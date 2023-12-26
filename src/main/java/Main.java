@@ -14,6 +14,7 @@ public class Main {
 
 //        making a random instance
         Random rand = new Random();
+        ProjectileHandler projectiles = new ProjectileHandler();
         Player player1 = new Player();
         EnemyHandler enemies = new EnemyHandler();
 
@@ -26,8 +27,8 @@ public class Main {
         while (!WindowShouldClose()){
             BeginDrawing();
             ClearBackground(RAYWHITE);
-            player1.update();
-            enemies.update();
+            player1.update(projectiles);
+            enemies.update(projectiles);
             DrawFPS(100,100);
             EndDrawing();
         }

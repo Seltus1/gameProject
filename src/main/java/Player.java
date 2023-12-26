@@ -9,7 +9,7 @@ import static com.raylib.Jaylib.*;
 // ethan test commit
 public class Player extends Creature{
     private int projAngle;
-    private static ArrayList<Projectile> projList = new ArrayList<>();
+//    private static ArrayList<Projectile> projList = new ArrayList<>();
     private Melee sword = new Melee(5,100,posX, posY, posY);
     private boolean canMelee = true;
     private static final long MELEE_COOLDOWN = 1000;
@@ -40,7 +40,8 @@ public class Player extends Creature{
             posX -= moveSpeed;
         }
     }
-    public void createProjecitle() {
+
+    public void createProjecitle(ProjectileHandler projList) {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
             if (canShoot) {
                 DrawCircle(posX, posY, 10, PURPLE);
@@ -49,7 +50,7 @@ public class Player extends Creature{
                 resetShotCooldown();
             }
         }
-        checkProjectilesBounds();
+        projList.checkProjectilesBounds();
     }
 
     private boolean canShoot() {
@@ -104,16 +105,6 @@ public class Player extends Creature{
             executor.shutdown();
         });
     }
-    public void checkProjectilesBounds(){
-        for(int i = 0; i < projList.size(); i++){
-            Projectile current = projList.get(i);
-            current.boundsCheck();
-            if(!(current.isInBounds())){
-                projList.remove(i);
-            }
-            current.move();
-        }
-    }
     public void setProjecitleDirection(){
         if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)){
             projAngle = 315;
@@ -143,16 +134,12 @@ public class Player extends Creature{
 
     }
 //    redraws the players position
-    public void update(){
+    public void update(ProjectileHandler projList){
         move();
-        createProjecitle();
+        createProjecitle(projList);
         melee();
         sword.update();
         DrawCircle(posX, posY, size, RED);
-    }
-
-    public static ArrayList<Projectile> getProjList() {
-        return projList;
     }
 }
 
