@@ -41,15 +41,25 @@ public class Player extends Creature{
         }
     }
 
-    public void createProjecitle(ProjectileHandler projList) {
+    public void createProjectile(ProjectileHandler projList) {
+        // Check if the left mouse button is down and if the player can currently shoot
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
+            // Check if the player can shoot again (additional check, might be redundant)
             if (canShoot) {
+                // Draw a visual representation (circle) of the projectile at the player's position
                 DrawCircle(posX, posY, 10, PURPLE);
+
+                // Set the direction of the projectile
                 setProjecitleDirection();
+
+                // Create a new Projectile object and add it to the ProjectileHandler
                 projList.add(new Projectile(10, posX, posY, 10, projAngle));
+
+                // Reset the cooldown for shooting
                 resetShotCooldown();
             }
         }
+        // Check the bounds of projectiles in the ProjectileHandler (likely to handle removal of out-of-bounds projectiles)
         projList.checkProjectilesBounds();
     }
 
@@ -58,50 +68,80 @@ public class Player extends Creature{
     }
 
     private void resetShotCooldown() {
+        // Create a new single-threaded ExecutorService
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.submit(() -> {
             try {
+                // Sleep for the specified cooldown duration
                 TimeUnit.MILLISECONDS.sleep(SHOT_COOLDOWN);
             } catch (InterruptedException e) {
-                System.out.println("got interrupted!");
+                // Handle interruption if it occurs
+                System.out.println("Got interrupted!");
             }
+
+            // Once the cooldown is over, allow shooting again
             canShoot = true;
+
+            // Shutdown the executor service (as it's no longer needed)
             executor.shutdown();
         });
 
         // Update the last shot time immediately to prevent rapid clicks during cooldown
         lastShotTime = System.currentTimeMillis();
+
+        // Set the flag to disallow shooting until the cooldown is finished
         canShoot = false;
     }
 
 
     public void melee() {
+        // Check if the space key is pressed and the player can perform a melee attack
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
+            // Check if the player can currently perform a melee attack
             if (canMelee) {
+                // Set the position of the sword to the player's position
                 sword.setPosX(posX);
                 sword.setPosY(posY);
+
+                // Initiate the sword attack
                 sword.attack();
+
+                // Disable further melee attacks until cooldown is over
                 canMelee = false;
+
+                // Record the time of the last melee attack
                 lastMeleeTime = System.currentTimeMillis();
+
+                // Reset the cooldown for the melee attack
                 resetMeleeCooldown();
             }
         }
     }
     private boolean canMelee() {
+        // Get the current time
         long currentTime = System.currentTimeMillis();
+
+        // Check if enough time has passed since the last melee attack
         return (currentTime - lastMeleeTime) >= MELEE_COOLDOWN;
     }
     private void resetMeleeCooldown() {
+        // Create a new single-threaded ExecutorService
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.submit(() -> {
             try {
+                // Sleep for the specified melee cooldown duration
                 TimeUnit.MILLISECONDS.sleep(MELEE_COOLDOWN);
             } catch (InterruptedException e) {
-                System.out.println("got interrupted!");
+                // Handle interruption if it occurs
+                System.out.println("Got interrupted!");
             }
+
+            // Once the cooldown is over, allow melee attacks again
             canMelee = true;
+
+            // Shutdown the executor service (as it's no longer needed)
             executor.shutdown();
         });
     }
@@ -135,10 +175,19 @@ public class Player extends Creature{
     }
 //    redraws the players position
     public void update(ProjectileHandler projList){
+        // Move the character or player
         move();
-        createProjecitle(projList);
+
+        // Create projectiles if conditions are met
+        createProjectile(projList);
+
+        // Perform a melee attack if conditions are met
         melee();
+
+        // Update the sword's state
         sword.update();
+
+        // Draw a circle representing the character at its position with a size and color
         DrawCircle(posX, posY, size, RED);
     }
 }

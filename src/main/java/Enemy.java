@@ -37,13 +37,22 @@ public class Enemy extends Creature{
         return isAlive;
     }
 
-    public void gotDamagedRanged(ProjectileHandler projList){
+    public void gotDamagedRanged(ProjectileHandler projList) {
         for (int i = 0; i < projList.size(); i++) {
+            // Get the current projectile from the ProjectileHandler at index 'i'
             Projectile currProj = (Projectile) projList.get(i);
-            Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(),currProj.getPosY());
-            if (CheckCollisionCircles(pos,size,currPos,currProj.getShotRad())){
+
+            // Get the current projectile's position as a Vector2
+            Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
+
+            // Check for collision between circles: enemy position and size, and projectile position and shot radius
+            if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad())) {
+                // Reduce enemy HP by the damage from the current projectile
                 hp -= currProj.getDamage();
-                if (hp <= 0){
+
+                // Check if enemy HP is less than or equal to 0
+                if (hp <= 0) {
+                    // If HP is zero or less, mark the enemy as not alive
                     isAlive = false;
                 }
             }
@@ -51,8 +60,10 @@ public class Enemy extends Creature{
     }
 //    TEST
     public void update(){
-        if (isAlive){
-            DrawCircle(posX,posY,size,PURPLE);
+        // Check if the enemy is alive
+        if (isAlive) {
+            // Draw a circle representing the enemy with posX, posY, size, and PURPLE color
+            DrawCircle(posX, posY, size, PURPLE);
         }
     }
 }

@@ -15,19 +15,22 @@ public class EnemyHandler extends ListHandler {
     }
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int Xpos = rand.nextInt(0, 1920);
-            int Ypos = rand.nextInt(0, 1080);
-            int size = rand.nextInt(5, 50);
+            int Xpos = rand.nextInt(1920); // Random X position between 0 and 1919
+            int Ypos = rand.nextInt(1080); // Random Y position between 0 and 1079
+            int size = rand.nextInt(46) + 5; // Random size between 5 and 50 (inclusive)
             Enemy enemy = new Enemy(200, Xpos, Ypos, size);
             add(enemy);
-            System.out.println(1);
         }
         return true;
     }
 
     public void update(ProjectileHandler projList){
-        for (Enemy enemy: list){
+        // Loop through the list of enemies
+        for (Enemy enemy : list) {
+            // Call the 'gotDamagedRanged' method on each enemy, passing the ProjectileHandler
             enemy.gotDamagedRanged(projList);
+
+            // Update the current enemy
             enemy.update();
         }
     }
