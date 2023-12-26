@@ -36,12 +36,16 @@ public class Enemy extends Creature{
         return isAlive;
     }
 
+    /**
+     * Checks if projectile collides with player. If it does, remove projectile and reduce health
+     */
     public void gotDamagedRanged(){
         for (int i = 0; i < Player.getProjList().size(); i++) {
             Projectile currProj = Player.getProjList().get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(),currProj.getPosY());
             if (CheckCollisionCircles(pos,size,currPos,currProj.getShotRad())){
-                hp -= currProj.getDamage();
+                Player.getProjList().remove(i);
+                hp = hp - currProj.getDamage();
                 if (hp <= 0){
                     isAlive = false;
                 }
