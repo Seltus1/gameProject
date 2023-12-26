@@ -23,7 +23,7 @@ public class EnemyHandler {
             int Ypos = rand.nextInt(0, 1080);
             int size = rand.nextInt(5, 50);
             Enemy enemy = new Enemy(200, Xpos, Ypos, size);
-            enemyList.add(enemy);
+            addEnemy(enemy);
         }
         return true;
     }
