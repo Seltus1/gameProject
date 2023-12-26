@@ -9,7 +9,6 @@ public class Enemy extends Creature{
     public Enemy(int hp, int posX, int posY, int size){
         super(hp,posX,posY,size);
         DrawCircle(posX,posY,size,PURPLE);
-
     }
     private Jaylib.Vector2 pos = new Jaylib.Vector2(posX,posY);
     @Override
