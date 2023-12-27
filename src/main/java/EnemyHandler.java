@@ -1,26 +1,36 @@
 import java.util.*;
-import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
+import java.util.Random;
 //UNFINISHED make it so handles all enemies
 //TEST
 public class EnemyHandler {
-    private static ArrayList<Enemy> enemyList = new ArrayList<>();
+    private static ArrayList<Enemy> enemyList;
+    private static Random rand = new Random();
 
 
     public EnemyHandler() {
-
+        enemyList = new ArrayList<>();
     }
-    public static void spawnEnemies(){
-        Random ran = new Random();
-        int numEnemiesToSpawn = 10;
-        for(int i = 0; i < numEnemiesToSpawn; i++){
-            //Why doesnt ran.nextInt()*1080 or 1920 not work? Fix later
-            enemyList.add(new Enemy(50,600,700,40));
-            enemyList.get(i).update();
+
+    public boolean addEnemy(Enemy e){
+        enemyList.add(e);
+        return true;
+    }
+
+    public boolean addMultipleEnemies(int amount){
+//        Random rand = new Random();
+        for (int i = 0; i < amount; i++) {
+            int Xpos = rand.nextInt(0, 1920);
+            int Ypos = rand.nextInt(0, 1080);
+            int size = rand.nextInt(5, 50);
+            Enemy enemy = new Enemy(200, Xpos, Ypos, size);
+            addEnemy(enemy);
         }
+        return true;
     }
 
-    public static ArrayList<Enemy> getEnemyList() {
-        return enemyList;
+    public void update(){
+        for (Enemy enemy: enemyList){
+            enemy.update();
+        }
     }
 }

@@ -15,7 +15,7 @@ public class Player extends Creature{
     private static final long MELEE_COOLDOWN = 1000;
     private long lastMeleeTime = 0;
     private boolean canShoot = true;
-    private static final long SHOT_COOLDOWN = 500;
+    private static final long SHOT_COOLDOWN = 250;
     private long lastShotTime = 0;
 
 
