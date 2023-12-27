@@ -21,7 +21,7 @@ public class Projectile {
         damage = 10;
         DrawCircle(this.posX, this.posY, shotRad, BLACK);
     }
-//TEST
+
     public boolean isInBounds() {
         return isInBounds;
     }
@@ -68,4 +68,8 @@ public class Projectile {
     public void update(){
         DrawCircle(posX, posY, shotRad, BLACK);
     }
+
+//    public boolean ifHitEnemy(int enemyX, int enemyY){
+//
+//    }
 }

@@ -13,6 +13,8 @@ public class Melee {
     private int posX;
     private int posY;
     private boolean draw;
+    private int lifeTime;
+
 
     public Melee(int attackSpeed, int range, int damage, int posX, int posY){
         this.attackSpeed = attackSpeed;
@@ -20,12 +22,12 @@ public class Melee {
         this.damage = damage;
         this.posX = posX;
         this.posY = posY;
+        lifeTime = 10000;
         draw = false;
     }
-
     public void attack(){
         draw = true;
-        countdown();
+        drawingTime();
     }
     public void setPosX(int posX){
         this.posX = posX;
@@ -33,12 +35,12 @@ public class Melee {
     public void setPosY(int posY){
         this.posY = posY;
     }
-    public void countdown() {
+    public void drawingTime() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.submit(() -> {
             try {
-                TimeUnit.MILLISECONDS.sleep(10000);
+                TimeUnit.MILLISECONDS.sleep(lifeTime);
             } catch (InterruptedException e) {
                 System.out.println("got interrupted!");
             }

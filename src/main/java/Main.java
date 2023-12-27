@@ -4,34 +4,46 @@ import java.util.Random;
 
 public class Main {
     public static void main(String[] args) {
+        // Define screen width and height constants
         final int SCREENWIDTH = 1920;
         final int SCREENHEIGHT = 1080;
-//        create new window
+
+        // Create a window with specified dimensions and title
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "testing game mechanics");
 
-//      target fps TEST
+        // Set the target frames per second (fps)
         SetTargetFPS(60);
 
-//        making a random instance
+        // Create instances of necessary game objects
         Random rand = new Random();
+        ProjectileHandler projectiles = new ProjectileHandler();
         Player player1 = new Player();
         EnemyHandler enemies = new EnemyHandler();
 
-        int amountOfEnemies = rand.nextInt(5, 13);
+        // Generate a random number of enemies
+        int amountOfEnemies = rand.nextInt(8) + 5;
         enemies.addMultipleEnemies(amountOfEnemies);
 
-//        Enemy enemy1 = new Enemy(200,500, 350,30);
-//        this checks if they close the window or press escape
-//        if not, run the loop and update stuff
-        while (!WindowShouldClose()){
+        // Main game loop
+        while (!WindowShouldClose()) {
+            // Begin drawing on the window
             BeginDrawing();
+
+            // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
-            player1.update();
-            enemies.update();
-            DrawFPS(100,100);
+
+            // Update the player and enemies
+            player1.update(projectiles);
+            enemies.update(projectiles);
+
+            // Display the current frames per second (FPS)
+            DrawFPS(100, 100);
+
+            // End drawing
             EndDrawing();
         }
-//        close the window
-        CloseWindow();
+
+        // Close the window when the loop exits (window closed or Esc pressed)
+        CloseWindow();;
     }
 }

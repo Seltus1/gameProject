@@ -1,3 +1,5 @@
+import com.raylib.Raylib;
+
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,26 +11,24 @@ import static com.raylib.Jaylib.*;
 // ethan test commit
 public class Player extends Creature{
     private int projAngle;
-    private static ArrayList<Projectile> projList = new ArrayList<>();
-    private Melee sword = new Melee(5,100,posX, posY, posY);
+    private Raylib.Color color;
     private boolean canMelee = true;
-    private static final long MELEE_COOLDOWN = 1000;
-    private long lastMeleeTime = 0;
     private boolean canShoot = true;
-    private static final long SHOT_COOLDOWN = 250;
-    private long lastShotTime = 0;
+    private static final int MELEE_COOLDOWN = 1000;
+    private static final int SHOT_COOLDOWN = 500;
+    private Melee sword = new Melee(5,100,posX, posY, posY);
 
 
 
     public Player() {
         super(100,10, 10, 100, 100, 5, 20);
-        DrawCircle(posX, posY, size, RED);
+        color = RED;
+        DrawCircle(posX, posY, size, color);
     }
 //move function that updates player posistions and redraws the position.
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
             posY -= moveSpeed;
-
         }
         if (IsKeyDown(KEY_S) && posY < GetScreenHeight() - size) {
             posY += moveSpeed;
@@ -40,80 +40,70 @@ public class Player extends Creature{
             posX -= moveSpeed;
         }
     }
-    public void createProjecitle() {
+
+    public void createProjectile(ProjectileHandler projList) {
+        // Check if the left mouse button is down and if the player can currently shoot
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
-            if (canShoot) {
+            // Check if the player can shoot again (additional check, might be redundant)
+                // Draw a visual representation (circle) of the projectile at the player's position
                 DrawCircle(posX, posY, 10, PURPLE);
+
+                // Set the direction of the projectile
                 setProjecitleDirection();
+
+                // Create a new Projectile object and add it to the ProjectileHandler
                 projList.add(new Projectile(10, posX, posY, 10, projAngle));
-                resetShotCooldown();
-            }
+
+                // Reset the cooldown for shooting
+                canShoot = false;
+                cooldown(SHOT_COOLDOWN, "shot");
+
+
         }
-        checkProjectilesBounds();
+        // Check the bounds of projectiles in the ProjectileHandler (likely to handle removal of out-of-bounds projectiles)
+        projList.checkProjectilesBounds();
     }
-
-    private boolean canShoot() {
-        return canShoot;
-    }
-
-    private void resetShotCooldown() {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(SHOT_COOLDOWN);
-            } catch (InterruptedException e) {
-                System.out.println("got interrupted!");
-            }
-            canShoot = true;
-            executor.shutdown();
-        });
-
-        // Update the last shot time immediately to prevent rapid clicks during cooldown
-        lastShotTime = System.currentTimeMillis();
-        canShoot = false;
-    }
-
 
     public void melee() {
+        // Check if the space key is pressed and the player can perform a melee attack
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
-            if (canMelee) {
+            // Check if the player can currently perform a melee attack
+                // Set the position of the sword to the player's position
                 sword.setPosX(posX);
                 sword.setPosY(posY);
+
+                // Initiate the sword attack
                 sword.attack();
+
+                // Disable further melee attacks until cooldown is over
                 canMelee = false;
-                lastMeleeTime = System.currentTimeMillis();
-                resetMeleeCooldown();
-            }
+
+                // Record the time of the last melee attack
+
+                // Reset the cooldown for the melee attack
+                cooldown(MELEE_COOLDOWN, "melee");
+
+
         }
     }
-    private boolean canMelee() {
-        long currentTime = System.currentTimeMillis();
-        return (currentTime - lastMeleeTime) >= MELEE_COOLDOWN;
-    }
-    private void resetMeleeCooldown() {
+    private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         executor.submit(() -> {
             try {
-                TimeUnit.MILLISECONDS.sleep(MELEE_COOLDOWN);
+                TimeUnit.MILLISECONDS.sleep(cooldown);
             } catch (InterruptedException e) {
-                System.out.println("got interrupted!");
+                System.out.println("Woah, something went wrong! (check cooldown method)");
             }
-            canMelee = true;
+            if(type.equals("shot")){
+                canShoot = true;
+            }
+            if(type.equals("melee")){
+                canMelee = true;
+            }
             executor.shutdown();
         });
     }
-    public void checkProjectilesBounds(){
-        for(int i = 0; i < projList.size(); i++){
-            Projectile current = projList.get(i);
-            current.boundsCheck();
-            if(!(current.isInBounds())){
-                projList.remove(i);
-            }
-            current.move();
-        }
-    }
+
     public void setProjecitleDirection(){
         if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)){
             projAngle = 315;
@@ -143,16 +133,27 @@ public class Player extends Creature{
 
     }
 //    redraws the players position
-    public void update(){
+    public void update(ProjectileHandler projList){
+        // Move the character or player
         move();
-        createProjecitle();
-        melee();
-        sword.update();
-        DrawCircle(posX, posY, size, RED);
-    }
 
-    public static ArrayList<Projectile> getProjList() {
-        return projList;
+        // Create projectiles if conditions are met
+        createProjectile(projList);
+
+        // Perform a melee attack if conditions are met
+        melee();
+
+        // Update the sword's state
+        sword.update();
+
+        // Draw a circle representing the character at its position with a size and color
+        DrawCircle(posX, posY, size, color);
+    }
+    private boolean canShoot() {
+        return canShoot;
+    }
+    private boolean canMelee() {
+        return canMelee;
     }
 }
 

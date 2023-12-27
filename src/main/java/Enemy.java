@@ -1,6 +1,8 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import java.util.ArrayList;
+
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
@@ -35,17 +37,22 @@ public class Enemy extends Creature{
         return isAlive;
     }
 
-    /**
-     * Checks if projectile collides with player. If it does, remove projectile and reduce health
-     */
-    public void gotDamagedRanged(){
-        for (int i = 0; i < Player.getProjList().size(); i++) {
-            Projectile currProj = Player.getProjList().get(i);
-            Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(),currProj.getPosY());
-            if (CheckCollisionCircles(pos,size,currPos,currProj.getShotRad())){
-                Player.getProjList().remove(i);
-                hp = hp - currProj.getDamage();
-                if (hp <= 0){
+    public void gotDamagedRanged(ProjectileHandler projList) {
+        for (int i = 0; i < projList.size(); i++) {
+            // Get the current projectile from the ProjectileHandler at index 'i'
+            Projectile currProj = (Projectile) projList.get(i);
+
+            // Get the current projectile's position as a Vector2
+            Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
+
+            // Check for collision between circles: enemy position and size, and projectile position and shot radius
+            if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad())) {
+                // Reduce enemy HP by the damage from the current projectile
+                hp -= currProj.getDamage();
+
+                // Check if enemy HP is less than or equal to 0
+                if (hp <= 0) {
+                    // If HP is zero or less, mark the enemy as not alive
                     isAlive = false;
                 }
             }
@@ -53,9 +60,10 @@ public class Enemy extends Creature{
     }
 //    TEST
     public void update(){
-        if (isAlive){
-            gotDamagedRanged();
-            DrawCircle(posX,posY,size,PURPLE);
+        // Check if the enemy is alive
+        if (isAlive) {
+            // Draw a circle representing the enemy with posX, posY, size, and PURPLE color
+            DrawCircle(posX, posY, size, PURPLE);
         }
     }
 }
