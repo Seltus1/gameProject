@@ -47,8 +47,10 @@ public class Enemy extends Creature{
 
             // Check for collision between circles: enemy position and size, and projectile position and shot radius
             if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad())) {
+                projList.removeIndex(i);
                 // Reduce enemy HP by the damage from the current projectile
                 hp -= currProj.getDamage();
+                System.out.println(hp);
 
                 // Check if enemy HP is less than or equal to 0
                 if (hp <= 0) {
@@ -56,14 +58,6 @@ public class Enemy extends Creature{
                     isAlive = false;
                 }
             }
-        }
-    }
-//    TEST
-    public void update(){
-        // Check if the enemy is alive
-        if (isAlive) {
-            // Draw a circle representing the enemy with posX, posY, size, and PURPLE color
-            DrawCircle(posX, posY, size, PURPLE);
         }
     }
 }

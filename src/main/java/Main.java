@@ -44,6 +44,6 @@ public class Main {
         }
 
         // Close the window when the loop exits (window closed or Esc pressed)
-        CloseWindow();;
+        CloseWindow();
     }
 }
