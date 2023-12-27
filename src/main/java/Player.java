@@ -1,3 +1,5 @@
+import com.raylib.Raylib;
+
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -9,26 +11,24 @@ import static com.raylib.Jaylib.*;
 // ethan test commit
 public class Player extends Creature{
     private int projAngle;
-//    private static ArrayList<Projectile> projList = new ArrayList<>();
-    private Melee sword = new Melee(5,100,posX, posY, posY);
+    private Raylib.Color color;
     private boolean canMelee = true;
-    private static final long MELEE_COOLDOWN = 1000;
-    private long lastMeleeTime = 0;
     private boolean canShoot = true;
-    private static final long SHOT_COOLDOWN = 250;
-    private long lastShotTime = 0;
+    private static final int MELEE_COOLDOWN = 1000;
+    private static final int SHOT_COOLDOWN = 500;
+    private Melee sword = new Melee(5,100,posX, posY, posY);
 
 
 
     public Player() {
         super(100,10, 10, 100, 100, 5, 20);
-        DrawCircle(posX, posY, size, RED);
+        color = RED;
+        DrawCircle(posX, posY, size, color);
     }
 //move function that updates player posistions and redraws the position.
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
             posY -= moveSpeed;
-
         }
         if (IsKeyDown(KEY_S) && posY < GetScreenHeight() - size) {
             posY += moveSpeed;
@@ -45,7 +45,6 @@ public class Player extends Creature{
         // Check if the left mouse button is down and if the player can currently shoot
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
             // Check if the player can shoot again (additional check, might be redundant)
-            if (canShoot) {
                 // Draw a visual representation (circle) of the projectile at the player's position
                 DrawCircle(posX, posY, 10, PURPLE);
 
@@ -56,50 +55,19 @@ public class Player extends Creature{
                 projList.add(new Projectile(10, posX, posY, 10, projAngle));
 
                 // Reset the cooldown for shooting
-                resetShotCooldown();
-            }
+                canShoot = false;
+                cooldown(SHOT_COOLDOWN, "shot");
+
+
         }
         // Check the bounds of projectiles in the ProjectileHandler (likely to handle removal of out-of-bounds projectiles)
         projList.checkProjectilesBounds();
     }
 
-    private boolean canShoot() {
-        return canShoot;
-    }
-
-    private void resetShotCooldown() {
-        // Create a new single-threaded ExecutorService
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        executor.submit(() -> {
-            try {
-                // Sleep for the specified cooldown duration
-                TimeUnit.MILLISECONDS.sleep(SHOT_COOLDOWN);
-            } catch (InterruptedException e) {
-                // Handle interruption if it occurs
-                System.out.println("Got interrupted!");
-            }
-
-            // Once the cooldown is over, allow shooting again
-            canShoot = true;
-
-            // Shutdown the executor service (as it's no longer needed)
-            executor.shutdown();
-        });
-
-        // Update the last shot time immediately to prevent rapid clicks during cooldown
-        lastShotTime = System.currentTimeMillis();
-
-        // Set the flag to disallow shooting until the cooldown is finished
-        canShoot = false;
-    }
-
-
     public void melee() {
         // Check if the space key is pressed and the player can perform a melee attack
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
             // Check if the player can currently perform a melee attack
-            if (canMelee) {
                 // Set the position of the sword to the player's position
                 sword.setPosX(posX);
                 sword.setPosY(posY);
@@ -111,40 +79,31 @@ public class Player extends Creature{
                 canMelee = false;
 
                 // Record the time of the last melee attack
-                lastMeleeTime = System.currentTimeMillis();
 
                 // Reset the cooldown for the melee attack
-                resetMeleeCooldown();
-            }
+                cooldown(MELEE_COOLDOWN, "melee");
+
+
         }
     }
-    private boolean canMelee() {
-        // Get the current time
-        long currentTime = System.currentTimeMillis();
-
-        // Check if enough time has passed since the last melee attack
-        return (currentTime - lastMeleeTime) >= MELEE_COOLDOWN;
-    }
-    private void resetMeleeCooldown() {
-        // Create a new single-threaded ExecutorService
+    private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
-
         executor.submit(() -> {
             try {
-                // Sleep for the specified melee cooldown duration
-                TimeUnit.MILLISECONDS.sleep(MELEE_COOLDOWN);
+                TimeUnit.MILLISECONDS.sleep(cooldown);
             } catch (InterruptedException e) {
-                // Handle interruption if it occurs
-                System.out.println("Got interrupted!");
+                System.out.println("Woah, something went wrong! (check cooldown method)");
             }
-
-            // Once the cooldown is over, allow melee attacks again
-            canMelee = true;
-
-            // Shutdown the executor service (as it's no longer needed)
+            if(type.equals("shot")){
+                canShoot = true;
+            }
+            if(type.equals("melee")){
+                canMelee = true;
+            }
             executor.shutdown();
         });
     }
+
     public void setProjecitleDirection(){
         if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)){
             projAngle = 315;
@@ -188,7 +147,13 @@ public class Player extends Creature{
         sword.update();
 
         // Draw a circle representing the character at its position with a size and color
-        DrawCircle(posX, posY, size, RED);
+        DrawCircle(posX, posY, size, color);
+    }
+    private boolean canShoot() {
+        return canShoot;
+    }
+    private boolean canMelee() {
+        return canMelee;
     }
 }
 

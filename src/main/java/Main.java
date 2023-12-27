@@ -21,7 +21,7 @@ public class Main {
         EnemyHandler enemies = new EnemyHandler();
 
         // Generate a random number of enemies
-        int amountOfEnemies = rand.nextInt(5, 13);
+        int amountOfEnemies = rand.nextInt(8) + 5;
         enemies.addMultipleEnemies(amountOfEnemies);
 
         // Main game loop
