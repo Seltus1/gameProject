@@ -19,6 +19,8 @@ public class Main {
         ProjectileHandler projectiles = new ProjectileHandler();
         Player player1 = new Player();
         EnemyHandler enemies = new EnemyHandler();
+        PlayerHandler player = new PlayerHandler(player1);
+
 
         // Generate a random number of enemies
         int amountOfEnemies = rand.nextInt(8) + 5;
@@ -28,12 +30,12 @@ public class Main {
         while (!WindowShouldClose()) {
             // Begin drawing on the window
             BeginDrawing();
-
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
 
             // Update the player and enemies
             player1.update(projectiles);
+            player.update(enemies);
             enemies.update(projectiles);
 
             // Display the current frames per second (FPS)

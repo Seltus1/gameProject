@@ -25,6 +25,10 @@ public class EnemyHandler extends ListHandler {
         return true;
     }
 
+    public ArrayList<Enemy> getEnemyList(){
+        return this.getList();
+    }
+
     public void update(ProjectileHandler projList) {
         for (int i = 0; i < size(); i++) {
             Enemy enemy = (Enemy) get(i);

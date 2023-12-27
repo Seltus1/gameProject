@@ -1,3 +1,4 @@
+import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import java.util.*;
@@ -17,6 +18,7 @@ public class Player extends Creature{
     private static final int MELEE_COOLDOWN = 1000;
     private static final int SHOT_COOLDOWN = 500;
     private Melee sword = new Melee(5,100,posX, posY, posY);
+    private Jaylib.Vector2 pos;
 
 
 
@@ -24,8 +26,9 @@ public class Player extends Creature{
         super(100,10, 10, 100, 100, 5, 20);
         color = RED;
         DrawCircle(posX, posY, size, color);
+        pos = new Jaylib.Vector2(posX,posY);
     }
-//move function that updates player posistions and redraws the position.
+    //move function that updates player posistions and redraws the position.
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
             posY -= moveSpeed;
@@ -45,18 +48,18 @@ public class Player extends Creature{
         // Check if the left mouse button is down and if the player can currently shoot
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
             // Check if the player can shoot again (additional check, might be redundant)
-                // Draw a visual representation (circle) of the projectile at the player's position
-                DrawCircle(posX, posY, 10, PURPLE);
+            // Draw a visual representation (circle) of the projectile at the player's position
+            DrawCircle(posX, posY, 10, PURPLE);
 
-                // Set the direction of the projectile
-                setProjecitleDirection();
+            // Set the direction of the projectile
+            setProjecitleDirection();
 
-                // Create a new Projectile object and add it to the ProjectileHandler
-                projList.add(new Projectile(10, posX, posY, 10, projAngle));
+            // Create a new Projectile object and add it to the ProjectileHandler
+            projList.add(new Projectile(10, posX, posY, 10, projAngle));
 
-                // Reset the cooldown for shooting
-                canShoot = false;
-                cooldown(SHOT_COOLDOWN, "shot");
+            // Reset the cooldown for shooting
+            canShoot = false;
+            cooldown(SHOT_COOLDOWN, "shot");
 
 
         }
@@ -68,20 +71,20 @@ public class Player extends Creature{
         // Check if the space key is pressed and the player can perform a melee attack
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
             // Check if the player can currently perform a melee attack
-                // Set the position of the sword to the player's position
-                sword.setPosX(posX);
-                sword.setPosY(posY);
+            // Set the position of the sword to the player's position
+            sword.setPosX(posX);
+            sword.setPosY(posY);
 
-                // Initiate the sword attack
-                sword.attack();
+            // Initiate the sword attack
+            sword.attack();
 
-                // Disable further melee attacks until cooldown is over
-                canMelee = false;
+            // Disable further melee attacks until cooldown is over
+            canMelee = false;
 
-                // Record the time of the last melee attack
+            // Record the time of the last melee attack
 
-                // Reset the cooldown for the melee attack
-                cooldown(MELEE_COOLDOWN, "melee");
+            // Reset the cooldown for the melee attack
+            cooldown(MELEE_COOLDOWN, "melee");
 
 
         }
@@ -132,7 +135,7 @@ public class Player extends Creature{
         }
 
     }
-//    redraws the players position
+    //    redraws the players position
     public void update(ProjectileHandler projList){
         // Move the character or player
         move();
@@ -155,5 +158,9 @@ public class Player extends Creature{
     private boolean canMelee() {
         return canMelee;
     }
-}
 
+    public Jaylib.Vector2 getPos() {
+        return pos;
+    }
+
+}

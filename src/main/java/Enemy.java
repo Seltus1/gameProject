@@ -8,6 +8,7 @@ import static com.raylib.Jaylib.*;
 
 public class Enemy extends Creature{
     private boolean isAlive = true;
+    public int dmg = 20;
     public Enemy(int hp, int posX, int posY, int size){
         super(hp,posX,posY,size);
         DrawCircle(posX,posY,size,PURPLE);
@@ -35,6 +36,10 @@ public class Enemy extends Creature{
 
     public boolean getIsAlive(){
         return isAlive;
+    }
+
+    public Jaylib.Vector2 getPos() {
+        return pos;
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {

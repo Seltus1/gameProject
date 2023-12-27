@@ -51,4 +51,33 @@ public class Creature {
     public int getSize() {
         return size;
     }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    public void setDps(int dps) {
+        this.dps = dps;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public void setMoveSpeed(int moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 }
+
