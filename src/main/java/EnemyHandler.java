@@ -6,32 +6,35 @@ import static com.raylib.Raylib.DrawCircle;
 
 //UNFINISHED make it so handles all enemies
 //TEST
-public class EnemyHandler extends ListHandler {
-    private ArrayList<Enemy> list = getList();
+public class EnemyHandler {
+    private ArrayList<Enemy> list;
+
     private Random rand = new Random();
 
     public EnemyHandler() {
-        super();
+        list = new ArrayList<>();
     }
-    public boolean addMultipleEnemies(int amount){
+
+    public boolean addMultipleEnemies(int amount) {
         for (int i = 0; i < amount; i++) {
             int Xpos = rand.nextInt(1920); // Random X position between 0 and 1919
             int Ypos = rand.nextInt(1080); // Random Y position between 0 and 1079
             int size = rand.nextInt(46) + 5; // Random size between 5 and 50 (inclusive)
-            Enemy enemy = new Enemy(200, Xpos, Ypos, size);
-            add(enemy);
+            Enemy enemy = new Enemy(1, Xpos, Ypos, size);
+            list.add(enemy);
         }
         return true;
     }
 
-    public void update(ProjectileHandler projList){
-        // Loop through the list of enemies
-        for (Enemy enemy : list) {
-            // Call the 'gotDamagedRanged' method on each enemy, passing the ProjectileHandler
-            enemy.gotDamagedRanged(projList);
-
-            // Update the current enemy
-            enemy.update();
+    public void update(ProjectileHandler projList) {
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).gotDamagedRanged(projList);
+            if (!list.get(i).getIsAlive()){
+                list.remove(i);
+            }
+            else{
+                DrawCircle(list.get(i).getPosX(), list.get(i).getPosY(), list.get(i).getSize(), PURPLE);
+            }
         }
     }
 }
