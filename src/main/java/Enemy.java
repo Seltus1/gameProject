@@ -1,68 +1,142 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import java.util.ArrayList;
+import static com.raylib.Raylib.CheckCollisionCircles;
+import static com.raylib.Raylib.DrawCircle;
 
-import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
+public class Enemy implements Creature {
+    private int hp;
+    private int damage;
+    private int range;
+    private int posX;
+    private int posY;
+    private int moveSpeed;
+    private int size;
+    private boolean isAlive;
+    private Raylib.Color color;
+    private Jaylib.Vector2 pos;
 
-public class Enemy extends Creature{
-    private boolean isAlive = true;
-    public int dmg = 20;
-    public Enemy(int hp, int posX, int posY, int size){
-        super(hp,posX,posY,size);
-        DrawCircle(posX,posY,size,PURPLE);
-    }
-    private Jaylib.Vector2 pos = new Jaylib.Vector2(posX,posY);
-    @Override
-    public int getHp() {
-        return super.getHp();
-    }
-
-    @Override
-    public int getPosX() {
-        return super.getPosX();
-    }
-
-    @Override
-    public int getPosY() {
-        return super.getPosY();
-    }
-
-    @Override
-    public int getSize() {
-        return super.getSize();
-    }
-
-    public boolean getIsAlive(){
-        return isAlive;
-    }
-
-    public Jaylib.Vector2 getPos() {
-        return pos;
+    public Enemy(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+        this.hp = hp;
+        this.damage = damage;
+        this.range = range;
+        this.posX = posX;
+        this.posY = posY;
+        this.moveSpeed = moveSpeed;
+        this.size = size;
+        this.color = color;
+        this.isAlive = true;
+        this.pos = new Jaylib.Vector2(posX,posY);
+        DrawCircle(posX, posY, size, color);
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {
         for (int i = 0; i < projList.size(); i++) {
-            // Get the current projectile from the ProjectileHandler at index 'i'
             Projectile currProj = (Projectile) projList.get(i);
-
-            // Get the current projectile's position as a Vector2
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-
-            // Check for collision between circles: enemy position and size, and projectile position and shot radius
-            if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad())) {
+            if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
                 projList.removeIndex(i);
-                // Reduce enemy HP by the damage from the current projectile
                 hp -= currProj.getDamage();
-                System.out.println(hp);
-
-                // Check if enemy HP is less than or equal to 0
                 if (hp <= 0) {
-                    // If HP is zero or less, mark the enemy as not alive
                     isAlive = false;
                 }
             }
         }
+    }
+
+    @Override
+    public Raylib.Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(Raylib.Color color) {
+        this.color = color;
+    }
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    @Override
+    public int getDamage() {
+        return damage;
+    }
+
+    @Override
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public int getRange() {
+        return range;
+    }
+
+    @Override
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    @Override
+    public int getPosX() {
+        return posX;
+    }
+
+    @Override
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    @Override
+    public int getPosY() {
+        return posY;
+    }
+
+    @Override
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    @Override
+    public int getMoveSpeed() {
+        return moveSpeed;
+    }
+
+    @Override
+    public void setMoveSpeed(int moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(int size) {
+        this.size = size;
+    }
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    @Override
+    public Jaylib.Vector2 getPos() {
+        return pos;
+    }
+
+    @Override
+    public void setPos(Jaylib.Vector2 pos) {
+        this.pos = pos;
     }
 }

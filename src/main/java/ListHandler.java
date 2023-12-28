@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public  abstract class ListHandler<T> {
+public class ListHandler<T> {
 
     private ArrayList<T> list;
 

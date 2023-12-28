@@ -1,34 +1,48 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.raylib.Jaylib.PURPLE;
 import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
-//TEST
-// ethan test commit
-public class Player extends Creature{
+
+public class Player implements Creature{
+    private int hp;
+    private int damage;
+    private int range;
+    private int posX;
+    private int posY;
+    private int moveSpeed;
+    private int size;
     private int projAngle;
+    private boolean isAlive;
+    private boolean canShoot;
+    private boolean canMelee;
     private Raylib.Color color;
-    private boolean canMelee = true;
-    private boolean canShoot = true;
-    private static final int MELEE_COOLDOWN = 1000;
-    private static final int SHOT_COOLDOWN = 500;
-    private Melee sword = new Melee(5,100,posX, posY, posY);
     private Jaylib.Vector2 pos;
+    private final int SHOT_COOLDOWN = 500;
+    private static final int MELEE_COOLDOWN = 1000;
+    private Melee sword = new Melee(5,100,posX, posY, posY);
 
 
 
-    public Player() {
-        super(100,10, 10, 100, 100, 5, 20);
-        color = RED;
-        DrawCircle(posX, posY, size, color);
-        pos = new Jaylib.Vector2(posX,posY);
+    public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+        this.hp = hp;
+        this.damage = damage;
+        this.range = range;
+        this.posX = posX;
+        this.posY = posY;
+        this.moveSpeed = moveSpeed;
+        this.size = size;
+        this.isAlive = true;
+        this.color = color;
+        this.pos = new Jaylib.Vector2(posX,posY);;
+        this.canShoot = true;
+        this.canMelee = true;
     }
-    //move function that updates player posistions and redraws the position.
+
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
             posY -= moveSpeed;
@@ -45,19 +59,12 @@ public class Player extends Creature{
     }
 
     public void createProjectile(ProjectileHandler projList) {
-        // Check if the left mouse button is down and if the player can currently shoot
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
-            // Check if the player can shoot again (additional check, might be redundant)
-            // Draw a visual representation (circle) of the projectile at the player's position
             DrawCircle(posX, posY, 10, PURPLE);
-
-            // Set the direction of the projectile
             setProjecitleDirection();
-
-            // Create a new Projectile object and add it to the ProjectileHandler
-            projList.add(new Projectile(10, posX, posY, 10, projAngle));
-
-            // Reset the cooldown for shooting
+            Projectile proj = new Projectile(10, posX, posY, 10, projAngle);
+            proj.setShotTage("Player");
+            projList.add(proj);
             canShoot = false;
             cooldown(SHOT_COOLDOWN, "shot");
 
@@ -68,10 +75,7 @@ public class Player extends Creature{
     }
 
     public void melee() {
-        // Check if the space key is pressed and the player can perform a melee attack
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
-            // Check if the player can currently perform a melee attack
-            // Set the position of the sword to the player's position
             sword.setPosX(posX);
             sword.setPosY(posY);
 
@@ -85,10 +89,9 @@ public class Player extends Creature{
 
             // Reset the cooldown for the melee attack
             cooldown(MELEE_COOLDOWN, "melee");
-
-
         }
     }
+
     private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
@@ -107,60 +110,144 @@ public class Player extends Creature{
         });
     }
 
-    public void setProjecitleDirection(){
-        if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)){
+    public void setProjecitleDirection() {
+        if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)) {
             projAngle = 315;
-        }
-        else if (IsKeyDown(KEY_W) && IsKeyDown(KEY_D)){
+        } else if (IsKeyDown(KEY_W) && IsKeyDown(KEY_D)) {
             projAngle = 45;
-        }
-        else if (IsKeyDown(KEY_D) && IsKeyDown(KEY_S)){
+        } else if (IsKeyDown(KEY_D) && IsKeyDown(KEY_S)) {
             projAngle = 135;
-        }
-        else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_S)){
+        } else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_S)) {
             projAngle = 225;
-        }
-        else if (IsKeyDown(KEY_W)){
+        } else if (IsKeyDown(KEY_W)) {
             projAngle = 0;
-        }
-        else if (IsKeyDown(KEY_D)) {
+        } else if (IsKeyDown(KEY_D)) {
             projAngle = 90;
-        }
-        else if (IsKeyDown(KEY_S)){
+        } else if (IsKeyDown(KEY_S)) {
             projAngle = 180;
-        }
-
-        else if (IsKeyDown(KEY_A)){
+        } else if (IsKeyDown(KEY_A)) {
             projAngle = 270;
         }
-
-    }
-    //    redraws the players position
-    public void update(ProjectileHandler projList){
-        // Move the character or player
-        move();
-
-        // Create projectiles if conditions are met
-        createProjectile(projList);
-
-        // Perform a melee attack if conditions are met
-        melee();
-
-        // Update the sword's state
-        sword.update();
-
-        // Draw a circle representing the character at its position with a size and color
-        DrawCircle(posX, posY, size, color);
-    }
-    private boolean canShoot() {
-        return canShoot;
-    }
-    private boolean canMelee() {
-        return canMelee;
     }
 
+        public void update(ProjectileHandler projList){
+            // Move the character or player
+            move();
+
+            // Create projectiles if conditions are met
+            createProjectile(projList);
+
+            // Perform a melee attack if conditions are met
+            melee();
+
+            // Update the sword's state
+            sword.update();
+
+            // Draw a circle representing the character at its position with a size and color
+            DrawCircle(posX, posY, size, color);
+        }
+
+    public boolean canShoot(){return canShoot;}
+
+    public boolean canMelee() {return canMelee;}
+
+    @Override
+    public int getHp() {
+        return hp;
+    }
+
+    @Override
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
+    @Override
+    public int getDamage() {
+        return damage;
+    }
+
+    @Override
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    @Override
+    public int getRange() {
+        return range;
+    }
+
+    @Override
+    public void setRange(int range) {
+        this.range = range;
+    }
+
+    @Override
+    public int getPosX() {
+        return posX;
+    }
+
+    @Override
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    @Override
+    public int getPosY() {
+        return posY;
+    }
+
+    @Override
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    @Override
+    public int getMoveSpeed() {
+        return moveSpeed;
+    }
+
+    @Override
+    public void setMoveSpeed(int moveSpeed) {
+        this.moveSpeed = moveSpeed;
+    }
+
+    @Override
+    public int getSize() {
+        return size;
+    }
+
+    @Override
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    @Override
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    @Override
+    public void setAlive(boolean alive) {
+        isAlive = alive;
+    }
+
+    @Override
+    public Raylib.Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setColor(Raylib.Color color) {
+        this.color = color;
+    }
+
+    @Override
     public Jaylib.Vector2 getPos() {
         return pos;
     }
 
+    @Override
+    public void setPos(Jaylib.Vector2 pos) {
+        this.pos = pos;
+    }
 }

@@ -1,8 +1,8 @@
 import java.util.*;
 import java.util.Random;
 
-import static com.raylib.Jaylib.PURPLE;
-import static com.raylib.Raylib.DrawCircle;
+import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
 
 //UNFINISHED make it so handles all enemies
 //TEST
@@ -16,29 +16,45 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount) {
         for (int i = 0; i < amount; i++) {
-            int Xpos = rand.nextInt(1920); // Random X position between 0 and 1919
-            int Ypos = rand.nextInt(1080); // Random Y position between 0 and 1079
-            int size = rand.nextInt(46) + 5; // Random size between 5 and 50 (inclusive)
-            Enemy enemy = new Enemy(1, Xpos, Ypos, size);
+            int Xpos = rand.nextInt(1920);
+            int Ypos = rand.nextInt(1080);
+            int size = rand.nextInt(46) + 5;
+            Enemy enemy = new Enemy(1, 5, 12, Xpos, Ypos, 5, size, PURPLE);
+            add(enemy);
+        }
+        return true;
+    }
+
+    public boolean addMultipleStationaryEnemy(int amount){
+        for (int i = 0; i < amount; i++) {
+            int Xpos = rand.nextInt(1920);
+            int Ypos = rand.nextInt(1080);
+            int size = rand.nextInt(46) + 5;
+            StationaryEnemy enemy = new StationaryEnemy(1, 0, 10000, Xpos, Ypos,0, size, GREEN);
             add(enemy);
         }
         return true;
     }
 
     public ArrayList<Enemy> getEnemyList(){
-        return this.getList();
+        return getList();
     }
 
-    public void update(ProjectileHandler projList) {
+    public void update(ProjectileHandler projList, Player player) {
         for (int i = 0; i < size(); i++) {
+            if (get(i) instanceof StationaryEnemy){
+                StationaryEnemy enemy = (StationaryEnemy) get(i);
+                enemy.shootPlayer(player, projList);
+            }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
-            if (!enemy.getIsAlive()){
+            if (!enemy.isAlive()){
                 removeIndex(i);
             }
             else{
-                DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), PURPLE);
+                DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
             }
         }
+
     }
 }

@@ -25,7 +25,7 @@ public class PlayerHandler {
         ArrayList<Enemy> enemyList = enemy.getEnemyList();
         for (int i = 0; i < enemyList.size(); i++) {
             if (CheckCollisionCircles(player.getPos(),player.getSize(),enemyList.get(i).getPos(),enemyList.get(i).getSize())){
-                player.setHp((player.getHp()-enemyList.get(i).dmg));
+                player.setHp((player.getHp()-enemyList.get(i).getDamage()));
             }
         }
     }

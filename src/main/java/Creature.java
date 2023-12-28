@@ -1,83 +1,26 @@
-public class Creature {
-    protected int hp;
-    protected int dps;
-    protected int range;
-    protected int posX;
-    protected int posY;
-    protected int moveSpeed;
-    protected int size;
-//TEST
-    public Creature(int hp, int dps, int range, int posX, int posY, int moveSpeed, int size){
-        this.hp = hp;
-        this.dps = dps;
-        this.range = range;
-        this.posX = posX;
-        this.posY = posY;
-        this.moveSpeed = moveSpeed;
-        this.size = size;
-    }
+import com.raylib.Jaylib;
+import com.raylib.Raylib;
 
-    public Creature (int hp, int posX, int posY,int size){
-        this.hp = hp;
-        this.posX = posX;
-        this.posY = posY;
-        this.size = size;
-    }
+public interface Creature {
+    int getHp();
+    int getDamage();
+    int getRange();
+    int getPosX();
+    int getPosY();
+    int getMoveSpeed();
+    int getSize();
+    boolean isAlive();
+    Jaylib.Vector2 getPos();
+    Raylib.Color getColor();
 
-    public int getHp() {
-        return hp;
-    }
-
-    public int getDps() {
-        return dps;
-    }
-
-    public int getRange() {
-        return range;
-    }
-
-    public int getPosX() {
-        return posX;
-    }
-
-    public int getPosY() {
-        return posY;
-    }
-
-    public int getMoveSpeed() {
-        return moveSpeed;
-    }
-
-    public int getSize() {
-        return size;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public void setDps(int dps) {
-        this.dps = dps;
-    }
-
-    public void setRange(int range) {
-        this.range = range;
-    }
-
-    public void setPosX(int posX) {
-        this.posX = posX;
-    }
-
-    public void setPosY(int posY) {
-        this.posY = posY;
-    }
-
-    public void setMoveSpeed(int moveSpeed) {
-        this.moveSpeed = moveSpeed;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
+    void setHp(int hp);
+    void setDamage(int dps);
+    void setRange(int range);
+    void setPosX(int posX);
+    void setPosY(int posY);
+    void setMoveSpeed(int moveSpeed);
+    void setSize(int size);
+    void setAlive(boolean isAlive);
+    void setPos(Jaylib.Vector2 position);
+    void setColor(Raylib.Color color);
 }
-
