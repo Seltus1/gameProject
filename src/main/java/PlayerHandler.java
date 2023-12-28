@@ -24,7 +24,8 @@ public class PlayerHandler {
     public void enemyCollision(EnemyHandler enemy){
         ArrayList<Enemy> enemyList = enemy.getEnemyList();
         for (int i = 0; i < enemyList.size(); i++) {
-            if (CheckCollisionCircles(player.getPos(),player.getSize(),enemyList.get(i).getPos(),enemyList.get(i).getSize())){
+            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
+            if (CheckCollisionCircles(playerPos,player.getSize(),enemyList.get(i).getPos(),enemyList.get(i).getSize())){
                 player.setHp((player.getHp()-enemyList.get(i).getDamage()));
             }
         }
@@ -46,7 +47,7 @@ public class PlayerHandler {
 
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
-        //enemyCollision(enemy);
+        enemyCollision(enemy);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;
