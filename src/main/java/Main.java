@@ -17,7 +17,7 @@ public class Main {
         // Create instances of necessary game objects
         Random rand = new Random();
         ProjectileHandler projectiles = new ProjectileHandler();
-        Player player1 = new Player(5, 12, 15, 20, 240, 5, 20, RED);
+        Player player1 = new Player(100, 12, 15, 20, 240, 5, 20, RED);
         EnemyHandler enemies = new EnemyHandler();
         PlayerHandler player = new PlayerHandler(player1);
 

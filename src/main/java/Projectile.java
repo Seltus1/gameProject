@@ -83,9 +83,6 @@ public class Projectile {
         yMoveSpeed = (yPct * shotSpeed) * yMul;
         actualPosX = enemyX;
         actualPosY = enemyY;
-//        this.yMoveSpeed = -2.890625;
-//        this.xMoveSpeed = 2.109375;
-
     }
 
     private void quadrentCheck(double num, double deno){

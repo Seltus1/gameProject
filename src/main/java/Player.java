@@ -5,8 +5,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.raylib.Jaylib.DARKGREEN;
 import static com.raylib.Jaylib.PURPLE;
 import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
 
 public class Player implements Creature{
     private int hp;
@@ -17,6 +19,8 @@ public class Player implements Creature{
     private int moveSpeed;
     private int size;
     private int projAngle;
+
+    private int initalHp;
     private boolean isAlive;
     private boolean canShoot;
     private boolean canMelee;
@@ -30,6 +34,7 @@ public class Player implements Creature{
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
+        initalHp = hp;
         this.damage = damage;
         this.range = range;
         this.posX = posX;
@@ -131,20 +136,21 @@ public class Player implements Creature{
     }
 
         public void update(ProjectileHandler projList){
-            // Move the character or player
             move();
-
-            // Create projectiles if conditions are met
             createProjectile(projList);
-
-            // Perform a melee attack if conditions are met
             melee();
-
-            // Update the sword's state
             sword.update();
-
-            // Draw a circle representing the character at its position with a size and color
             DrawCircle(posX, posY, size, color);
+            drawHp();
+        }
+
+        public void drawHp(){
+            double thing = (double) hp /  initalHp;
+            double width = thing * 150;
+            DrawRectangle(50, 1000, (int) width, 40, DARKGREEN);
+            DrawRectangleLines(50, 1000, 150, 40, BLACK);
+            String s = String.format("HP: %d", getHp());
+            DrawText(s, 50, 1000, 20, BLACK);
         }
 
     public boolean canShoot(){return canShoot;}

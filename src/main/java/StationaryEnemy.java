@@ -15,7 +15,8 @@ public class StationaryEnemy extends Enemy{
 
     public StationaryEnemy(int hp, int dps, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         super(hp, dps, range, posX, posY, moveSpeed, size, color);
-        canShoot = true;
+        canShoot = false;
+        cooldown(SHOOT_COOLDOWN, "shot");
     }
 
     public void shootPlayer(Player player, ProjectileHandler projList){
@@ -45,5 +46,4 @@ public class StationaryEnemy extends Enemy{
             executor.shutdown();
         });
     }
-
 }

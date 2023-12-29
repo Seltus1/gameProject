@@ -55,7 +55,6 @@ public class PlayerHandler {
         if (!isAlive){
             DrawText("you suck",300,600,20,RED);
         }
-        System.out.println(player.getHp());
     }
 
 }
