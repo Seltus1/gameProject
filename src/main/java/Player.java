@@ -19,7 +19,6 @@ public class Player implements Creature{
     private int moveSpeed;
     private int size;
     private int projAngle;
-
     private int initalHp;
     private boolean isAlive;
     private boolean canShoot;
@@ -29,8 +28,6 @@ public class Player implements Creature{
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
     private Melee sword = new Melee(5,100,posX, posY, posY);
-
-
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
@@ -47,7 +44,6 @@ public class Player implements Creature{
         this.canShoot = true;
         this.canMelee = true;
     }
-
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
             posY -= moveSpeed;
@@ -62,23 +58,6 @@ public class Player implements Creature{
             posX -= moveSpeed;
         }
     }
-
-    public void createProjectile(ProjectileHandler projList) {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && canShoot()) {
-            DrawCircle(posX, posY, 10, PURPLE);
-            setProjecitleDirection();
-            Projectile proj = new Projectile(10, posX, posY, 10, projAngle);
-            proj.setShotTage("Player");
-            projList.add(proj);
-            canShoot = false;
-            cooldown(SHOT_COOLDOWN, "shot");
-
-
-        }
-        // Check the bounds of projectiles in the ProjectileHandler (likely to handle removal of out-of-bounds projectiles)
-        projList.checkProjectilesBounds();
-    }
-
     public void melee() {
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
             sword.setPosX(posX);
@@ -96,7 +75,6 @@ public class Player implements Creature{
             cooldown(MELEE_COOLDOWN, "melee");
         }
     }
-
     private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
@@ -114,35 +92,12 @@ public class Player implements Creature{
             executor.shutdown();
         });
     }
-
-    public void setProjecitleDirection() {
-        if (IsKeyDown(KEY_W) && IsKeyDown(KEY_A)) {
-            projAngle = 315;
-        } else if (IsKeyDown(KEY_W) && IsKeyDown(KEY_D)) {
-            projAngle = 45;
-        } else if (IsKeyDown(KEY_D) && IsKeyDown(KEY_S)) {
-            projAngle = 135;
-        } else if (IsKeyDown(KEY_A) && IsKeyDown(KEY_S)) {
-            projAngle = 225;
-        } else if (IsKeyDown(KEY_W)) {
-            projAngle = 0;
-        } else if (IsKeyDown(KEY_D)) {
-            projAngle = 90;
-        } else if (IsKeyDown(KEY_S)) {
-            projAngle = 180;
-        } else if (IsKeyDown(KEY_A)) {
-            projAngle = 270;
-        }
-    }
-
         public void update(ProjectileHandler projList){
             move();
-            createProjectile(projList);
             melee();
             sword.update();
             DrawCircle(posX, posY, size, color);
         }
-
     public boolean canShoot(){return canShoot;}
 
     public boolean canMelee() {return canMelee;}

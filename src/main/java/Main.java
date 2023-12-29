@@ -10,6 +10,7 @@ public class Main {
 
         // Create a window with specified dimensions and title
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "testing game mechanics");
+        ToggleFullscreen();
 
         // Set the target frames per second (fps)
         SetTargetFPS(60);
@@ -23,6 +24,7 @@ public class Main {
 
 
         // Generate a random number of enemies
+        SetMouseCursor(3);
         int amountOfEnemies = rand.nextInt(8) + 5;
         enemies.addMultipleEnemies(amountOfEnemies);
         int amountOfStationaryEnemy = rand.nextInt(8) + 3;
@@ -34,8 +36,8 @@ public class Main {
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
-
             // Update the player and enemies
+
             player1.update(projectiles);
             player.update(enemies,projectiles);
             enemies.update(projectiles, player1);
@@ -54,4 +56,5 @@ public class Main {
         // Close the window when the loop exits (window closed or Esc pressed)
         CloseWindow();
     }
+
 }

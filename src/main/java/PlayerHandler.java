@@ -1,7 +1,9 @@
 import com.raylib.Jaylib;
-import com.raylib.Raylib;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
@@ -43,6 +45,19 @@ public class PlayerHandler {
             }
         }
     }
+    public void shoot(ProjectileHandler projList){
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
+            int playerXPos = GetMouseX();
+            int playerYPos = GetMouseY();
+            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos);
+            shot.setShotTag("Player");
+            shot.vectorCalculations();
+            projList.add(shot);
+            player.setCanShoot(false);
+            cooldown(player.getSHOT_COOLDOWN(), "shot");
+        }
+        projList.checkProjectilesBounds();
+    }
 
     public void drawHp(){
         double thing = (double) player.getHp() /  player.getInitalHp();
@@ -54,9 +69,24 @@ public class PlayerHandler {
     }
 
 
+    private void cooldown(int cooldown, String type){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.submit(() -> {
+            try {
+                TimeUnit.MILLISECONDS.sleep(cooldown);
+            } catch (InterruptedException e) {
+                System.out.println("Woah, something went wrong! (check cooldown method)");
+            }
+            if(type.equals("shot")){
+                player.setCanShoot(true);
+            }
+            executor.shutdown();
+        });
+    }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
         enemyCollision(enemy);
+        shoot(projList);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;

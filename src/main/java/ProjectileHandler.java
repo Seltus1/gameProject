@@ -14,7 +14,7 @@ public class ProjectileHandler extends ListHandler{
                 removeIndex(i);
             }
             if (current.getShotTag().equals("Player")){
-                current.move();
+                current.updateMove();
             }
             else{
                 current.updateMove();

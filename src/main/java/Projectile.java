@@ -51,21 +51,7 @@ public class Projectile {
     public boolean isInBounds() {
         return isInBounds;
     }
-    public void move(){
-        if(angleOfMovement == 45 || angleOfMovement == 90 || angleOfMovement == 135 ){
-            posX += shotSpeed;
-        }
-        if (angleOfMovement == 315 || angleOfMovement == 270 || angleOfMovement == 225) {
-            posX -=shotSpeed;
-        }
-        if(angleOfMovement == 315 || angleOfMovement == 0 || angleOfMovement == 45){
-            posY -=shotSpeed;
-        }
-        if(angleOfMovement == 225 || angleOfMovement == 180 || angleOfMovement == 135){
-            posY +=shotSpeed;
-        }
-        update();
-    }
+
     public void vectorCalculations(){
         double enemyX = posX, enemyY = posY;
         double playerX = finalX, playerY = finalY;
@@ -73,9 +59,6 @@ public class Projectile {
         double y = playerY - enemyY;
         double x = playerX - enemyX;
         quadrentCheck(y, x);
-        double slope = (y / x) * slopeMul;
-        double step1 = slope * enemyX; // m * x
-        double b = enemyY + (step1 * -1); // brining the step one to the y
         double totalDistance = (Math.abs(playerX - enemyX) + Math.abs(playerY - enemyY));
         double xPct = Math.abs(playerX - enemyX) / totalDistance;
         double yPct = 1 - xPct;
@@ -108,17 +91,12 @@ public class Projectile {
         }
     }
 
-
     public void updateMove(){
         this.actualPosY += yMoveSpeed;
         this.posY = (int) actualPosY;
         this.actualPosX += xMoveSpeed;
         this.posX = (int) actualPosX;
         update();
-    }
-
-    private void shotError(double ShotError){
-
     }
     public void boundsCheck(){
         if(posX < 0 || posX > GetScreenWidth()){
@@ -152,7 +130,7 @@ public class Projectile {
     public double getXMoveSpeed() {return xMoveSpeed;}
     public double getYMoveSpeed() {return yMoveSpeed;}
 
-    public void setShotTage(String tag){
+    public void setShotTag(String tag){
         shotTag = tag;
     }
 

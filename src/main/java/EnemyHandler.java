@@ -18,12 +18,13 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < amount; i++) {
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
-            int size = rand.nextInt(20,46);
+            int size = rand.nextInt(26) + 20;
             Enemy enemy = new Enemy(1, 5, 12, Xpos, Ypos, 5, size, PURPLE);
             add(enemy);
         }
         return true;
     }
+
 
     public boolean addMultipleStationaryEnemy(int amount){
         for (int i = 0; i < amount; i++) {
