@@ -44,6 +44,15 @@ public class PlayerHandler {
         }
     }
 
+    public void drawHp(){
+        double thing = (double) player.getHp() /  player.getInitalHp();
+        double width = thing * 150;
+        DrawRectangle(50, 1000, (int) width, 40, DARKGREEN);
+        DrawRectangleLines(50, 1000, 150, 40, BLACK);
+        String s = String.format("HP: %d", player.getHp());
+        DrawText(s, 50, 1000, 20, BLACK);
+    }
+
 
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
@@ -55,6 +64,7 @@ public class PlayerHandler {
         if (!isAlive){
             DrawText("you suck",300,600,20,RED);
         }
+        drawHp();
     }
 
 }

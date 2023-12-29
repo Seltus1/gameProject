@@ -141,16 +141,6 @@ public class Player implements Creature{
             melee();
             sword.update();
             DrawCircle(posX, posY, size, color);
-            drawHp();
-        }
-
-        public void drawHp(){
-            double thing = (double) hp /  initalHp;
-            double width = thing * 150;
-            DrawRectangle(50, 1000, (int) width, 40, DARKGREEN);
-            DrawRectangleLines(50, 1000, 150, 40, BLACK);
-            String s = String.format("HP: %d", getHp());
-            DrawText(s, 50, 1000, 20, BLACK);
         }
 
     public boolean canShoot(){return canShoot;}
@@ -255,5 +245,49 @@ public class Player implements Creature{
     @Override
     public void setPos(Jaylib.Vector2 pos) {
         this.pos = pos;
+    }
+
+    public int getProjAngle() {
+        return projAngle;
+    }
+
+    public void setProjAngle(int projAngle) {
+        this.projAngle = projAngle;
+    }
+
+    public int getInitalHp() {
+        return initalHp;
+    }
+
+    public void setInitalHp(int initalHp) {
+        this.initalHp = initalHp;
+    }
+
+    public boolean isCanShoot() {
+        return canShoot;
+    }
+
+    public void setCanShoot(boolean canShoot) {
+        this.canShoot = canShoot;
+    }
+
+    public boolean isCanMelee() {
+        return canMelee;
+    }
+
+    public void setCanMelee(boolean canMelee) {
+        this.canMelee = canMelee;
+    }
+
+    public int getSHOT_COOLDOWN() {
+        return SHOT_COOLDOWN;
+    }
+
+    public Melee getSword() {
+        return sword;
+    }
+
+    public void setSword(Melee sword) {
+        this.sword = sword;
     }
 }
