@@ -13,8 +13,8 @@ public class StationaryEnemy extends Enemy{
     private Random rand = new Random();
     private final int SHOOT_COOLDOWN = rand.nextInt(10000) + 2000;
 
-    public StationaryEnemy(int hp, int dps, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
-        super(hp, dps, range, posX, posY, moveSpeed, size, color);
+    public StationaryEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+        super(hp, dps, posX, posY, moveSpeed, size, color);
         canShoot = false;
         cooldown(SHOOT_COOLDOWN, "shot");
     }

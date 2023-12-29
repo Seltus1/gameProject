@@ -6,9 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 //TEST
 //TESTING AGAIN
-public class Melee {
-    private int attackSpeed;
-    private int range;
+public class MeleeAttack {
     private int damage;
     private int posX;
     private int posY;
@@ -16,9 +14,7 @@ public class Melee {
     private int lifeTime;
 
 
-    public Melee(int attackSpeed, int range, int damage, int posX, int posY){
-        this.attackSpeed = attackSpeed;
-        this.range = range;
+    public MeleeAttack(int damage, int posX, int posY){
         this.damage = damage;
         this.posX = posX;
         this.posY = posY;
@@ -51,7 +47,7 @@ public class Melee {
 
     public void update(){
         if(draw) {
-            DrawRectangle(this.posX, this.posY, 10, range, BLACK);
+            DrawRectangle(this.posX, this.posY, 10, 5, BLACK);
         }
     }
 }

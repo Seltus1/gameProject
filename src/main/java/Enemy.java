@@ -18,7 +18,7 @@ public class Enemy implements Creature {
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
 
-    public Enemy(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
         this.damage = damage;
         this.range = range;

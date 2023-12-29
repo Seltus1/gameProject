@@ -1,16 +1,17 @@
 import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
-import com.raylib.Jaylib;
+
 import com.raylib.Raylib;
 
-public class MovableEnemy extends Enemy{
+public class MeleeEnemy extends Enemy{
 
     private int xMul;
     private int yMul;
 
 
-    public MovableEnemy(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
-        super(hp, damage, range, posX, posY, moveSpeed, size, color);
+
+    public MeleeEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
+        super(hp, damage, posX, posY, moveSpeed, size, color);
+        setRange(5);
     }
 
     public void followPlayer(Player player){
@@ -23,8 +24,8 @@ public class MovableEnemy extends Enemy{
         quadrentCheck(y, x);
         double totalDistance = (Math.abs(playerXPos - myXPos) + Math.abs(playerYPos - myYPos));
         double xPct = Math.abs(playerXPos - myXPos) / totalDistance;
+
         double yPct = 1 - xPct;
-        int moveSpeed = getMoveSpeed();
         double xMoveSpeed = (xPct * getMoveSpeed()) * xMul;
         double yMoveSpeed = (yPct * getMoveSpeed()) * yMul;
         double updateX = myXPos + xMoveSpeed;
@@ -50,6 +51,18 @@ public class MovableEnemy extends Enemy{
         else{
             xMul = -1;
             yMul = 1;
+        }
+    }
+    private int calculateDistance(Player player){
+        int y = player.getPosY() - getPosY();
+        int x = player.getPosX() - getPosX();
+        int totalDist = Math.abs(x) + Math.abs(y);
+        return totalDist;
+    }
+    public void attack(Player player){
+        if(calculateDistance(player) <= getRange()){
+            MeleeAttack melee = new MeleeAttack(getDamage(),getPosX(),getPosY());
+            melee.attack();
         }
     }
 }

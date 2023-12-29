@@ -14,36 +14,25 @@ public class EnemyHandler extends ListHandler {
         super();
     }
 
-    public boolean addMultipleEnemies(int amount) {
+    public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int Xpos = rand.nextInt(1920);
-            int Ypos = rand.nextInt(1080);
-            int size = rand.nextInt(26) + 20;
-            Enemy enemy = new Enemy(1, 5, 12, Xpos, Ypos, 5, size, PURPLE);
-            add(enemy);
-        }
-        return true;
-    }
-
-
-    public boolean addMultipleStationaryEnemy(int amount){
-        for (int i = 0; i < amount; i++) {
+//            int randEnemy = rand.nextInt(2) + 1;
+            int randEnemy = 3;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = rand.nextInt(46) + 5;
-            StationaryEnemy enemy = new StationaryEnemy(1, 0, 10000, Xpos, Ypos,0, size, GREEN);
-            add(enemy);
-        }
-        return true;
-    }
-
-    public boolean addMultipleMovableEnemy(int amount){
-        for (int i = 0; i < amount; i++) {
-            int Xpos = rand.nextInt(1920);
-            int Ypos = rand.nextInt(1080);
-            int size = rand.nextInt(46) + 5;
-            MovableEnemy enemy = new MovableEnemy(1, 5, 10000, Xpos, Ypos,3, size, DARKBLUE);
-            add(enemy);
+            if(randEnemy == 1){
+                StationaryEnemy enemy = new StationaryEnemy(1, 0, 10000, Xpos, Ypos, size, GREEN);
+                add(enemy);
+            }
+            else if(randEnemy == 2){
+                MeleeEnemy enemy = new MeleeEnemy(1, 0, 10000, Xpos, Ypos, size, BLUE);
+                add(enemy);
+            }
+            else if(randEnemy == 3){
+                FireMeleeEnemy enemy = new FireMeleeEnemy(1, 0, 10000, Xpos, Ypos, size, ORANGE);
+                add(enemy);
+            }
         }
         return true;
     }
@@ -58,9 +47,14 @@ public class EnemyHandler extends ListHandler {
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
                 enemy.shootPlayer(player, projList);
             }
-            if (get(i) instanceof MovableEnemy){
-                MovableEnemy enemy = (MovableEnemy) get(i);
+            if (get(i) instanceof MeleeEnemy){
+                MeleeEnemy enemy = (MeleeEnemy) get(i);
                 enemy.followPlayer(player);
+            }
+            if (get(i) instanceof  FireMeleeEnemy){
+                FireMeleeEnemy enemy = (FireMeleeEnemy) get(i);
+                enemy.followPlayer(player);
+                enemy.attack(player);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);

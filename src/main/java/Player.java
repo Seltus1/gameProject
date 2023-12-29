@@ -5,10 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static com.raylib.Jaylib.DARKGREEN;
-import static com.raylib.Jaylib.PURPLE;
 import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
 
 public class Player implements Creature{
     private int hp;
@@ -27,7 +24,7 @@ public class Player implements Creature{
     private Jaylib.Vector2 pos;
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
-    private Melee sword = new Melee(5,100,posX, posY, posY);
+    private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
@@ -238,11 +235,11 @@ public class Player implements Creature{
         return SHOT_COOLDOWN;
     }
 
-    public Melee getSword() {
+    public MeleeAttack getSword() {
         return sword;
     }
 
-    public void setSword(Melee sword) {
+    public void setSword(MeleeAttack sword) {
         this.sword = sword;
     }
 }
