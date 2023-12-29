@@ -10,7 +10,7 @@ public class Main {
 
         // Create a window with specified dimensions and title
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "testing game mechanics");
-        ToggleFullscreen();
+//        ToggleFullscreen();
 
         // Set the target frames per second (fps)
         SetTargetFPS(60);
@@ -35,13 +35,13 @@ public class Main {
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
-            if(game.isIsinMenu()){
-                game.update();
-            }
-            if(game.isPlaying()) {
+//            if(game.isIsinMenu()){
+//                game.update();
+//            }
+//            if(game.isPlaying()) {
                 // Update the player and enemies
 
-                player1.update(projectiles);
+                player1.update(projectiles, player1);
                 player.update(enemies, projectiles);
                 enemies.update(projectiles, player1);
                 if (enemies.size() == 0) {
@@ -49,7 +49,7 @@ public class Main {
                 }
 
                 // Display the current frames per second (FPS)
-            }
+
                 DrawFPS(100, 100);
 
                 // End drawing

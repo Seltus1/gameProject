@@ -22,15 +22,15 @@ public class EnemyHandler extends ListHandler {
             int Ypos = rand.nextInt(1080);
             int size = rand.nextInt(46) + 5;
             if(randEnemy == 1){
-                StationaryEnemy enemy = new StationaryEnemy(1, 0, 10000, Xpos, Ypos, size, GREEN);
+                StationaryEnemy enemy = new StationaryEnemy(1, 0, Xpos, Ypos, 0, size, GREEN);
                 add(enemy);
             }
             else if(randEnemy == 2){
-                MeleeEnemy enemy = new MeleeEnemy(1, 0, 10000, Xpos, Ypos, size, BLUE);
+                MeleeEnemy enemy = new MeleeEnemy(1, 0, Xpos, Ypos, 5, size, BLUE);
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireMeleeEnemy enemy = new FireMeleeEnemy(1, 0, 10000, Xpos, Ypos, size, ORANGE);
+                FireMeleeEnemy enemy = new FireMeleeEnemy(1, 5, Xpos, Ypos,2, size, ORANGE);
                 add(enemy);
             }
         }
@@ -47,7 +47,7 @@ public class EnemyHandler extends ListHandler {
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
                 enemy.shootPlayer(player, projList);
             }
-            if (get(i) instanceof MeleeEnemy){
+            else if (get(i) instanceof MeleeEnemy){
                 MeleeEnemy enemy = (MeleeEnemy) get(i);
                 enemy.followPlayer(player);
             }

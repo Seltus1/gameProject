@@ -55,13 +55,13 @@ public class Player implements Creature{
             posX -= moveSpeed;
         }
     }
-    public void melee() {
+    public void melee(Player player) {
         if (IsKeyDown(KEY_SPACE) && canMelee()) {
             sword.setPosX(posX);
             sword.setPosY(posY);
 
             // Initiate the sword attack
-            sword.attack();
+            sword.attack(player);
 
             // Disable further melee attacks until cooldown is over
             canMelee = false;
@@ -89,9 +89,9 @@ public class Player implements Creature{
             executor.shutdown();
         });
     }
-        public void update(ProjectileHandler projList){
+        public void update(ProjectileHandler projList, Player player){
             move();
-            melee();
+            melee(player);
             sword.update();
             DrawCircle(posX, posY, size, color);
         }

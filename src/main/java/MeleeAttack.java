@@ -21,7 +21,8 @@ public class MeleeAttack {
         lifeTime = 10000;
         draw = false;
     }
-    public void attack(){
+    public void attack(Player player){
+        player.setHp(player.getHp() - damage);
         draw = true;
         drawingTime();
     }
