@@ -21,6 +21,7 @@ public class Main {
         Player player1 = new Player(100, 12, 15, 20, 240, 5, 20, RED);
         EnemyHandler enemies = new EnemyHandler();
         PlayerHandler player = new PlayerHandler(player1);
+        GameHandler game = new GameHandler();
 
 
         // Generate a random number of enemies
@@ -36,21 +37,26 @@ public class Main {
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
-            // Update the player and enemies
-
-            player1.update(projectiles);
-            player.update(enemies,projectiles);
-            enemies.update(projectiles, player1);
-            if (enemies.size() == 0){
-                enemies.addMultipleStationaryEnemy(amountOfStationaryEnemy);
-                enemies.addMultipleMovableEnemy(amountOfMovableEnemies);
+            if(game.isIsinMenu()){
+                game.update();
             }
+            if(game.isPlaying()) {
+                // Update the player and enemies
 
-            // Display the current frames per second (FPS)
-            DrawFPS(100, 100);
+                player1.update(projectiles);
+                player.update(enemies, projectiles);
+                enemies.update(projectiles, player1);
+                if (enemies.size() == 0) {
+                    enemies.addMultipleStationaryEnemy(amountOfStationaryEnemy);
+                    enemies.addMultipleMovableEnemy(amountOfMovableEnemies);
+                }
 
-            // End drawing
-            EndDrawing();
+                // Display the current frames per second (FPS)
+            }
+                DrawFPS(100, 100);
+
+                // End drawing
+                EndDrawing();
         }
 
         // Close the window when the loop exits (window closed or Esc pressed)
