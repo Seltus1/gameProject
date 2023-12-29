@@ -34,7 +34,8 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-            if (CheckCollisionCircles(pos, size, currPos, currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
+            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(posX, posY);
+            if (CheckCollisionCircles(enemyPos, size, currPos, currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
                 projList.removeIndex(i);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {

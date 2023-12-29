@@ -25,8 +25,8 @@ public class Main {
 
         // Generate a random number of enemies
         SetMouseCursor(3);
-        int amountOfEnemies = rand.nextInt(8) + 5;
-        enemies.addMultipleEnemies(amountOfEnemies);
+        int amountOfMovableEnemies = rand.nextInt(8) + 5;
+        enemies.addMultipleMovableEnemy(amountOfMovableEnemies);
         int amountOfStationaryEnemy = rand.nextInt(8) + 3;
         enemies.addMultipleStationaryEnemy(amountOfStationaryEnemy);
 
@@ -43,7 +43,7 @@ public class Main {
             enemies.update(projectiles, player1);
             if (enemies.size() == 0){
                 enemies.addMultipleStationaryEnemy(amountOfStationaryEnemy);
-                enemies.addMultipleEnemies(amountOfEnemies);
+                enemies.addMultipleMovableEnemy(amountOfMovableEnemies);
             }
 
             // Display the current frames per second (FPS)

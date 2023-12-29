@@ -37,6 +37,17 @@ public class EnemyHandler extends ListHandler {
         return true;
     }
 
+    public boolean addMultipleMovableEnemy(int amount){
+        for (int i = 0; i < amount; i++) {
+            int Xpos = rand.nextInt(1920);
+            int Ypos = rand.nextInt(1080);
+            int size = rand.nextInt(46) + 5;
+            MovableEnemy enemy = new MovableEnemy(1, 5, 10000, Xpos, Ypos,3, size, DARKBLUE);
+            add(enemy);
+        }
+        return true;
+    }
+
     public ArrayList<Enemy> getEnemyList(){
         return getList();
     }
@@ -46,6 +57,10 @@ public class EnemyHandler extends ListHandler {
             if (get(i) instanceof StationaryEnemy){
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
                 enemy.shootPlayer(player, projList);
+            }
+            if (get(i) instanceof MovableEnemy){
+                MovableEnemy enemy = (MovableEnemy) get(i);
+                enemy.followPlayer(player);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
