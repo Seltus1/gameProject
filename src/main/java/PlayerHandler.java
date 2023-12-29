@@ -17,6 +17,14 @@ public class PlayerHandler {
         isAlive = true;
     }
 
+    public void playerIframe(int iFrame){
+        try {
+            Thread.sleep(iFrame);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * A primitive method that checks for all enemies for collision
      * Soon, implement a circle that is approx 2x the size of our players and only check for collisions when an enemy
@@ -27,7 +35,8 @@ public class PlayerHandler {
         ArrayList<Enemy> enemyList = enemy.getEnemyList();
         for (int i = 0; i < enemyList.size(); i++) {
             Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
-            if (CheckCollisionCircles(playerPos,player.getSize(),enemyList.get(i).getPos(),enemyList.get(i).getSize())){
+            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
+            if (CheckCollisionCircles(playerPos,player.getSize(),enemyPos,enemyList.get(i).getSize())){
                 player.setHp((player.getHp()-enemyList.get(i).getDamage()));
             }
         }

@@ -12,6 +12,8 @@ public class Enemy implements Creature {
     private int posY;
     private int moveSpeed;
     private int size;
+    private boolean canMelee;
+    private boolean canRange;
     private boolean isAlive;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
@@ -139,5 +141,21 @@ public class Enemy implements Creature {
     @Override
     public void setPos(Jaylib.Vector2 pos) {
         this.pos = pos;
+    }
+
+    public boolean isCanRange() {
+        return canRange;
+    }
+
+    public void setCanRange(boolean canRange) {
+        this.canRange = canRange;
+    }
+
+    public boolean isCanMelee() {
+        return canMelee;
+    }
+
+    public void setCanMelee(boolean canMelee) {
+        this.canMelee = canMelee;
     }
 }
