@@ -93,9 +93,9 @@ public class Projectile {
 
     public void updateMove(){
         this.actualPosY += yMoveSpeed;
-        this.posY = (int) actualPosY;
+        this.posY = (int) Math.round(actualPosY);
         this.actualPosX += xMoveSpeed;
-        this.posX = (int) actualPosX;
+        this.posX = (int) Math.round(actualPosX);
         update();
     }
     public void boundsCheck(){

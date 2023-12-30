@@ -6,32 +6,37 @@ public class MeleeEnemy extends Enemy{
 
     private int xMul;
     private int yMul;
+    private double actualXPos;
+    private double actualYPos;
 
 
 
     public MeleeEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
         super(hp, damage, posX, posY, moveSpeed, size, color);
         setRange(5);
+        setActualXPos(getPosX());
+        setActualYPos(getPosY());
     }
 
     public void followPlayer(Player player){
         double playerXPos = player.getPosX();
         double playerYPos = player.getPosY();
-        double myXPos = getPosX();
-        double myYPos = getPosY();
+        double myXPos = getActualXPos();
+        double myYPos = getActualYPos();
         double y = playerYPos - myYPos;
         double x = playerXPos - myXPos;
         quadrentCheck(y, x);
         double totalDistance = (Math.abs(playerXPos - myXPos) + Math.abs(playerYPos - myYPos));
         double xPct = Math.abs(playerXPos - myXPos) / totalDistance;
-
         double yPct = 1 - xPct;
         double xMoveSpeed = (xPct * getMoveSpeed()) * xMul;
         double yMoveSpeed = (yPct * getMoveSpeed()) * yMul;
         double updateX = myXPos + xMoveSpeed;
         double updateY = myYPos + yMoveSpeed;
-        setPosX( (int) updateX);
-        setPosY( (int) updateY);
+        setActualXPos(updateX);
+        setActualYPos(updateY);
+        setPosX((int) Math.round(updateX));
+        setPosY((int) Math.round(updateY));
         DrawCircle(getPosX(), getPosY(), getSize(), getColor());
     }
 
@@ -48,7 +53,27 @@ public class MeleeEnemy extends Enemy{
             xMul = 1;
             yMul = 1;
         }
-        else{
+        else if (xValues == 0){
+            xMul = 1;
+
+        }
+        else if (yValues == 0 && xValues > 0){
+            xMul = 1;
+            yMul = 0;
+        }
+        else if (yValues == 0 && xValues < 0){
+            xMul = -1;
+            yMul = 0;
+        }
+        else if (xValues == 0 && yValues > 0){
+            yMul = 1;
+            xMul = 0;
+        }
+        else if (xValues == 0 && yValues < 0){
+            yMul = -1;
+            xMul = 0;
+        }
+        else {
             xMul = -1;
             yMul = 1;
         }
@@ -65,5 +90,21 @@ public class MeleeEnemy extends Enemy{
             MeleeAttack melee = new MeleeAttack(getDamage(),getPosX(),getPosY());
             melee.attack(player);
         }
+    }
+
+    public double getActualXPos() {
+        return actualXPos;
+    }
+
+    public void setActualXPos(double actualXPos) {
+        this.actualXPos = actualXPos;
+    }
+
+    public double getActualYPos() {
+        return actualYPos;
+    }
+
+    public void setActualYPos(double actualYPos) {
+        this.actualYPos = actualYPos;
     }
 }
