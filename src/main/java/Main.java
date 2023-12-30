@@ -45,7 +45,7 @@ public class Main {
                 player.update(enemies, projectiles);
                 enemies.update(projectiles, player1);
                 if (enemies.size() == 0) {
-                    enemies.addMultipleEnemies(1);
+                    enemies.addMultipleEnemies(amountOfEnemy);
                 }
 
                 // Display the current frames per second (FPS)

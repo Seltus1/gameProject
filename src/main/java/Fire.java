@@ -1,55 +1,55 @@
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class Fire {
     private String currency;
     private int numCoins;
     private int burnTime;
-    private int burnTickTime;
-    private boolean shortTickTimer;
+
     private int burnDamage;
-    private long lastAttackTime = 0;
-    private boolean isBurning = false;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-    private Timer timer = new Timer();
+    private int burnCooldown;
+    private int burnCountdown;
+    private int the2ndcounterthe2ndeditionnumber2;
+    private boolean isInRange;
+
+    public boolean isInRange() {
+        return isInRange;
+    }
+
+    public void setInRange(boolean inRange) {
+        isInRange = inRange;
+    }
 
     public Fire(){
         currency = "Flame";
         numCoins = 10;
-        burnTickTime = 500;
-        burnDamage = 10;
-        burnTime = 2000;
-        shortTickTimer = true;
+        burnDamage = 1;
+        burnTime = 3;
+        isInRange = false;
     }
 
     public void attack(Player player) {
-        long currentTime = System.currentTimeMillis();
-
-        if (!isBurning && (currentTime - lastAttackTime) >= burnTime) {
-            isBurning = true;
-            lastAttackTime = currentTime;
-
-            Executors.newSingleThreadExecutor().submit(() -> {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(burnTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } finally {
-                    isBurning = false;
-                }
-            });
+        burnCooldown++;
+        if((burnCooldown + 1) % 31 == 0 && burnCountdown == 0){
+            burnCountdown = burnTime;
+            player.setOnFire(true);
+            burnCooldown = 0;
         }
+//        System.out.println("attack" + burnCooldown);
+    }
 
-        if (shortTickTimer && isBurning && (currentTime - lastAttackTime) >= burnTickTime) {
-            player.setHp(player.getHp() - burnDamage);
-            lastAttackTime = currentTime;
+    public void pushFireDamage(Player player) {
+        if (player.isOnFire()){
+            the2ndcounterthe2ndeditionnumber2++;
+            if((the2ndcounterthe2ndeditionnumber2 + 1) % 15 == 0) {
+                player.setHp(player.getHp() - burnDamage);
+                if(!isInRange) {
+                    burnCountdown--;
+                }
+            }
+        }
+        if(burnCountdown == 0){
+            player.setOnFire(false);
         }
     }
+
     public String getCurrency() {
         return currency;
     }
@@ -67,6 +67,14 @@ public class Fire {
 
     public int getBurnTime() {
         return burnTime;
+    }
+
+    public int getBurnCountdown() {
+        return burnCountdown;
+    }
+
+    public void setBurnCountdown(int burnCountdown) {
+        this.burnCountdown = burnCountdown;
     }
 
     public void setBurnTime(int burnTime) {

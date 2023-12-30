@@ -2,20 +2,21 @@ import static com.raylib.Raylib.*;
 
 import com.raylib.Raylib;
 
-public class MeleeEnemy extends Enemy{
+public class BrawlerEnemy extends Enemy{
 
     private int xMul;
     private int yMul;
     private double actualXPos;
     private double actualYPos;
+    private MeleeAttack melee;
 
 
-
-    public MeleeEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
+    public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
         super(hp, damage, posX, posY, moveSpeed, size, color);
-        setRange(5);
+        setRange(100);
         setActualXPos(getPosX());
         setActualYPos(getPosY());
+        melee = new MeleeAttack(getDamage(),getPosX(),getPosY());
     }
 
     public void followPlayer(Player player){
@@ -78,7 +79,7 @@ public class MeleeEnemy extends Enemy{
             yMul = 1;
         }
     }
-    private int calculateDistance(Player player){
+    public int calculateDistance(Player player){
         int y = player.getPosY() - getPosY();
         int x = player.getPosX() - getPosX();
         int totalDist = Math.abs(x) + Math.abs(y);
@@ -86,9 +87,8 @@ public class MeleeEnemy extends Enemy{
     }
     public void attack(Player player){
         int distance = calculateDistance(player);
-        if(distance >= getRange()){
-            MeleeAttack melee = new MeleeAttack(getDamage(),getPosX(),getPosY());
-            melee.attack(player);
+        if(distance <= getRange()){
+            melee.attack(player, 31);
         }
     }
 

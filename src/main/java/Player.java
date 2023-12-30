@@ -8,23 +8,46 @@ import java.util.concurrent.TimeUnit;
 import static com.raylib.Raylib.*;
 
 public class Player implements Creature{
+//    HP
+
     private int hp;
+    private int initalHp;
+
+//    DMG
+
     private int damage;
     private int range;
+
+//    POS
+
     private int posX;
     private int posY;
+    private Jaylib.Vector2 pos;
+
+//    Move
+
     private int moveSpeed;
+
+//    size/color
+
     private int size;
-    private int projAngle;
-    private int initalHp;
+    private Raylib.Color color;
+
+
+//    Player states
     private boolean isAlive;
+    private boolean isOnFire;
+
+//    cooldowns
+
     private boolean canShoot;
     private boolean canMelee;
-    private Raylib.Color color;
-    private Jaylib.Vector2 pos;
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
+
+//    instance of other stuffs
     private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
+
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
@@ -40,6 +63,7 @@ public class Player implements Creature{
         this.pos = new Jaylib.Vector2(posX,posY);;
         this.canShoot = true;
         this.canMelee = true;
+        isOnFire = false;
     }
     public void move() {
         if (IsKeyDown(KEY_W) && posY > 3 + size) {
@@ -61,7 +85,7 @@ public class Player implements Creature{
             sword.setPosY(posY);
 
             // Initiate the sword attack
-            sword.attack(player);
+            sword.attack(player, 31);
 
             // Disable further melee attacks until cooldown is over
             canMelee = false;
@@ -199,14 +223,6 @@ public class Player implements Creature{
         this.pos = pos;
     }
 
-    public int getProjAngle() {
-        return projAngle;
-    }
-
-    public void setProjAngle(int projAngle) {
-        this.projAngle = projAngle;
-    }
-
     public int getInitalHp() {
         return initalHp;
     }
@@ -241,5 +257,12 @@ public class Player implements Creature{
 
     public void setSword(MeleeAttack sword) {
         this.sword = sword;
+    }
+    public boolean isOnFire() {
+        return isOnFire;
+    }
+
+    public void setOnFire(boolean onFire) {
+        isOnFire = onFire;
     }
 }

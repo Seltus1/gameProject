@@ -12,9 +12,7 @@ public class MeleeAttack {
     private int posY;
     private boolean draw;
     private int lifeTime;
-    private int cooldown;
-    private boolean isMelee;
-    private boolean shortTick;
+    private int cooldown = 0;
 
 
     public MeleeAttack(int damage, int posX, int posY){
@@ -23,20 +21,16 @@ public class MeleeAttack {
         this.posY = posY;
         lifeTime = 1000;
         draw = false;
-        isMelee = false;
-        cooldown = 10000;
-        shortTick = true;
+        cooldown = 0;
     }
-    public void attack(Player player){
-        if(!(isMelee)) {
-            cooldown(cooldown, "else");
-            if (shortTick) {
-                shortTick = false;
-                draw = true;
-                cooldown(lifeTime, "draw");
-            }
+    public void attack(Player player, int time){
+        cooldown++;
+        if(cooldown  % time == 0){
+            player.setHp(player.getHp() - damage);
+            cooldown = 0;
         }
-            update();
+
+        update();
 
     }
     public void setPosX(int posX){
@@ -45,24 +39,18 @@ public class MeleeAttack {
     public void setPosY(int posY){
         this.posY = posY;
     }
+
     public void cooldown(int cooldown, String type) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
         executor.submit(() -> {
             try {
-                isMelee = true;
                 TimeUnit.MILLISECONDS.sleep(cooldown);
             } catch (InterruptedException e) {
                 System.out.println("got interrupted!");
             }
-            if(type.equals("draw")){
-                draw = false;
-                shortTick = true;
-            }
-            else{
-                isMelee = false;
-            }
 
+            draw = false;
             executor.shutdown();
         });
     }

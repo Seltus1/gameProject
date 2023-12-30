@@ -32,14 +32,14 @@ public class PlayerHandler {
      * @param
      */
     public void enemyCollision(EnemyHandler enemy){
-        ArrayList<Enemy> enemyList = enemy.getEnemyList();
-        for (int i = 0; i < enemyList.size(); i++) {
-            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
-            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
-            if (CheckCollisionCircles(playerPos,player.getSize(),enemyPos,enemyList.get(i).getSize())){
-                player.setHp((player.getHp()-enemyList.get(i).getDamage()));
-            }
-        }
+//        ArrayList<Enemy> enemyList = enemy.getEnemyList();
+//        for (int i = 0; i < enemyList.size(); i++) {
+//            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
+//            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
+//            if (CheckCollisionCircles(playerPos,player.getSize(),enemyPos,enemyList.get(i).getSize())){
+//                player.setHp((player.getHp()-enemyList.get(i).getDamage()));
+//            }
+//        }
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {
