@@ -6,7 +6,7 @@ public class Fire {
     private int burnDamage;
     private int burnCooldown;
     private int burnCountdown;
-    private int the2ndcounterthe2ndeditionnumber2;
+    private int burnCounter;
     private boolean isInRange;
 
     public boolean isInRange() {
@@ -21,27 +21,34 @@ public class Fire {
         currency = "Flame";
         numCoins = 10;
         burnDamage = 1;
-        burnTime = 3;
+        burnTime = 10;
         isInRange = false;
     }
 
     public void attack(Player player) {
         burnCooldown++;
         if((burnCooldown + 1) % 31 == 0 && burnCountdown == 0){
-            burnCountdown = burnTime;
             player.setOnFire(true);
             burnCooldown = 0;
+            burnCountdown++;
         }
-//        System.out.println("attack" + burnCooldown);
+        if(!(burnCountdown == 0)){
+            player.setOnFire(true);
+        }
     }
 
     public void pushFireDamage(Player player) {
+        player.setIntialBurn(burnTime);
+        player.setBurnDmgCount(burnCountdown);
         if (player.isOnFire()){
-            the2ndcounterthe2ndeditionnumber2++;
-            if((the2ndcounterthe2ndeditionnumber2 + 1) % 15 == 0) {
+            burnCounter++;
+            if((burnCounter + 1) % 15 == 0) {
                 player.setHp(player.getHp() - burnDamage);
                 if(!isInRange) {
                     burnCountdown--;
+                }
+                else if(isInRange && burnCountdown < burnTime){
+                    burnCountdown++;
                 }
             }
         }

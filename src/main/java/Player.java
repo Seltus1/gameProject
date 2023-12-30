@@ -39,6 +39,8 @@ public class Player implements Creature{
 //    Player states
     private boolean isAlive;
     private boolean isOnFire;
+    private int burnDmgCount;
+    private int intialBurn;
 
 //    cooldowns
 
@@ -291,5 +293,21 @@ public class Player implements Creature{
 
     public void setOnFire(boolean onFire) {
         isOnFire = onFire;
+    }
+
+    public int getBurnDmgCount() {
+        return burnDmgCount;
+    }
+
+    public void setBurnDmgCount(int burnDmgCount) {
+        this.burnDmgCount = burnDmgCount;
+    }
+
+    public int getIntialBurn() {
+        return intialBurn;
+    }
+
+    public void setIntialBurn(int intialBurn) {
+        this.intialBurn = intialBurn;
     }
 }

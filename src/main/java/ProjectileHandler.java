@@ -1,5 +1,3 @@
-
-
 public class ProjectileHandler extends ListHandler{
 
     public ProjectileHandler(){
