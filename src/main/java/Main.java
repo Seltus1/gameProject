@@ -35,27 +35,23 @@ public class Main {
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
-//            if(game.isIsinMenu()){
+//            if (game.isIsinMenu()) {
 //                game.update();
 //            }
-//            if(game.isPlaying()) {
-                // Update the player and enemies
-
+//            if (game.isPlaying()) {
+//                 Update the player and enemies
                 player1.update(projectiles, player1);
                 player.update(enemies, projectiles);
                 enemies.update(projectiles, player1);
                 if (enemies.size() == 0) {
                     enemies.addMultipleEnemies(amountOfEnemy);
                 }
-
                 // Display the current frames per second (FPS)
-
                 DrawFPS(100, 100);
-
                 // End drawing
                 EndDrawing();
-        }
-
+            }
+//        }
         // Close the window when the loop exits (window closed or Esc pressed)
         CloseWindow();
     }

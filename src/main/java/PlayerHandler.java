@@ -77,6 +77,15 @@ public class PlayerHandler {
         DrawText(s, 50, 1000, 20, BLACK);
     }
 
+    public void drawBurn(){
+        double thing = (double) player.getBurnDmgCount() / player.getIntialBurn();
+        double width = thing * 150;
+        DrawRectangle(50, 900, (int) width, 40, ORANGE);
+        DrawRectangleLines(50, 900, 150, 40, BLACK);
+        String s = String.format("BURN: %d", player.getBurnDmgCount());
+        DrawText(s, 50, 900, 20, BLACK);
+    }
+
 
     private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -104,6 +113,9 @@ public class PlayerHandler {
             DrawText("you suck",300,600,20,RED);
         }
         drawHp();
+        if(player.isOnFire()){
+            drawBurn();
+        }
     }
 
 }

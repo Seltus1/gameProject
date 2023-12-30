@@ -54,10 +54,6 @@ public class BrawlerEnemy extends Enemy{
             xMul = 1;
             yMul = 1;
         }
-        else if (xValues == 0){
-            xMul = 1;
-
-        }
         else if (yValues == 0 && xValues > 0){
             xMul = 1;
             yMul = 0;
