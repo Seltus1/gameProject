@@ -30,7 +30,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, 250, 550,4, size, ORANGE);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, Xpos, Ypos,4, size, ORANGE);
                 add(enemy);
             }
         }

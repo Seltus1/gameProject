@@ -10,6 +10,8 @@ public class BrawlerEnemy extends Enemy{
     private double actualXPos;
     private double actualYPos;
     private MeleeAttack melee;
+    private double xPct;
+    private double yPct;
 
 
     public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
@@ -21,35 +23,36 @@ public class BrawlerEnemy extends Enemy{
     }
 
     public void followPlayer(Player player){
-        float diagonalSpeedMultiplier = (float) (1 / Math.sqrt(2));
-        float normalizedSpeed = getMoveSpeed() * diagonalSpeedMultiplier;
         double playerXPos = player.getPosX();
         double playerYPos = player.getPosY();
         double myXPos = getActualXPos();
         double myYPos = getActualYPos();
-        double y = playerYPos - myYPos;
-        double x = playerXPos - myXPos;
-        quadrentCheck(y, x);
-        double totalDistance = (Math.abs(playerXPos - myXPos) + Math.abs(playerYPos - myYPos));
-        double xPct = Math.abs(playerXPos - myXPos) / totalDistance;
-        double yPct = 1 - xPct;
-        double xMoveSpeed = (xPct * normalizedSpeed) * xMul;
-        double yMoveSpeed = (yPct * normalizedSpeed) * yMul;
-        double updateX = myXPos + xMoveSpeed;
-        double updateY = myYPos + yMoveSpeed;
+        double verticalValues = playerYPos - myYPos;
+        double horizontalValues = playerXPos - myXPos;
+        quadrentCheck(verticalValues, horizontalValues);
+        double updateX, updateY;
+        if (verticalValues != 0 && horizontalValues != 0){
+            pythagCheck(verticalValues, horizontalValues);
+            updateX = myXPos + getMoveSpeed() * xPct;
+            updateY = myYPos + getMoveSpeed() * yPct;
+
+        }
+        else {
+            updateX = (myXPos + getMoveSpeed()) * xMul;
+            updateY = (myYPos + getMoveSpeed()) * yMul;
+        }
         setActualXPos(updateX);
         setActualYPos(updateY);
         setPosX((int) Math.round(updateX));
         setPosY((int) Math.round(updateY));
         DrawCircle(getPosX(), getPosY(), getSize(), getColor());
-        int totaldistance = Math.abs((getPosX() - (int) myXPos)) + Math.abs((getPosY() - (int) myYPos));
-        if (totaldistance == 4){
-            String s = "hello";
-        }
-        String s = "X change: " + (getPosX() - (int) myXPos);
-        String t = " Y change: " + (getPosY() - (int) myYPos) + " Total Distance : " + (xMoveSpeed + yMoveSpeed);
-        DrawText(s, 1000, 1000, 20, BLACK);
-        DrawText(t, 1200, 1000, 20, BLACK);
+    }
+
+    private void pythagCheck(double verticalValues, double horizontalValues){
+        double hypot = Math.sqrt(Math.pow(horizontalValues, 2) + Math.pow(verticalValues, 2));
+        double multipler = 1 / hypot;
+        yPct = verticalValues * multipler;
+        xPct = horizontalValues * multipler;
     }
 
     private void quadrentCheck(double yValues, double xValues){
