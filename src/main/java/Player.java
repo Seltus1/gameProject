@@ -96,6 +96,7 @@ public class Player implements Creature{
         return down - up;
     }
 
+
     public void move() {
         int hCheck = horizontalCheck();
         int vCheck = verticalCheck();
