@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(3) + 1;
-//            int randEnemy = 3;
+//            int randEnemy = rand.nextInt(3) + 1;
+            int randEnemy = 3;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -30,7 +30,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, Xpos, Ypos,3, size, ORANGE);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, 250, 550,4, size, ORANGE);
                 add(enemy);
             }
         }
@@ -65,8 +65,5 @@ public class EnemyHandler extends ListHandler {
                 DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
             }
         }
-
     }
-
-
 }

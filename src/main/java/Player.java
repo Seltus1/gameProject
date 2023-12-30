@@ -5,6 +5,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import static com.raylib.Jaylib.BLACK;
+import static com.raylib.Jaylib.DARKGREEN;
 import static com.raylib.Raylib.*;
 
 public class Player implements Creature{
@@ -45,6 +47,8 @@ public class Player implements Creature{
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
 
+    private final float diagCheck = (float) Math.sqrt(0.5);
+
 //    instance of other stuffs
     private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
 
@@ -65,18 +69,41 @@ public class Player implements Creature{
         this.canMelee = true;
         isOnFire = false;
     }
+
+    public int horizontalCheck(){
+        int left = 0;
+        int right = 0;
+        if (IsKeyDown(KEY_A)){
+            left = 1;
+        }
+        if (IsKeyDown(KEY_D)){
+            right = 1;
+        }
+        return right - left;
+    }
+
+    public int verticalCheck(){
+        int up = 0;
+        int down = 0;
+        if (IsKeyDown(KEY_W)){
+            up = 1;
+        }
+        if (IsKeyDown(KEY_S)){
+            down = 1;
+        }
+        return down - up;
+    }
+
     public void move() {
-        if (IsKeyDown(KEY_W) && posY > 3 + size) {
-            posY -= moveSpeed;
+        int hCheck = horizontalCheck();
+        int vCheck = verticalCheck();
+        if (hCheck != 0 && vCheck != 0){
+            posX += (hCheck * moveSpeed) * diagCheck;
+            posY += (vCheck * moveSpeed) * diagCheck;
         }
-        if (IsKeyDown(KEY_S) && posY < GetScreenHeight() - size) {
-            posY += moveSpeed;
-        }
-        if (IsKeyDown(KEY_D) && posX < GetScreenWidth() - size) {
-            posX += moveSpeed;
-        }
-        if (IsKeyDown(KEY_A) && posX > 3 + size) {
-            posX -= moveSpeed;
+        else{
+            posX += (hCheck * moveSpeed);
+            posY += (vCheck * moveSpeed);
         }
     }
     public void melee(Player player) {

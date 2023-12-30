@@ -1,3 +1,4 @@
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 import com.raylib.Raylib;
@@ -20,6 +21,8 @@ public class BrawlerEnemy extends Enemy{
     }
 
     public void followPlayer(Player player){
+        float diagonalSpeedMultiplier = (float) (1 / Math.sqrt(2));
+        float normalizedSpeed = getMoveSpeed() * diagonalSpeedMultiplier;
         double playerXPos = player.getPosX();
         double playerYPos = player.getPosY();
         double myXPos = getActualXPos();
@@ -30,8 +33,8 @@ public class BrawlerEnemy extends Enemy{
         double totalDistance = (Math.abs(playerXPos - myXPos) + Math.abs(playerYPos - myYPos));
         double xPct = Math.abs(playerXPos - myXPos) / totalDistance;
         double yPct = 1 - xPct;
-        double xMoveSpeed = (xPct * getMoveSpeed()) * xMul;
-        double yMoveSpeed = (yPct * getMoveSpeed()) * yMul;
+        double xMoveSpeed = (xPct * normalizedSpeed) * xMul;
+        double yMoveSpeed = (yPct * normalizedSpeed) * yMul;
         double updateX = myXPos + xMoveSpeed;
         double updateY = myYPos + yMoveSpeed;
         setActualXPos(updateX);
@@ -39,6 +42,14 @@ public class BrawlerEnemy extends Enemy{
         setPosX((int) Math.round(updateX));
         setPosY((int) Math.round(updateY));
         DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+        int totaldistance = Math.abs((getPosX() - (int) myXPos)) + Math.abs((getPosY() - (int) myYPos));
+        if (totaldistance == 4){
+            String s = "hello";
+        }
+        String s = "X change: " + (getPosX() - (int) myXPos);
+        String t = " Y change: " + (getPosY() - (int) myYPos) + " Total Distance : " + (xMoveSpeed + yMoveSpeed);
+        DrawText(s, 1000, 1000, 20, BLACK);
+        DrawText(t, 1200, 1000, 20, BLACK);
     }
 
     private void quadrentCheck(double yValues, double xValues){
@@ -53,10 +64,6 @@ public class BrawlerEnemy extends Enemy{
         else if (yValues > 0 && xValues > 0) {
             xMul = 1;
             yMul = 1;
-        }
-        else if (xValues == 0){
-            xMul = 1;
-
         }
         else if (yValues == 0 && xValues > 0){
             xMul = 1;

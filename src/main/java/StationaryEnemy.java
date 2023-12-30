@@ -12,13 +12,11 @@ public class StationaryEnemy extends Enemy{
     private boolean canShoot;
     private Random rand = new Random();
     private final int SHOOT_COOLDOWN = rand.nextInt(10000) + 2000;
-
     public StationaryEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         super(hp, dps, posX, posY, moveSpeed, size, color);
         canShoot = false;
         cooldown(SHOOT_COOLDOWN, "shot");
     }
-
     public void shootPlayer(Player player, ProjectileHandler projList){
         if (canShoot){
             int playerXPos = player.getPosX();
@@ -31,7 +29,6 @@ public class StationaryEnemy extends Enemy{
             cooldown(SHOOT_COOLDOWN, "shot");
         }
     }
-
     private void cooldown(int cooldown, String type){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.submit(() -> {
@@ -46,5 +43,4 @@ public class StationaryEnemy extends Enemy{
             executor.shutdown();
         });
     }
-
 }
