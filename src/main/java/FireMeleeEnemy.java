@@ -10,7 +10,7 @@ public class FireMeleeEnemy extends MeleeEnemy{
 
     public void attack(Player player){
         fire.setBurnTime(2000);
-        super.attack(player);
+//        super.attack(player);
         fire.attack(player);
     }
 

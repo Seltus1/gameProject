@@ -1,70 +1,55 @@
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Fire {
     private String currency;
     private int numCoins;
     private int burnTime;
     private int burnTickTime;
-    private boolean isBurning;
-    private boolean ShortTickTimer;
+    private boolean shortTickTimer;
     private int burnDamage;
+    private long lastAttackTime = 0;
+    private boolean isBurning = false;
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private Timer timer = new Timer();
 
     public Fire(){
         currency = "Flame";
         numCoins = 10;
         burnTickTime = 500;
+        burnDamage = 10;
+        burnTime = 2000;
+        shortTickTimer = true;
     }
 
-    public void attack(Player player){
-        if(!isBurning) {
+    public void attack(Player player) {
+        long currentTime = System.currentTimeMillis();
+
+        if (!isBurning && (currentTime - lastAttackTime) >= burnTime) {
             isBurning = true;
-            cooldown(burnTime, "total");
+            lastAttackTime = currentTime;
+
+            Executors.newSingleThreadExecutor().submit(() -> {
+                try {
+                    TimeUnit.MILLISECONDS.sleep(burnTime);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } finally {
+                    isBurning = false;
+                }
+            });
         }
-        if (ShortTickTimer && isBurning) {
+
+        if (shortTickTimer && isBurning && (currentTime - lastAttackTime) >= burnTickTime) {
             player.setHp(player.getHp() - burnDamage);
-            cooldown(burnTickTime, "else");
+            lastAttackTime = currentTime;
         }
-
     }
-
-    private void cooldown(int cooldown, String type){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(cooldown);
-            } catch (InterruptedException e) {
-                System.out.println("Woah, something went wrong! (check cooldown method)");
-            }
-            if(type.equals("total")){
-                isBurning = false;
-            }
-            else{
-                isBurning = false;
-            }
-
-            executor.shutdown();
-        });
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public String getCurrency() {
         return currency;
     }

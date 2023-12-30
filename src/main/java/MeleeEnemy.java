@@ -86,7 +86,7 @@ public class MeleeEnemy extends Enemy{
     }
     public void attack(Player player){
         int distance = calculateDistance(player);
-        if(distance <= getRange()){
+        if(distance >= getRange()){
             MeleeAttack melee = new MeleeAttack(getDamage(),getPosX(),getPosY());
             melee.attack(player);
         }
