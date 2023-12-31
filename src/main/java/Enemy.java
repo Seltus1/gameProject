@@ -1,6 +1,9 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import java.awt.geom.Ellipse2D;
+import java.util.*;
+
 import static com.raylib.Raylib.CheckCollisionCircles;
 import static com.raylib.Raylib.DrawCircle;
 
@@ -17,6 +20,7 @@ public class Enemy implements Creature {
     private boolean isAlive;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
+    private Ellipse2D.Double circle;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
@@ -30,6 +34,7 @@ public class Enemy implements Creature {
         this.isAlive = true;
         this.pos = new Jaylib.Vector2(posX,posY);
         DrawCircle(posX, posY, size, color);
+        circle = new Ellipse2D.Double(posX,posY,size,size);
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {
@@ -46,6 +51,7 @@ public class Enemy implements Creature {
             }
         }
     }
+
 
     @Override
     public Raylib.Color getColor() {

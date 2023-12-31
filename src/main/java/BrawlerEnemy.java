@@ -27,20 +27,20 @@ public class BrawlerEnemy extends Enemy{
         double playerYPos = player.getPosY();
         double myXPos = getActualXPos();
         double myYPos = getActualYPos();
+
         double verticalValues = playerYPos - myYPos;
         double horizontalValues = playerXPos - myXPos;
-        quadrentCheck(verticalValues, horizontalValues);
+        //Good ol' vector math
+        double magnitude = Math.sqrt(Math.pow(verticalValues,2) + Math.pow(horizontalValues,2));
+        double yNormalized = verticalValues/magnitude;
+        double xNormalized = horizontalValues/magnitude;
+        //Apply moveSpeed to scale it
+        double xScaled = xNormalized*getMoveSpeed();
+        double yScaled = yNormalized*getMoveSpeed();
         double updateX, updateY;
-        if (verticalValues != 0 && horizontalValues != 0){
-            pythagCheck(verticalValues, horizontalValues);
-            updateX = myXPos + getMoveSpeed() * xPct;
-            updateY = myYPos + getMoveSpeed() * yPct;
 
-        }
-        else {
-            updateX = (myXPos + getMoveSpeed()) * xMul;
-            updateY = (myYPos + getMoveSpeed()) * yMul;
-        }
+        updateX = actualXPos += xScaled;
+        updateY = actualYPos += yScaled;
         setActualXPos(updateX);
         setActualYPos(updateY);
         setPosX((int) Math.round(updateX));
@@ -48,47 +48,6 @@ public class BrawlerEnemy extends Enemy{
         DrawCircle(getPosX(), getPosY(), getSize(), getColor());
     }
 
-    private void pythagCheck(double verticalValues, double horizontalValues){
-        double hypot = Math.sqrt(Math.pow(horizontalValues, 2) + Math.pow(verticalValues, 2));
-        double multipler = 1 / hypot;
-        yPct = verticalValues * multipler;
-        xPct = horizontalValues * multipler;
-    }
-
-    private void quadrentCheck(double yValues, double xValues){
-        if (yValues < 0 && xValues < 0){
-            xMul = -1;
-            yMul = -1;
-        }
-        else if (yValues < 0 && xValues > 0){
-            xMul = 1;
-            yMul = -1;
-        }
-        else if (yValues > 0 && xValues > 0) {
-            xMul = 1;
-            yMul = 1;
-        }
-        else if (yValues == 0 && xValues > 0){
-            xMul = 1;
-            yMul = 0;
-        }
-        else if (yValues == 0 && xValues < 0){
-            xMul = -1;
-            yMul = 0;
-        }
-        else if (xValues == 0 && yValues > 0){
-            yMul = 1;
-            xMul = 0;
-        }
-        else if (xValues == 0 && yValues < 0){
-            yMul = -1;
-            xMul = 0;
-        }
-        else {
-            xMul = -1;
-            yMul = 1;
-        }
-    }
     public int calculateDistance(Player player){
         int y = player.getPosY() - getPosY();
         int x = player.getPosX() - getPosX();
