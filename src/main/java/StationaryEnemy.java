@@ -23,7 +23,7 @@ public class StationaryEnemy extends Enemy{
         if (canShoot){
             int playerXPos = player.getPosX();
             int playerYPos = player.getPosY();
-            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos);
+            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, BLACK);
             shot.setShotTag("Enemy");
             shot.vectorCalculations();
             projList.add(shot);

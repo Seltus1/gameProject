@@ -9,18 +9,15 @@ import static com.raylib.Jaylib.*;
 public class EnemyHandler extends ListHandler {
 
     private Random rand = new Random();
-    private Fire fire;
 
     public EnemyHandler() {
         super();
-        fire = new Fire();
-
     }
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(3) + 1;
-//            int randEnemy = 3;
+            int randEnemy = rand.nextInt(4) + 1;
+//            int randEnemy = 4;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -29,11 +26,15 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 2){
-                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 100, BLUE);
+                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 50, BLUE);
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 100, ORANGE);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 75, ORANGE);
+                add(enemy);
+            }
+            else if (randEnemy == 4){
+                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800,15, PURPLE);
                 add(enemy);
             }
         }
@@ -54,16 +55,28 @@ public class EnemyHandler extends ListHandler {
             }
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
-                enemy.followPlayer(player);
+                if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
+                    enemy.followPlayer(player);
+                }
                 enemy.attack(player);
             }
             if (get(i) instanceof  FireBrawlerEnemy) {
                 counter++;
                 FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
                 enemy.attack(player);
-                if (enemy.calculateDistance(player) >= enemy.getRange()){
+                if (enemy.calculateDistanceToPlayer(player) >= enemy.getRange()){
                     falseCounter++;
                 }
+            }
+            if (get(i) instanceof MagicEnemy){
+                MagicEnemy enemy = (MagicEnemy) get(i);
+                if (enemy.calculateDistanceToPlayer(player) > enemy.getRange() / 1.5){
+                    enemy.followPlayer(player);
+                }
+                else if (enemy.calculateDistanceToPlayer(player) < enemy.getRange() / 2){
+                    enemy.runAwayFromPlayer(player);
+                }
+                enemy.castSpell(player, projList);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);

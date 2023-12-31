@@ -13,7 +13,7 @@ public class FireBrawlerEnemy extends BrawlerEnemy{
         fire.setBurnTime(10);
         player.setBurnDamage(fire.getBurnDamage());
         super.attack(player);
-        if (calculateDistance(player) <= getRange()){
+        if (calculateDistanceToPlayer(player) <= getRange()){
             fire.attack(player);
             player.setFireInRange(true);
             player.setOnFire(true);

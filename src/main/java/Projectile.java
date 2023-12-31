@@ -1,3 +1,5 @@
+import com.raylib.Raylib;
+
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
@@ -22,6 +24,8 @@ public class Projectile {
     private int yMul;
     private int slopeMul;
 
+    private  Raylib.Color color;
+
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int angleOfMovement) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
@@ -35,7 +39,7 @@ public class Projectile {
         DrawCircle(this.posX, this.posY, shotRad, BLACK);
     }
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
         this.posY = posY;
@@ -45,7 +49,8 @@ public class Projectile {
         this.finalY = finalY;
         //Add this to constructor later when we have weapons
         damage = 10;
-        DrawCircle(this.posX, this.posY, shotRad, BLACK);
+        this.color = color;
+        DrawCircle(this.posX, this.posY, shotRad, color);
     }
 
     public boolean isInBounds() {
@@ -124,7 +129,7 @@ public class Projectile {
     }
 
     public void update(){
-        DrawCircle(posX, posY, shotRad, BLACK);
+        DrawCircle(posX, posY, shotRad, color);
     }
 
     public double getXMoveSpeed() {return xMoveSpeed;}
@@ -138,4 +143,119 @@ public class Projectile {
         return shotTag;
     }
 
+    public int getShotSpeed() {
+        return shotSpeed;
+    }
+
+    public void setShotSpeed(int shotSpeed) {
+        this.shotSpeed = shotSpeed;
+    }
+
+    public void setShotRad(int shotRad) {
+        this.shotRad = shotRad;
+    }
+
+    public void setPosX(int posX) {
+        this.posX = posX;
+    }
+
+    public void setPosY(int posY) {
+        this.posY = posY;
+    }
+
+    public double getActualPosX() {
+        return actualPosX;
+    }
+
+    public void setActualPosX(double actualPosX) {
+        this.actualPosX = actualPosX;
+    }
+
+    public double getActualPosY() {
+        return actualPosY;
+    }
+
+    public void setActualPosY(double actualPosY) {
+        this.actualPosY = actualPosY;
+    }
+
+    public void setInBounds(boolean inBounds) {
+        isInBounds = inBounds;
+    }
+
+    public int getAngleOfMovement() {
+        return angleOfMovement;
+    }
+
+    public void setAngleOfMovement(int angleOfMovement) {
+        this.angleOfMovement = angleOfMovement;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getFinalX() {
+        return finalX;
+    }
+
+    public void setFinalX(int finalX) {
+        this.finalX = finalX;
+    }
+
+    public int getFinalY() {
+        return finalY;
+    }
+
+    public void setFinalY(int finalY) {
+        this.finalY = finalY;
+    }
+
+    public double getxMoveSpeed() {
+        return xMoveSpeed;
+    }
+
+    public void setxMoveSpeed(double xMoveSpeed) {
+        this.xMoveSpeed = xMoveSpeed;
+    }
+
+    public double getyMoveSpeed() {
+        return yMoveSpeed;
+    }
+
+    public void setyMoveSpeed(double yMoveSpeed) {
+        this.yMoveSpeed = yMoveSpeed;
+    }
+
+    public int getxMul() {
+        return xMul;
+    }
+
+    public void setxMul(int xMul) {
+        this.xMul = xMul;
+    }
+
+    public int getyMul() {
+        return yMul;
+    }
+
+    public void setyMul(int yMul) {
+        this.yMul = yMul;
+    }
+
+    public int getSlopeMul() {
+        return slopeMul;
+    }
+
+    public void setSlopeMul(int slopeMul) {
+        this.slopeMul = slopeMul;
+    }
+
+    public Raylib.Color getColor() {
+        return color;
+    }
+
+    public void setColor(Raylib.Color color) {
+        this.color = color;
+    }
 }

@@ -57,7 +57,7 @@ public class PlayerHandler {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
             int playerXPos = GetMouseX();
             int playerYPos = GetMouseY();
-            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos);
+            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, BLACK);
             shot.setShotTag("Player");
             shot.vectorCalculations();
             projList.add(shot);
