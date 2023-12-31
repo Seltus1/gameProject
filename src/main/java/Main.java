@@ -38,22 +38,26 @@ public class Main {
 //            if(game.isIsinMenu()){
 //                game.update();
 //            }
-//            if(game.isPlaying()) {
-                // Update the player and enemies
+           if(player1.getHp() >= 0) {
+               // Update the player and enemies
 
-                player1.update(projectiles, player1);
-                player.update(enemies, projectiles);
-                enemies.update(projectiles, player1);
-                if (enemies.size() == 0) {
-                    enemies.addMultipleEnemies(amountOfEnemy);
-                }
+               player1.update(projectiles, player1);
+               player.update(enemies, projectiles);
+               enemies.update(projectiles, player1);
+               if (enemies.size() == 0) {
+                   enemies.addMultipleEnemies(amountOfEnemy);
+               }
 
-                // Display the current frames per second (FPS)
+               // Display the current frames per second (FPS)
 
-                DrawFPS(100, 100);
+           }
+           else{
+               game.update(player1, enemies);
+           }
+               DrawFPS(100, 100);
 
-                // End drawing
-                EndDrawing();
+               // End drawing
+               EndDrawing();
         }
 
         // Close the window when the loop exits (window closed or Esc pressed)

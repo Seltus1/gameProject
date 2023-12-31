@@ -108,9 +108,6 @@ public class PlayerHandler {
         if (player.getHp() <= 0){
             isAlive = false;
         }
-        if (!isAlive){
-            DrawText("you suck",300,600,20,RED);
-        }
         drawHp();
         if(player.isOnFire()){
             drawBurn();
