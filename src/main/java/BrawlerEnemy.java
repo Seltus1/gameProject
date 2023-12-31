@@ -5,14 +5,9 @@ import com.raylib.Raylib;
 
 public class BrawlerEnemy extends Enemy{
 
-    private int xMul;
-    private int yMul;
     private double actualXPos;
     private double actualYPos;
     private MeleeAttack melee;
-    private double xPct;
-    private double yPct;
-
 
     public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
         super(hp, damage, posX, posY, moveSpeed, size, color);

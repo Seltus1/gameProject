@@ -9,9 +9,12 @@ import static com.raylib.Jaylib.*;
 public class EnemyHandler extends ListHandler {
 
     private Random rand = new Random();
+    private Fire fire;
 
     public EnemyHandler() {
         super();
+        fire = new Fire();
+
     }
 
     public boolean addMultipleEnemies(int amount){
@@ -30,7 +33,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, Xpos, Ypos,2, size, ORANGE);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 6, Xpos, Ypos,0, size, ORANGE);
                 add(enemy);
             }
         }
@@ -42,6 +45,8 @@ public class EnemyHandler extends ListHandler {
     }
 
     public void update(ProjectileHandler projList, Player player) {
+        int counter = 0;
+        int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
             if (get(i) instanceof StationaryEnemy){
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
@@ -51,10 +56,14 @@ public class EnemyHandler extends ListHandler {
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 enemy.followPlayer(player);
             }
-            if (get(i) instanceof  FireBrawlerEnemy){
+            if (get(i) instanceof  FireBrawlerEnemy) {
+                counter++;
                 FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
                 enemy.followPlayer(player);
                 enemy.attack(player);
+                if (enemy.calculateDistance(player) >= enemy.getRange()){
+                    falseCounter++;
+                }
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
@@ -63,6 +72,12 @@ public class EnemyHandler extends ListHandler {
             }
             else{
                 DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
+            }
+            if (falseCounter == counter){
+                player.setFireInRange(false);
+            }
+            else {
+                player.setFireInRange(true);
             }
         }
     }

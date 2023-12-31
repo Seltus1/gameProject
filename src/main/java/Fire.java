@@ -8,6 +8,7 @@ public class Fire {
     private int burnCountdown;
     private int burnCounter;
     private boolean isInRange;
+    private boolean isPushFireCalled;
 
     public boolean isInRange() {
         return isInRange;
@@ -23,39 +24,16 @@ public class Fire {
         burnDamage = 1;
         burnTime = 10;
         isInRange = false;
+        isPushFireCalled = false;
     }
 
     public void attack(Player player) {
         burnCooldown++;
-        if((burnCooldown + 1) % 31 == 0 && burnCountdown == 0){
-            player.setOnFire(true);
-            burnCooldown = 0;
-            burnCountdown++;
-        }
-        if(!(burnCountdown == 0)){
-            player.setOnFire(true);
+        if((burnCooldown + 1) % 31 == 0) {
+            player.setBurnTicks(player.getBurnTicks() + 1);
         }
     }
 
-    public void pushFireDamage(Player player) {
-        player.setIntialBurn(burnTime);
-        player.setBurnDmgCount(burnCountdown);
-        if (player.isOnFire()){
-            burnCounter++;
-            if((burnCounter + 1) % 15 == 0) {
-                player.setHp(player.getHp() - burnDamage);
-                if(!isInRange) {
-                    burnCountdown--;
-                }
-                else if(isInRange && burnCountdown < burnTime){
-                    burnCountdown++;
-                }
-            }
-        }
-        if(burnCountdown == 0){
-            player.setOnFire(false);
-        }
-    }
 
     public String getCurrency() {
         return currency;
@@ -94,5 +72,29 @@ public class Fire {
 
     public void setBurnDamage(int burnDamage) {
         this.burnDamage = burnDamage;
+    }
+
+    public int getBurnCooldown() {
+        return burnCooldown;
+    }
+
+    public void setBurnCooldown(int burnCooldown) {
+        this.burnCooldown = burnCooldown;
+    }
+
+    public int getBurnCounter() {
+        return burnCounter;
+    }
+
+    public void setBurnCounter(int burnCounter) {
+        this.burnCounter = burnCounter;
+    }
+
+    public boolean isPushFireCalled() {
+        return isPushFireCalled;
+    }
+
+    public void setPushFireCalled(boolean pushFireCalled) {
+        isPushFireCalled = pushFireCalled;
     }
 }

@@ -1,6 +1,5 @@
 import com.raylib.Jaylib;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -78,11 +77,11 @@ public class PlayerHandler {
     }
 
     public void drawBurn(){
-        double thing = (double) player.getBurnDmgCount() / player.getIntialBurn();
+        double thing = (double) player.getBurnTicks() / player.getIntialBurn();
         double width = thing * 150;
         DrawRectangle(50, 900, (int) width, 40, ORANGE);
         DrawRectangleLines(50, 900, 150, 40, BLACK);
-        String s = String.format("BURN: %d", player.getBurnDmgCount());
+        String s = String.format("BURN: %d", player.getBurnTicks());
         DrawText(s, 50, 900, 20, BLACK);
     }
 
