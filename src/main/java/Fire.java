@@ -29,7 +29,7 @@ public class Fire {
 
     public void attack(Player player) {
         burnCooldown++;
-        if((burnCooldown + 1) % 31 == 0) {
+        if((burnCooldown + 1) % 15 == 0 && player.getBurnTicks() < burnTime) {
             player.setBurnTicks(player.getBurnTicks() + 1);
         }
     }

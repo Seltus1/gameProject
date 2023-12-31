@@ -25,7 +25,7 @@ public class Enemy implements Creature {
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
         this.hp = hp;
         this.damage = damage;
-        this.range = range;
+        this.range = 100;
         this.posX = posX;
         this.posY = posY;
         this.moveSpeed = moveSpeed;

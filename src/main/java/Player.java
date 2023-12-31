@@ -34,7 +34,7 @@ public class Player implements Creature{
     private Raylib.Color color;
 
 
-//    Player states
+    //    Player states
     private boolean isAlive;
     private boolean isOnFire;
     private int burnTicks;
@@ -49,7 +49,7 @@ public class Player implements Creature{
 
     private final float diagCheck = (float) Math.sqrt(0.5);
 
-//    instance of other stuffs
+    //    instance of other stuffs
     private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
 
     private int burnDamage;
@@ -146,28 +146,28 @@ public class Player implements Creature{
             executor.shutdown();
         });
     }
-        public void update(ProjectileHandler projList, Player player){
-            move();
-            melee(player);
-            sword.update();
-            burn();
-            DrawCircle(posX, posY, size, color);
-        }
+    public void update(ProjectileHandler projList, Player player){
+        move();
+        melee(player);
+        sword.update();
+        burn();
+        DrawCircle(posX, posY, size, color);
+    }
 
-        public void burn(){
+    public void burn(){
         burnCountDown++;
-            if (burnTicks != 0){
-                if ((burnCountDown + 1) % 31 == 0) {
-                    hp = (hp - burnTicks);
-                    if (!isFireInRange) {
-                        burnTicks = (burnTicks - burnDamage);
-                    }
+        if (burnTicks != 0){
+            if ((burnCountDown + 1) % 15 == 0) {
+                hp = (hp - burnDamage);
+                if (!isFireInRange) {
+                    burnTicks -= burnDamage;
                 }
             }
-            else{
-                isOnFire = false;
-            }
         }
+        else{
+            isOnFire = false;
+        }
+    }
 
 
     public int getBurnDamage() {
