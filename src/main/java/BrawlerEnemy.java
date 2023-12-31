@@ -14,9 +14,8 @@ public class BrawlerEnemy extends Enemy{
     private double yPct;
 
 
-    public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color){
-        super(hp, damage, posX, posY, moveSpeed, size, color);
-        setRange(100);
+    public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color){
+        super(hp, damage, posX, posY, moveSpeed, size, range, color);
         setActualXPos(getPosX());
         setActualYPos(getPosY());
         melee = new MeleeAttack(getDamage(),getPosX(),getPosY());

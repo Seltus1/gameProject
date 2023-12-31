@@ -22,10 +22,10 @@ public class Enemy implements Creature {
     private Jaylib.Vector2 pos;
     private Ellipse2D.Double circle;
 
-    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
         this.damage = damage;
-        this.range = 100;
+        this.range = range;
         this.posX = posX;
         this.posY = posY;
         this.moveSpeed = moveSpeed;

@@ -25,15 +25,15 @@ public class EnemyHandler extends ListHandler {
             int Ypos = rand.nextInt(1080);
             int size = 25;
             if(randEnemy == 1){
-                StationaryEnemy enemy = new StationaryEnemy(1, 0, Xpos, Ypos, 0, size, GREEN);
+                StationaryEnemy enemy = new StationaryEnemy(1, 0, Xpos, Ypos, 0, size, 5, 35, GREEN);
                 add(enemy);
             }
             else if(randEnemy == 2){
-                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, BLUE);
+                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 100, BLUE);
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, ORANGE);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 100, ORANGE);
                 add(enemy);
             }
         }
@@ -55,6 +55,7 @@ public class EnemyHandler extends ListHandler {
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 enemy.followPlayer(player);
+                enemy.attack(player);
             }
             if (get(i) instanceof  FireBrawlerEnemy) {
                 counter++;

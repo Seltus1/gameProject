@@ -11,9 +11,11 @@ import static com.raylib.Jaylib.*;
 public class StationaryEnemy extends Enemy{
     private boolean canShoot;
     private Random rand = new Random();
-    private final int SHOOT_COOLDOWN = rand.nextInt(10000) + 2000;
-    public StationaryEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
-        super(hp, dps, posX, posY, moveSpeed, size, color);
+    private int shotSpeed;
+    private final int SHOOT_COOLDOWN = rand.nextInt(1000) + 2000;
+    public StationaryEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color) {
+        super(hp, dps, posX, posY, moveSpeed, size, range, color);
+        this.shotSpeed = shotSpeed;
         canShoot = false;
         cooldown(SHOOT_COOLDOWN, "shot");
     }
@@ -21,7 +23,7 @@ public class StationaryEnemy extends Enemy{
         if (canShoot){
             int playerXPos = player.getPosX();
             int playerYPos = player.getPosY();
-            Projectile shot = new Projectile(5, getPosX(), getPosY(), 7, playerXPos, playerYPos);
+            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos);
             shot.setShotTag("Enemy");
             shot.vectorCalculations();
             projList.add(shot);
