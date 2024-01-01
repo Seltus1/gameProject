@@ -60,42 +60,53 @@ public class Enemy implements Creature {
         int totalDist = Math.abs(x) + Math.abs(y);
         return totalDist;
     }
+public void followPlayer(Player player, String tag) {
+    double[] positions = determinePositions(player, tag);
+    double verticalValues = positions[0];
+    double horizontalValues = positions[1];
 
-    public void followPlayer(Player player, String tag){
-        double playerXPos;
-        double playerYPos;
-        double myXPos;
-        double myYPos;
-        if(tag.equals("to")){
+    double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
+    double xScaled = normalizedValues[0] * getMoveSpeed();
+    double yScaled = normalizedValues[1] * getMoveSpeed();
+
+    double[] updatedPositions = updatePositions(xScaled, yScaled);
+    double updateX = updatedPositions[0];
+    double updateY = updatedPositions[1];
+
+    updateObjectPositions(updateX, updateY);
+    DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+}
+    private double[] determinePositions(Player player, String tag) {
+        double playerXPos, playerYPos, myXPos, myYPos;
+        if (tag.equals("to")) {
             playerXPos = player.getPosX();
             playerYPos = player.getPosY();
             myXPos = getActualXPos();
             myYPos = getActualYPos();
-        }
-        else{
+        } else {
             playerXPos = getActualXPos();
             playerYPos = getActualYPos();
             myXPos = player.getPosX();
             myYPos = player.getPosY();
         }
-
-        double verticalValues = playerYPos - myYPos;
-        double horizontalValues = playerXPos - myXPos;
-        //Good ol' vector math
-        double magnitude = Math.sqrt(Math.pow(verticalValues,2) + Math.pow(horizontalValues,2));
-        double yNormalized = verticalValues/magnitude;
-        double xNormalized = horizontalValues/magnitude;
-        //Apply moveSpeed to scale it
-        double xScaled = xNormalized*getMoveSpeed();
-        double yScaled = yNormalized*getMoveSpeed();
-        double updateX, updateY;
-        updateX = actualXPos += xScaled;
-        updateY = actualYPos += yScaled;
+        return new double[]{playerYPos - myYPos, playerXPos - myXPos};
+    }
+    private double[] normalizeValues(double verticalValues, double horizontalValues) {
+        double magnitude = Math.sqrt(Math.pow(verticalValues, 2) + Math.pow(horizontalValues, 2));
+        double yNormalized = verticalValues / magnitude;
+        double xNormalized = horizontalValues / magnitude;
+        return new double[]{xNormalized, yNormalized};
+    }
+    private double[] updatePositions(double xScaled, double yScaled) {
+        double updateX = getActualXPos() + xScaled;
+        double updateY = getActualYPos() + yScaled;
+        return new double[]{updateX, updateY};
+    }
+    private void updateObjectPositions(double updateX, double updateY) {
         setActualXPos(updateX);
         setActualYPos(updateY);
         setPosX((int) Math.round(updateX));
         setPosY((int) Math.round(updateY));
-        DrawCircle(getPosX(), getPosY(), getSize(), getColor());
     }
     @Override
     public Raylib.Color getColor() {
