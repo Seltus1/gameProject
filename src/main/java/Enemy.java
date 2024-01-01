@@ -2,6 +2,7 @@ import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 
 import static com.raylib.Raylib.CheckCollisionCircles;
 import static com.raylib.Raylib.DrawCircle;
@@ -64,7 +65,6 @@ public void followPlayer(Player player, String tag) {
     double[] positions = determinePositions(player, tag);
     double verticalValues = positions[0];
     double horizontalValues = positions[1];
-
     double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
     double xScaled = normalizedValues[0] * getMoveSpeed();
     double yScaled = normalizedValues[1] * getMoveSpeed();
@@ -76,6 +76,35 @@ public void followPlayer(Player player, String tag) {
     updateObjectPositions(updateX, updateY);
     DrawCircle(getPosX(), getPosY(), getSize(), getColor());
 }
+
+    /**
+     * collision function: How do i make sure the object calling this method always ignores itself?
+     * @param enemyList
+     * @param player
+     * @param tag
+     * @return
+     */
+    public boolean collisionWIthOtherEnemy(ArrayList<Enemy> enemyList, Player player, String tag){
+        double[] positions = determinePositions(player, tag);
+        double verticalValues = positions[0];
+        double horizontalValues = positions[1];
+        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
+        double xScaled = normalizedValues[0] * getMoveSpeed();
+        double yScaled = normalizedValues[1] * getMoveSpeed();
+        double updateX = getActualXPos() + xScaled;
+        double updateY = getActualYPos() + yScaled;
+        Jaylib.Vector2 projectedVector = new Jaylib.Vector2((float) updateX,(float) updateY);
+        for (int i = 0; i < enemyList.size(); i++) {
+            Enemy otherEnemy = enemyList.get(i);
+            double otherPosX = otherEnemy.getActualXPos();
+            double otherPosY = otherEnemy.getActualYPos();
+            Jaylib.Vector2 enemyPos = new Jaylib.Vector2((float) otherPosX,(float) otherPosY);
+            if (CheckCollisionCircles(projectedVector,getSize(),enemyPos,otherEnemy.getSize())){
+                return true;
+            }
+        }
+        return false;
+    }
     private double[] determinePositions(Player player, String tag) {
         double playerXPos, playerYPos, myXPos, myYPos;
         if (tag.equals("to")) {
@@ -100,6 +129,10 @@ public void followPlayer(Player player, String tag) {
     private double[] updatePositions(double xScaled, double yScaled) {
         double updateX = getActualXPos() + xScaled;
         double updateY = getActualYPos() + yScaled;
+        setActualXPos(updateX);
+        setActualYPos(updateY);
+        setPosX((int) Math.round(updateX));
+        setPosY((int) Math.round(updateY));
         return new double[]{updateX, updateY};
     }
     private void updateObjectPositions(double updateX, double updateY) {
