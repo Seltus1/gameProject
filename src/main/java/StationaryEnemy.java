@@ -12,37 +12,32 @@ public class StationaryEnemy extends Enemy{
     private boolean canShoot;
     private Random rand = new Random();
     private int shotSpeed;
-    private final int SHOOT_COOLDOWN = rand.nextInt(1000) + 2000;
+    private String shotTag;
+    private int shotCooldown;
+
     public StationaryEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color) {
         super(hp, dps, posX, posY, moveSpeed, size, range, color);
         this.shotSpeed = shotSpeed;
-        canShoot = false;
-        cooldown(SHOOT_COOLDOWN, "shot");
     }
-    public void shootPlayer(Player player, ProjectileHandler projList){
-        if (canShoot){
+    public void shootPlayer(Player player, ProjectileHandler projList, String shotTag, Raylib.Color color){
+        shotCooldown++;
+        if((shotCooldown +1 )% 90 == 0) {
             int playerXPos = player.getPosX();
             int playerYPos = player.getPosY();
-            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, BLACK);
-            shot.setShotTag("Enemy");
+            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, color);
             shot.vectorCalculations();
             projList.add(shot);
             canShoot = false;
-            cooldown(SHOOT_COOLDOWN, "shot");
+            shotCooldown = 0;
         }
+
     }
-    private void cooldown(int cooldown, String type){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(cooldown);
-            } catch (InterruptedException e) {
-                System.out.println("Woah, something went wrong! (check cooldown method)");
-            }
-            if(type.equals("shot")){
-                canShoot = true;
-            }
-            executor.shutdown();
-        });
+
+    public String getShotTag() {
+        return shotTag;
+    }
+
+    public void setShotTag(String shotTag) {
+        this.shotTag = shotTag;
     }
 }

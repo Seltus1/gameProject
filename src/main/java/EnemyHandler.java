@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(4) + 1;
-//            int randEnemy = 4;
+            int randEnemy = rand.nextInt(5) + 1;
+//            int randEnemy = 5;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -37,6 +37,10 @@ public class EnemyHandler extends ListHandler {
                 MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800,15, PURPLE);
                 add(enemy);
             }
+            else if(randEnemy == 5){
+                FireSniperEnemy enemy = new FireSniperEnemy(1,10,Xpos,Ypos,0,size,75, 10000, 35, BROWN);
+                add(enemy);
+            }
         }
         return true;
     }
@@ -51,7 +55,7 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < size(); i++) {
             if (get(i) instanceof StationaryEnemy){
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
-                enemy.shootPlayer(player, projList);
+                enemy.shootPlayer(player, projList, "Enemy", BLACK);
             }
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
@@ -76,7 +80,11 @@ public class EnemyHandler extends ListHandler {
                 else if (enemy.calculateDistanceToPlayer(player) < enemy.getRange() / 2){
                     enemy.followPlayer(player, "away");
                 }
-                enemy.castSpell(player, projList);
+                enemy.castSpell(player, projList, DARKPURPLE);
+            }
+            if(get(i) instanceof  FireSniperEnemy){
+                FireSniperEnemy enemy = (FireSniperEnemy) get(i);
+                enemy.shoot(player,projList);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);

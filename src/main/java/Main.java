@@ -38,7 +38,7 @@ public class Main {
 //            if(game.isIsinMenu()){
 //                game.update();
 //            }
-           if(player1.getHp() >= 0) {
+//           if(player1.getHp() >= 0) {
                // Update the player and enemies
 
                player1.update(projectiles, player1);
@@ -50,10 +50,10 @@ public class Main {
 
                // Display the current frames per second (FPS)
 
-           }
-           else{
-               game.update(player1, enemies);
-           }
+//           }
+//           else{
+//               game.update(player1, enemies);
+//           }
                DrawFPS(100, 100);
 
                // End drawing

@@ -9,6 +9,7 @@ public class Fire {
     private int burnCounter;
     private boolean isInRange;
     private boolean isPushFireCalled;
+    private int range;
 
     public boolean isInRange() {
         return isInRange;
@@ -24,15 +25,31 @@ public class Fire {
         burnDamage = 1;
         burnTime = 10;
         isInRange = false;
-        isPushFireCalled = false;
+        range = 75;
     }
 
-    public void attack(Player player) {
+    public void meleeAttack(Player player) {
         burnCooldown++;
-        if((burnCooldown + 1) % 15 == 0 && player.getBurnTicks() < burnTime) {
+        if((burnCooldown + 1) % 16 == 0 && player.getBurnTicks() < burnTime) {
             player.setBurnTicks(player.getBurnTicks() + 1);
+            player.setIntialBurn(this.burnTime);
+            burnCooldown = 0;
         }
     }
+
+    public void shootAttack(Player player, Projectile proj){
+
+            player.setOnFire(true);
+            if(player.getBurnTicks() < player.getIntialBurn()) {
+                if(player.getBurnTicks() + 5 >= player.getIntialBurn()){
+                    player.setBurnTicks(player.getIntialBurn());
+                }
+                else {
+                    player.setBurnTicks(player.getBurnTicks() + 5);
+                }
+            }
+
+        }
 
 
     public String getCurrency() {
@@ -96,5 +113,13 @@ public class Fire {
 
     public void setPushFireCalled(boolean pushFireCalled) {
         isPushFireCalled = pushFireCalled;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public void setRange(int range) {
+        this.range = range;
     }
 }
