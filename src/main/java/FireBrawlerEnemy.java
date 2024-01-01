@@ -1,5 +1,10 @@
 import com.raylib.Raylib;
 
+import static com.raylib.Jaylib.BLACK;
+import static com.raylib.Raylib.ColorTint;
+import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
+
 public class FireBrawlerEnemy extends BrawlerEnemy{
     private Fire fire;
     private int burnCountDown;

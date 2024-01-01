@@ -38,7 +38,6 @@ public class Fire {
     }
 
     public void shootAttack(Player player, Projectile proj){
-
             player.setOnFire(true);
             if(player.getBurnTicks() < player.getIntialBurn()) {
                 if(player.getBurnTicks() + 5 >= player.getIntialBurn()){

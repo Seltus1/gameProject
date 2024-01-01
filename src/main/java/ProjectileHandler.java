@@ -15,6 +15,5 @@ public class ProjectileHandler extends ListHandler{
                 current.updateMove();
             }
         }
-
     }
 }
