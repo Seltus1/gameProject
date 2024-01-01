@@ -9,7 +9,7 @@ public class Main {
         final int SCREENHEIGHT = 1080;
 
         // Create a window with specified dimensions and title
-        InitWindow(SCREENWIDTH, SCREENHEIGHT, "testing game mechanics");
+        InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");
 //        ToggleFullscreen();
 
         // Set the target frames per second (fps)

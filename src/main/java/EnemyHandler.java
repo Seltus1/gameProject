@@ -56,7 +56,7 @@ public class EnemyHandler extends ListHandler {
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
-                    enemy.followPlayer(player);
+                    enemy.followPlayer(player, "to");
                 }
                 enemy.attack(player);
             }
@@ -71,10 +71,10 @@ public class EnemyHandler extends ListHandler {
             if (get(i) instanceof MagicEnemy){
                 MagicEnemy enemy = (MagicEnemy) get(i);
                 if (enemy.calculateDistanceToPlayer(player) > enemy.getRange() / 1.5){
-                    enemy.followPlayer(player);
+                    enemy.followPlayer(player, "to");
                 }
                 else if (enemy.calculateDistanceToPlayer(player) < enemy.getRange() / 2){
-                    enemy.runAwayFromPlayer(player);
+                    enemy.followPlayer(player, "away");
                 }
                 enemy.castSpell(player, projList);
             }

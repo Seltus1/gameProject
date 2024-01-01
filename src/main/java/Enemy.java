@@ -61,11 +61,23 @@ public class Enemy implements Creature {
         return totalDist;
     }
 
-    public void followPlayer(Player player){
-        double playerXPos = player.getPosX();
-        double playerYPos = player.getPosY();
-        double myXPos = getActualXPos();
-        double myYPos = getActualYPos();
+    public void followPlayer(Player player, String tag){
+        double playerXPos;
+        double playerYPos;
+        double myXPos;
+        double myYPos;
+        if(tag.equals("to")){
+            playerXPos = player.getPosX();
+            playerYPos = player.getPosY();
+            myXPos = getActualXPos();
+            myYPos = getActualYPos();
+        }
+        else{
+            playerXPos = getActualXPos();
+            playerYPos = getActualYPos();
+            myXPos = player.getPosX();
+            myYPos = player.getPosY();
+        }
 
         double verticalValues = playerYPos - myYPos;
         double horizontalValues = playerXPos - myXPos;
@@ -77,7 +89,6 @@ public class Enemy implements Creature {
         double xScaled = xNormalized*getMoveSpeed();
         double yScaled = yNormalized*getMoveSpeed();
         double updateX, updateY;
-
         updateX = actualXPos += xScaled;
         updateY = actualYPos += yScaled;
         setActualXPos(updateX);
@@ -86,34 +97,6 @@ public class Enemy implements Creature {
         setPosY((int) Math.round(updateY));
         DrawCircle(getPosX(), getPosY(), getSize(), getColor());
     }
-
-    public void runAwayFromPlayer(Player player){
-        double playerXPos = getActualXPos();
-        double playerYPos = getActualYPos();
-        double myXPos = player.getPosX();
-        double myYPos = player.getPosY();
-
-        double verticalValues = playerYPos - myYPos;
-        double horizontalValues = playerXPos - myXPos;
-        //Good ol' vector math
-        double magnitude = Math.sqrt(Math.pow(verticalValues,2) + Math.pow(horizontalValues,2));
-        double yNormalized = verticalValues/magnitude;
-        double xNormalized = horizontalValues/magnitude;
-        //Apply moveSpeed to scale it
-        double xScaled = xNormalized*getMoveSpeed();
-        double yScaled = yNormalized*getMoveSpeed();
-        double updateX, updateY;
-
-        updateX = actualXPos += xScaled;
-        updateY = actualYPos += yScaled;
-        setActualXPos(updateX);
-        setActualYPos(updateY);
-        setPosX((int) Math.round(updateX));
-        setPosY((int) Math.round(updateY));
-        DrawCircle(getPosX(), getPosY(), getSize(), getColor());
-    }
-
-
     @Override
     public Raylib.Color getColor() {
         return color;
