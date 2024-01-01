@@ -1,6 +1,7 @@
 import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
+import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 public class BrawlerEnemy extends Enemy{
@@ -35,8 +36,8 @@ public class BrawlerEnemy extends Enemy{
         double yNormalized = verticalValues/magnitude;
         double xNormalized = horizontalValues/magnitude;
         //Apply moveSpeed to scale it
-        double xScaled = xNormalized*getMoveSpeed();
-        double yScaled = yNormalized*getMoveSpeed();
+        double xScaled = xNormalized*(getMoveSpeed()*0.66);
+        double yScaled = yNormalized*(getMoveSpeed()*0.66);
         double updateX, updateY;
 
         updateX = actualXPos += xScaled;
