@@ -1,6 +1,5 @@
 import com.raylib.Jaylib;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -58,7 +57,7 @@ public class PlayerHandler {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
             int playerXPos = GetMouseX();
             int playerYPos = GetMouseY();
-            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos);
+            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, BLACK);
             shot.setShotTag("Player");
             shot.vectorCalculations();
             projList.add(shot);
@@ -78,11 +77,11 @@ public class PlayerHandler {
     }
 
     public void drawBurn(){
-        double thing = (double) player.getBurnDmgCount() / player.getIntialBurn();
+        double thing = (double) player.getBurnTicks() / player.getIntialBurn();
         double width = thing * 150;
         DrawRectangle(50, 900, (int) width, 40, ORANGE);
         DrawRectangleLines(50, 900, 150, 40, BLACK);
-        String s = String.format("BURN: %d", player.getBurnDmgCount());
+        String s = String.format("BURN: %d", player.getBurnTicks());
         DrawText(s, 50, 900, 20, BLACK);
     }
 
@@ -108,9 +107,6 @@ public class PlayerHandler {
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;
-        }
-        if (!isAlive){
-            DrawText("you suck",300,600,20,RED);
         }
         drawHp();
         if(player.isOnFire()){

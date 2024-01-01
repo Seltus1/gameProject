@@ -5,8 +5,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Jaylib.DARKGREEN;
 import static com.raylib.Raylib.*;
 
 public class Player implements Creature{
@@ -36,10 +34,10 @@ public class Player implements Creature{
     private Raylib.Color color;
 
 
-//    Player states
+    //    Player states
     private boolean isAlive;
     private boolean isOnFire;
-    private int burnDmgCount;
+    private int burnTicks;
     private int intialBurn;
 
 //    cooldowns
@@ -51,8 +49,12 @@ public class Player implements Creature{
 
     private final float diagCheck = (float) Math.sqrt(0.5);
 
-//    instance of other stuffs
+    //    instance of other stuffs
     private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
+
+    private int burnDamage;
+    private int burnCountDown;
+    private boolean isFireInRange;
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
@@ -70,6 +72,7 @@ public class Player implements Creature{
         this.canShoot = true;
         this.canMelee = true;
         isOnFire = false;
+        burnCountDown = 0;
     }
 
     public int horizontalCheck(){
@@ -143,12 +146,38 @@ public class Player implements Creature{
             executor.shutdown();
         });
     }
-        public void update(ProjectileHandler projList, Player player){
-            move();
-            melee(player);
-            sword.update();
-            DrawCircle(posX, posY, size, color);
+    public void update(ProjectileHandler projList, Player player){
+        move();
+        melee(player);
+        sword.update();
+        burn();
+        DrawCircle(posX, posY, size, color);
+    }
+
+    public void burn(){
+        burnCountDown++;
+        if (burnTicks != 0){
+            if ((burnCountDown + 1) % 15 == 0) {
+                hp = (hp - burnDamage);
+                if (!isFireInRange) {
+                    burnTicks -= burnDamage;
+                }
+            }
         }
+        else{
+            isOnFire = false;
+        }
+    }
+
+
+    public int getBurnDamage() {
+        return burnDamage;
+    }
+
+    public void setBurnDamage(int burnDamage) {
+        this.burnDamage = burnDamage;
+    }
+
     public boolean canShoot(){return canShoot;}
 
     public boolean canMelee() {return canMelee;}
@@ -296,12 +325,12 @@ public class Player implements Creature{
         isOnFire = onFire;
     }
 
-    public int getBurnDmgCount() {
-        return burnDmgCount;
+    public int getBurnTicks() {
+        return burnTicks;
     }
 
-    public void setBurnDmgCount(int burnDmgCount) {
-        this.burnDmgCount = burnDmgCount;
+    public void setBurnTicks(int burnTicks) {
+        this.burnTicks = burnTicks;
     }
 
     public int getIntialBurn() {
@@ -310,5 +339,25 @@ public class Player implements Creature{
 
     public void setIntialBurn(int intialBurn) {
         this.intialBurn = intialBurn;
+    }
+
+    public float getDiagCheck() {
+        return diagCheck;
+    }
+
+    public int getBurnCountDown() {
+        return burnCountDown;
+    }
+
+    public void setBurnCountDown(int burnCountDown) {
+        this.burnCountDown = burnCountDown;
+    }
+
+    public boolean isInFireRange() {
+        return isFireInRange;
+    }
+
+    public void setFireInRange(boolean fireInRange) {
+        isFireInRange = fireInRange;
     }
 }
