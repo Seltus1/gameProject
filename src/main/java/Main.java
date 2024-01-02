@@ -18,7 +18,7 @@ public class Main {
         // Create instances of necessary game objects
         Random rand = new Random();
         ProjectileHandler projectiles = new ProjectileHandler();
-        Player player1 = new Player(100, 12, 15, 750, 550, 5, 20, 700, RED);
+        Player player1 = new Player(100, 12, 15, 550, 250, 5, 20, 700, RED);
         EnemyHandler enemies = new EnemyHandler();
         PlayerHandler player = new PlayerHandler(player1);
         GameHandler game = new GameHandler();
@@ -27,7 +27,7 @@ public class Main {
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(amountOfEnemy);
+        enemies.addMultipleEnemies(1);
 
         // Main game loop
         while (!WindowShouldClose()) {
@@ -46,7 +46,7 @@ public class Main {
             enemies.update(projectiles, player1);
             projectiles.update();
             if (enemies.size() == 0) {
-                enemies.addMultipleEnemies(amountOfEnemy);
+                enemies.addMultipleEnemies(1);
             }
 
                // Display the current frames per second (FPS)

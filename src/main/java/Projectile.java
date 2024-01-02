@@ -2,6 +2,8 @@ import com.raylib.Raylib;
 
 import static com.raylib.Raylib.*;
 
+import static com.raylib.Jaylib.*;
+
 public class Projectile {
     private int shotSpeed;
     private int shotRad;
@@ -65,35 +67,21 @@ public class Projectile {
         actualPosY = enemyY;
     }
 
-    public void doubleVectorCalc(String aboveOrBelow){
-//        int enemyX = posX, enemyY = posY;
-//        int playerX = finalX, playerY = finalY;
-//        double x = playerX - enemyX;
-//        int xAdjuster = horizontalCheck((int) x);
-//        double y = playerY - enemyY;
-//        int yAdjuster = verticalCheck((int) y);
-//        double angle = Math.atan(y / x);
-////        if (longOrShort.equals("long")){
-////            angle += 20;
-////        }
-////        else{
-////            angle -= 20;
-////        }
-//        double xMul = Math.sin(angle);
-//        double yMul = Math.cos(angle);
-//        xMoveSpeed = (shotSpeed * xMul) * xAdjuster;
-//        yMoveSpeed = (shotSpeed * yMul) * yAdjuster;
-//        actualPosX = enemyX;
-//        actualPosY = enemyY;
-        int enemyX = posX, enemyY = posY;
-        int playerX = finalX, playerY = finalY;
-        double x = playerX - enemyX;
-        double y = playerY - enemyY;
+    public void doubleVectorCalc(String aboveOrBelow) {
+        vectorCalc();
+        double thing = xMoveSpeed;
+        xMoveSpeed = yMoveSpeed;
+        yMoveSpeed = thing;
+        if (aboveOrBelow.equals("above")){
+            finalX += (xMoveSpeed * -3);
+            finalY += (yMoveSpeed * 3);
+        }
+        else{
+            finalX -= (xMoveSpeed * -3);
+            finalY -= (yMoveSpeed * 3);
+        }
+        vectorCalc();
     }
-
-//    private double calculateHypot(int x, int y){
-//
-//    }
 
     private int horizontalCheck(int xValues){
         int left = 0;

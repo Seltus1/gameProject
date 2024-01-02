@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(4) + 1;
-//            int randEnemy = 4;
+//            int randEnemy = rand.nextInt(4) + 1;
+            int randEnemy = 4;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -34,7 +34,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 4){
-                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550, 15, PURPLE);
+                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 2, size, 800, 550, 15, PURPLE);
                 add(enemy);
             }
         }
