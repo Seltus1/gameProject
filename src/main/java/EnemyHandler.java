@@ -22,7 +22,7 @@ public class EnemyHandler extends ListHandler {
             int Ypos = rand.nextInt(1080);
             int size = 25;
             if(randEnemy == 1){
-                StationaryEnemy enemy = new StationaryEnemy(1, 0, Xpos, Ypos, 0, size, 5, 35, GREEN);
+                SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 5, 35, GREEN);
                 add(enemy);
             }
             else if(randEnemy == 2){
@@ -34,7 +34,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 4){
-                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800,15, PURPLE);
+                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550, 15, PURPLE);
                 add(enemy);
             }
         }
@@ -49,8 +49,8 @@ public class EnemyHandler extends ListHandler {
         int counter = 0;
         int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
-            if (get(i) instanceof StationaryEnemy){
-                StationaryEnemy enemy = (StationaryEnemy) get(i);
+            if (get(i) instanceof SniperEnemy){
+                SniperEnemy enemy = (SniperEnemy) get(i);
                 enemy.shootPlayer(player, projList,"to",RED);
             }
             else if (get(i) instanceof BrawlerEnemy){
@@ -76,13 +76,7 @@ public class EnemyHandler extends ListHandler {
             }
             if (get(i) instanceof MagicEnemy){
                 MagicEnemy enemy = (MagicEnemy) get(i);
-                if (enemy.calculateDistanceToPlayer(player) > enemy.getRange() / 1.5){
-                    enemy.followPlayer(player, "to");
-                }
-                else if (enemy.calculateDistanceToPlayer(player) < enemy.getRange() / 2){
-                    enemy.followPlayer(player, "away");
-                }
-                enemy.castSpell(player, projList,PURPLE);
+                enemy.update(player, projList, DARKPURPLE);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);

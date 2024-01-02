@@ -55,13 +55,14 @@ public class Player implements Creature{
     private int burnDamage;
     private int burnCountDown;
     private boolean isFireInRange;
+    private int shotRange;
 
 
-    public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Raylib.Color color) {
+    public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
         this.hp = hp;
         initalHp = hp;
         this.damage = damage;
-        this.range = range;
+        this.range = meleeRange;
         this.posX = posX;
         this.posY = posY;
         this.moveSpeed = moveSpeed;
@@ -75,6 +76,7 @@ public class Player implements Creature{
         burnCountDown = 0;
         intialBurn = 10;
         burnDamage = 1;
+        this.shotRange = shotRange;
     }
 
     public int horizontalCheck(){
@@ -114,43 +116,9 @@ public class Player implements Creature{
             posY += (vCheck * moveSpeed);
         }
     }
-    public void melee(Player player) {
-        if (IsKeyDown(KEY_SPACE) && canMelee()) {
-            sword.setPosX(posX);
-            sword.setPosY(posY);
 
-            // Initiate the sword attack
-            sword.attack(player, 31);
-
-            // Disable further melee attacks until cooldown is over
-            canMelee = false;
-
-            // Record the time of the last melee attack
-
-            // Reset the cooldown for the melee attack
-            cooldown(MELEE_COOLDOWN, "melee");
-        }
-    }
-    private void cooldown(int cooldown, String type){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(cooldown);
-            } catch (InterruptedException e) {
-                System.out.println("Woah, something went wrong! (check cooldown method)");
-            }
-            if(type.equals("shot")){
-                canShoot = true;
-            }
-            if(type.equals("melee")){
-                canMelee = true;
-            }
-            executor.shutdown();
-        });
-    }
-    public void update(ProjectileHandler projList, Player player){
+    public void update(ProjectileHandler projList){
         move();
-        melee(player);
         sword.update();
         burn();
         DrawCircle(posX, posY, size, color);
@@ -361,5 +329,17 @@ public class Player implements Creature{
 
     public void setFireInRange(boolean fireInRange) {
         isFireInRange = fireInRange;
+    }
+
+    public boolean isFireInRange() {
+        return isFireInRange;
+    }
+
+    public int getShotRange() {
+        return shotRange;
+    }
+
+    public void setShotRange(int shotRange) {
+        this.shotRange = shotRange;
     }
 }

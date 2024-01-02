@@ -4,16 +4,28 @@ public class ProjectileHandler extends ListHandler{
         super();
     }
 
-    public void checkProjectilesBounds(){
+    public void checkProjectilesBounds(Projectile projectile){
+        projectile.boundsCheck();
+        if (!(projectile.isInBounds())) {
+            removeObject(projectile);
+        }
+        else{
+            projectile.updateMove();
+            projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());
+        }
+    }
+
+    public void checkMaxDistance(Projectile projectile){
+        if (projectile.distanceTravelled()){
+            removeObject(projectile);
+        }
+    }
+
+    public void update(){
         for (int i = 0; i < size(); i++) {
-            Projectile current = (Projectile) get(i);
-            current.boundsCheck();
-            if (!(current.isInBounds())) {
-                removeIndex(i);
-            }
-            else{
-                current.updateMove();
-            }
+            Projectile projectile = (Projectile) get(i);
+            checkMaxDistance(projectile);
+            checkProjectilesBounds(projectile);
         }
     }
 }
