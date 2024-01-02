@@ -96,6 +96,9 @@ public void followPlayer(Player player, String tag) {
         Jaylib.Vector2 projectedVector = new Jaylib.Vector2((float) updateX,(float) updateY);
         for (int i = 0; i < enemyList.size(); i++) {
             Enemy otherEnemy = enemyList.get(i);
+            if (otherEnemy.equals(this)){
+                continue;
+            }
             double otherPosX = otherEnemy.getActualXPos();
             double otherPosY = otherEnemy.getActualYPos();
             Jaylib.Vector2 enemyPos = new Jaylib.Vector2((float) otherPosX,(float) otherPosY);
