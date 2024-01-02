@@ -15,13 +15,12 @@ public class MagicEnemy extends Enemy{
         this.spellRange = spellRange;
     }
 
-    public void castSpell(Player player, ProjectileHandler projList){
+    public void castSpell(Player player, ProjectileHandler projList, Raylib.Color color){
         if (spellRange > calculateDistanceToPlayer(player)){
             spellCoolDown++;
-            DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), DARKPURPLE);
+            DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), color);
             if ((spellCoolDown + 1) % 91 == 0){
-                Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), DARKPURPLE);
-                spell.setShotTag("Enemy");
+                Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", color);
                 spell.vectorCalculations();
                 projList.add(spell);
                 spellCoolDown = 0;

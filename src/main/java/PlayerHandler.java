@@ -10,10 +10,12 @@ import static com.raylib.Jaylib.*;
 public class PlayerHandler {
     private Player player;
     private boolean isAlive;
+    private Fire fire;
 
     public PlayerHandler(Player player){
         this.player = player;
         isAlive = true;
+        fire = new Fire();
     }
 
     public void playerIframe(int iFrame){
@@ -46,18 +48,29 @@ public class PlayerHandler {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             //lol without this, the collision bounds never got moved
-            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
-            if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad()) && currProj.getShotTag().equals("Enemy")) {
-                player.setHp(player.getHp()-((Projectile) projList.get(i)).getDamage());
-                projList.removeIndex(i);
+            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(), player.getPosY());
+            if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad())) {
+                if (currProj.getShotTag().contains("Enemy")) {
+                    player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
+                    ((Projectile) projList.get(i)).setHitPlayer(true);
+                    projList.removeIndex(i);
+                    if (currProj.getShotTag().contains("Fire")) {
+                        fire.shootAttack(player, currProj);
+                    }
+                }
+                else {
+                    ((Projectile) projList.get(i)).setHitPlayer(false);
+                }
+
+                }
             }
         }
-    }
+
     public void shoot(ProjectileHandler projList){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
             int playerXPos = GetMouseX();
             int playerYPos = GetMouseY();
-            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, BLACK);
+            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", BLACK);
             shot.setShotTag("Player");
             shot.vectorCalculations();
             projList.add(shot);

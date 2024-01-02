@@ -56,14 +56,9 @@ public class EnemyHandler extends ListHandler {
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
-                    if (!enemy.collisionWIthOtherEnemy(getEnemyList(),player,"to")){
-                        enemy.followPlayer(player,"to");
-                        enemy.attack(player);
-                    }
-                    else {
-                        DrawCircle((int)enemy.getActualXPos(),(int)enemy.getActualYPos(),enemy.getSize(),enemy.getColor());
-                    }
+                    enemy.followPlayer(player, "to");
                 }
+                enemy.attack(player);
             }
             if (get(i) instanceof  FireBrawlerEnemy) {
                 counter++;

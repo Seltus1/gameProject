@@ -24,22 +24,11 @@ public class Projectile {
     private int yMul;
     private int slopeMul;
 
+    private boolean hitPlayer;
+
     private  Raylib.Color color;
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int angleOfMovement) {
-        this.shotSpeed = shotSpeed;
-        this.posX = posX;
-        this.posY = posY;
-        this.shotRad = shotRad;
-        isInBounds = true;
-        this.angleOfMovement = angleOfMovement;
-        shotTag = null;
-        //Add this to constructor later when we have weapons
-        damage = 10;
-        DrawCircle(this.posX, this.posY, shotRad, BLACK);
-    }
-
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, Raylib.Color color) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
         this.posY = posY;
@@ -50,6 +39,7 @@ public class Projectile {
         //Add this to constructor later when we have weapons
         damage = 10;
         this.color = color;
+        this.shotTag = shotTag;
         DrawCircle(this.posX, this.posY, shotRad, color);
     }
 
@@ -257,5 +247,13 @@ public class Projectile {
 
     public void setColor(Raylib.Color color) {
         this.color = color;
+    }
+
+    public boolean isHitPlayer() {
+        return hitPlayer;
+    }
+
+    public void setHitPlayer(boolean hitPlayer) {
+        this.hitPlayer = hitPlayer;
     }
 }

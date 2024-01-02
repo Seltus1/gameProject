@@ -1,5 +1,10 @@
 import com.raylib.Raylib;
 
+import static com.raylib.Jaylib.BLACK;
+import static com.raylib.Raylib.ColorTint;
+import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
+
 public class FireBrawlerEnemy extends BrawlerEnemy{
     private Fire fire;
     private int burnCountDown;
@@ -13,11 +18,13 @@ public class FireBrawlerEnemy extends BrawlerEnemy{
 //        fire.setBurnTime(10);
         player.setBurnDamage(fire.getBurnDamage());
         super.attack(player);
-        if (calculateDistanceToPlayer(player) <= getRange()){
-            fire.attack(player);
+        if (calculateDistanceToPlayer(player) <= fire.getRange()){
+            fire.meleeAttack(player);
             player.setFireInRange(true);
             player.setOnFire(true);
-            player.setIntialBurn(fire.getBurnTime());
+        }
+        else{
+            player.setFireInRange(false);
         }
     }
 }

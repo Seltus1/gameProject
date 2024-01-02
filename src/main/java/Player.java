@@ -73,6 +73,8 @@ public class Player implements Creature{
         this.canMelee = true;
         isOnFire = false;
         burnCountDown = 0;
+        intialBurn = 10;
+        burnDamage = 1;
     }
 
     public int horizontalCheck(){
