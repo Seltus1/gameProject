@@ -77,13 +77,7 @@ public void followPlayer(Player player, String tag) {
     DrawCircle(getPosX(), getPosY(), getSize(), getColor());
 }
 
-    /**
-     * collision function: How do i make sure the object calling this method always ignores itself?
-     * @param enemyList
-     * @param player
-     * @param tag
-     * @return
-     */
+
     public boolean collisionWIthOtherEnemy(ArrayList<Enemy> enemyList, Player player, String tag){
         double[] positions = determinePositions(player, tag);
         double verticalValues = positions[0];

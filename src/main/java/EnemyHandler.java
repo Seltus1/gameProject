@@ -51,12 +51,18 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < size(); i++) {
             if (get(i) instanceof StationaryEnemy){
                 StationaryEnemy enemy = (StationaryEnemy) get(i);
-                enemy.shootPlayer(player, projList);
+                enemy.shootPlayer(player, projList,"to",RED);
             }
             else if (get(i) instanceof BrawlerEnemy){
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
-                    enemy.followPlayer(player, "to");
+                    if (!enemy.collisionWIthOtherEnemy(getEnemyList(),player,"to")){
+                        enemy.followPlayer(player,"to");
+                        enemy.attack(player);
+                    }
+                    else {
+                        DrawCircle((int)enemy.getActualXPos(),(int)enemy.getActualYPos(),enemy.getSize(),enemy.getColor());
+                    }
                 }
                 enemy.attack(player);
             }
@@ -76,7 +82,7 @@ public class EnemyHandler extends ListHandler {
                 else if (enemy.calculateDistanceToPlayer(player) < enemy.getRange() / 2){
                     enemy.followPlayer(player, "away");
                 }
-                enemy.castSpell(player, projList);
+                enemy.castSpell(player, projList,PURPLE);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
