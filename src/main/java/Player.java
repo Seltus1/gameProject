@@ -46,6 +46,7 @@ public class Player implements Creature {
     private boolean canMelee;
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
+    private long timeSinceHit;
 
     private final float diagCheck = (float) Math.sqrt(0.5);
 
@@ -345,5 +346,13 @@ public class Player implements Creature {
 
     public void setShotRange(int shotRange) {
         this.shotRange = shotRange;
+    }
+
+    public long getTimeSinceHit() {
+        return timeSinceHit;
+    }
+
+    public void setTimeSinceHit(long timeSinceHit) {
+        this.timeSinceHit = timeSinceHit;
     }
 }

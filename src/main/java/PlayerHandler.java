@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
+import java.util.*;
 
 public class PlayerHandler {
     private Player player;
@@ -18,11 +19,14 @@ public class PlayerHandler {
     private double yDir;
     private double cursorX;
     private double cursorY;
+    private Date date;
 
     public PlayerHandler(Player player){
         this.player = player;
         isAlive = true;
         fire = new Fire();
+        date = new Date();
+
     }
 
     public void playerIframe(int iFrame){
@@ -105,6 +109,7 @@ public class PlayerHandler {
             //lol without this, the collision bounds never got moved
             Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(), player.getPosY());
             if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad())) {
+                player.setTimeSinceHit(System.currentTimeMillis());
                 if (currProj.getShotTag().contains("Enemy")) {
                     if(currProj.getShotTag().contains("Pool")) {
                         currProj.setyMoveSpeed(0);
@@ -138,6 +143,13 @@ public class PlayerHandler {
             projList.add(shot);
             player.setCanShoot(false);
             cooldown(player.getSHOT_COOLDOWN(), "shot");
+        }
+    }
+    public void regen(){
+        if(System.currentTimeMillis() - player.getTimeSinceHit() > 5000){
+            if(player.getHp() < 100) {
+                player.setHp(player.getHp() + 1);
+            }
         }
     }
 
@@ -187,6 +199,7 @@ public class PlayerHandler {
             drawBurn();
         }
         drawRange();
+        regen();
     }
     public void updatePool(Projectile currProj, ProjectileHandler projList){
         if(currProj.isDraw()){
