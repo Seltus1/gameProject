@@ -57,7 +57,7 @@ public class Projectile {
         return isInBounds;
     }
 
-    public void shootLine(){
+    public void shootInLine(){
         Jaylib.Vector2 position = new Jaylib.Vector2(finalX, finalY);
         vector.moveObject(position, "to");
         updateObjectPositions();
@@ -73,7 +73,7 @@ public class Projectile {
     }
 
     public void doubleVectorCalc(String aboveOrBelow) {
-        shootLine();
+        shootInLine();
         double swap = xMoveSpeed;
         vector.setxNormalizedMovement(vector.getyNormalizedMovement());
         vector.setyNormalizedMovement(swap);
@@ -85,7 +85,7 @@ public class Projectile {
             finalX -= (xMoveSpeed * -3);
             finalY -= (yMoveSpeed * 3);
         }
-        shootLine();
+        shootInLine();
     }
 
     public void updateMove(){

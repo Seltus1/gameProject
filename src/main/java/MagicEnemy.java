@@ -24,7 +24,7 @@ public class MagicEnemy extends Enemy {
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
         Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, color);
-        spell.shootLine();
+        spell.shootInLine();
         projList.add(spell);
     }
 
@@ -41,7 +41,7 @@ public class MagicEnemy extends Enemy {
 
     public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
         Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool", spellRange, color);
-        poolShot.shootLine();
+        poolShot.shootInLine();
         projList.add(poolShot);
     }
 

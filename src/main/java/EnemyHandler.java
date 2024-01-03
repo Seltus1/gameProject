@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(5) + 1;
-//            int randEnemy = 4;
+//            int randEnemy = rand.nextInt(6) + 1;
+            int randEnemy = 6;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -38,7 +38,11 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 5){
-                FireSniperEnemy enemy = new FireSniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1));
+                FireSniperEnemy enemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1));
+                add(enemy);
+            }
+            else if (randEnemy == 6){
+                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,20, PURPLE);
                 add(enemy);
             }
         }
@@ -88,6 +92,10 @@ public class EnemyHandler extends ListHandler {
             if (get(i) instanceof MagicEnemy){
                 MagicEnemy enemy = (MagicEnemy) get(i);
                 enemy.update(player, projList, DARKPURPLE);
+            }
+            if( get(i) instanceof  StealthEnemy){
+                StealthEnemy enemy = (StealthEnemy) get(i);
+                enemy.update(player, projList);
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
