@@ -17,7 +17,17 @@ public class ProjectileHandler extends ListHandler{
 
     public void checkMaxDistance(Projectile projectile){
         if (projectile.distanceTravelled()){
-            removeObject(projectile);
+            if(projectile.getShotTag().contains("Pool")){
+                projectile.explodePoolSpell();
+                projectile.setxMoveSpeed(0);
+                projectile.setyMoveSpeed(0);
+                if(!projectile.isDraw()){
+                    removeObject(projectile);
+                }
+            }
+            else {
+                removeObject(projectile);
+            }
         }
     }
 
@@ -26,6 +36,7 @@ public class ProjectileHandler extends ListHandler{
             Projectile projectile = (Projectile) get(i);
             checkMaxDistance(projectile);
             checkProjectilesBounds(projectile);
+
         }
     }
 }

@@ -1,4 +1,5 @@
 import com.raylib.Jaylib;
+import com.raylib.Raylib;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,6 +12,12 @@ public class PlayerHandler {
     private Player player;
     private boolean isAlive;
     private Fire fire;
+    private int cooldown;
+    private int thingy;
+    private double xDir;
+    private double yDir;
+    private double cursorX;
+    private double cursorY;
 
     public PlayerHandler(Player player){
         this.player = player;
@@ -43,6 +50,54 @@ public class PlayerHandler {
 //        }
     }
 
+    public void drawRange() {
+        Raylib.Vector2 mousePos = GetMousePosition();
+        Raylib.Vector2 playerPos = player.getPos();
+        float shotRange = player.getShotRange();
+
+        // Calculate the direction vector from player to mouse
+        Raylib.Vector2 direction = new Raylib.Vector2();
+        direction.x(mousePos.x() - playerPos.x());
+        direction.y(mousePos.y() - playerPos.y());
+
+
+        // Normalize the direction vector
+        float length = (float) Math.sqrt(direction.x() * direction.x() + direction.y() * direction.y());
+        direction.x(direction.x() / length);
+        direction.y(direction.y() / length);
+
+        // Calculate the endpoint of the line based on player's position and direction
+        Raylib.Vector2 endPoint = new Raylib.Vector2();
+        endPoint.x(playerPos.x() + direction.x() * shotRange);
+        endPoint.y(playerPos.y() + direction.y() * shotRange);
+
+        // Draw the line from playerPos to endPoint
+        DrawLineV(playerPos, endPoint, BLACK);
+    }
+
+    private int horizontalCheck(int xValues){
+        int left = 0;
+        int right = 0;
+        if (xValues < 0){
+            left = 1;
+        }
+        if (xValues > 0){
+            right = 1;
+        }
+        return right - left;
+    }
+
+    private int verticalCheck(int yValues){
+        int up = 0;
+        int down = 0;
+        if (yValues < 0){
+            up = 1;
+        }
+        if (yValues > 0){
+            down = 1;
+        }
+        return down - up;
+    }
     public void gotDamagedRanged(ProjectileHandler projList) {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
@@ -51,11 +106,18 @@ public class PlayerHandler {
             Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(), player.getPosY());
             if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad())) {
                 if (currProj.getShotTag().contains("Enemy")) {
-                    player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
-                    ((Projectile) projList.get(i)).setHitPlayer(true);
-                    projList.removeIndex(i);
-                    if (currProj.getShotTag().contains("Fire")) {
-                        fire.shootAttack(player, currProj);
+                    if(currProj.getShotTag().contains("Pool")) {
+                        currProj.setyMoveSpeed(0);
+                        currProj.setxMoveSpeed(0);
+                        updatePool(currProj,projList);
+                    }
+                    else {
+                        player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
+                        ((Projectile) projList.get(i)).setHitPlayer(true);
+                        if (currProj.getShotTag().contains("Fire")) {
+                            fire.shootAttack(player, currProj);
+                        }
+                        projList.removeObject(currProj);
                     }
                 }
                 else {
@@ -123,6 +185,20 @@ public class PlayerHandler {
         drawHp();
         if(player.isOnFire()){
             drawBurn();
+        }
+        drawRange();
+    }
+    public void updatePool(Projectile currProj, ProjectileHandler projList){
+        if(currProj.isDraw()){
+            currProj.setShotRad(50);
+            cooldown++;
+            if((cooldown + 1) % 15 == 0) {
+                player.setHp(player.getHp() - currProj.getDamage());
+                cooldown = 0;
+            }
+        }
+        else {
+            projList.removeObject(currProj);
         }
     }
 

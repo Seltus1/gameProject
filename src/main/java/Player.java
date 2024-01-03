@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import static com.raylib.Raylib.*;
 
-public class Player implements Creature{
+public class Player implements Creature {
 //    HP
 
     private int hp;
@@ -69,7 +69,8 @@ public class Player implements Creature{
         this.size = size;
         this.isAlive = true;
         this.color = color;
-        this.pos = new Jaylib.Vector2(posX,posY);;
+        this.pos = new Jaylib.Vector2(posX, posY);
+        ;
         this.canShoot = true;
         this.canMelee = true;
         isOnFire = false;
@@ -79,25 +80,25 @@ public class Player implements Creature{
         this.shotRange = shotRange;
     }
 
-    public int horizontalCheck(){
+    public int horizontalCheck() {
         int left = 0;
         int right = 0;
-        if (IsKeyDown(KEY_A)){
+        if (IsKeyDown(KEY_A)) {
             left = 1;
         }
-        if (IsKeyDown(KEY_D)){
+        if (IsKeyDown(KEY_D)) {
             right = 1;
         }
         return right - left;
     }
 
-    public int verticalCheck(){
+    public int verticalCheck() {
         int up = 0;
         int down = 0;
-        if (IsKeyDown(KEY_W)){
+        if (IsKeyDown(KEY_W)) {
             up = 1;
         }
-        if (IsKeyDown(KEY_S)){
+        if (IsKeyDown(KEY_S)) {
             down = 1;
         }
         return down - up;
@@ -107,34 +108,33 @@ public class Player implements Creature{
     public void move() {
         int hCheck = horizontalCheck();
         int vCheck = verticalCheck();
-        if (hCheck != 0 && vCheck != 0){
+        if (hCheck != 0 && vCheck != 0) {
             posX += (hCheck * moveSpeed) * diagCheck;
             posY += (vCheck * moveSpeed) * diagCheck;
-        }
-        else{
+        } else {
             posX += (hCheck * moveSpeed);
             posY += (vCheck * moveSpeed);
         }
     }
 
-    public void update(ProjectileHandler projList){
+    public void update(ProjectileHandler projList) {
         move();
         sword.update();
         burn();
         DrawCircle(posX, posY, size, color);
+        setPos(new Jaylib.Vector2(posX,posY));
     }
 
-    public void burn(){
+    public void burn() {
         burnCountDown++;
-        if (burnTicks != 0){
+        if (burnTicks != 0) {
             if ((burnCountDown + 1) % 15 == 0) {
                 hp = (hp - burnDamage);
                 if (!isFireInRange) {
                     burnTicks -= burnDamage;
                 }
             }
-        }
-        else{
+        } else {
             isOnFire = false;
         }
     }
@@ -148,9 +148,13 @@ public class Player implements Creature{
         this.burnDamage = burnDamage;
     }
 
-    public boolean canShoot(){return canShoot;}
+    public boolean canShoot() {
+        return canShoot;
+    }
 
-    public boolean canMelee() {return canMelee;}
+    public boolean canMelee() {
+        return canMelee;
+    }
 
     @Override
     public int getHp() {

@@ -16,13 +16,13 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(4) + 1;
-            int randEnemy = 4;
+            int randEnemy = rand.nextInt(5) + 1;
+//            int randEnemy = 1;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
             if(randEnemy == 1){
-                SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 5, 35, GREEN);
+                SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN);
                 add(enemy);
             }
             else if(randEnemy == 2){
@@ -35,6 +35,10 @@ public class EnemyHandler extends ListHandler {
             }
             else if (randEnemy == 4){
                 MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 2, size, 800, 550, 15, PURPLE);
+                add(enemy);
+            }
+            else if(randEnemy == 5){
+                FireSniperEnemy enemy = new FireSniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1));
                 add(enemy);
             }
         }
@@ -50,10 +54,25 @@ public class EnemyHandler extends ListHandler {
         int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
             if (get(i) instanceof SniperEnemy){
-                SniperEnemy enemy = (SniperEnemy) get(i);
-                enemy.shootPlayer(player, projList,"to",RED);
+                if(get(i) instanceof  FireSniperEnemy){
+                    FireSniperEnemy enemy = (FireSniperEnemy) get(i);
+                    enemy.shoot(player,projList);
+                }
+                else {
+                    SniperEnemy enemy = (SniperEnemy) get(i);
+                    enemy.shootPlayer(player, projList, "Enemy", BLACK);
+                }
+
             }
             else if (get(i) instanceof BrawlerEnemy){
+                if (get(i) instanceof  FireBrawlerEnemy) {
+                    counter++;
+                    FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
+                    enemy.attack(player);
+                    if (enemy.calculateDistanceToPlayer(player) >= enemy.getRange()){
+                        falseCounter++;
+                    }
+                }
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
                 if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
                     if (!enemy.collisionWIthOtherEnemy(getEnemyList(),player,"to")){
@@ -65,14 +84,6 @@ public class EnemyHandler extends ListHandler {
                     }
                 }
                 enemy.attack(player);
-            }
-            if (get(i) instanceof  FireBrawlerEnemy) {
-                counter++;
-                FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
-                enemy.attack(player);
-                if (enemy.calculateDistanceToPlayer(player) >= enemy.getRange()){
-                    falseCounter++;
-                }
             }
             if (get(i) instanceof MagicEnemy){
                 MagicEnemy enemy = (MagicEnemy) get(i);

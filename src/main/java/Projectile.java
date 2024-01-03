@@ -24,8 +24,10 @@ public class Projectile {
     private int xMul;
     private int yMul;
     private int slopeMul;
+    private int cooldown;
 
     private boolean hitPlayer;
+    private boolean draw = true;
 
     private  Raylib.Color color;
     private int maxRange;
@@ -45,6 +47,9 @@ public class Projectile {
         this.shotTag = shotTag;
         DrawCircle(this.posX, this.posY, shotRad, color);
         this.maxRange = maxRange;
+        actualPosX = posX;
+        actualPosY = posY;
+
     }
 
     public boolean isInBounds() {
@@ -52,19 +57,25 @@ public class Projectile {
     }
 
     public void vectorCalc(){
-        double enemyX = posX, enemyY = posY;
-        double playerX = finalX, playerY = finalY;
+        int enemyX = posX, enemyY = posY;
+        int playerX = finalX, playerY = finalY;
 //        making a y = mx + b function
-        double y = playerY - enemyY;
-        double x = playerX - enemyX;
-        quadrentCheck(y, x);
-        double totalDistance = (Math.abs(playerX - enemyX) + Math.abs(playerY - enemyY));
-        double xPct = Math.abs(playerX - enemyX) / totalDistance;
-        double yPct = 1 - xPct;
-        xMoveSpeed = (xPct * shotSpeed) * xMul;
-        yMoveSpeed = (yPct * shotSpeed) * yMul;
-        actualPosX = enemyX;
-        actualPosY = enemyY;
+        int y = playerY - enemyY;
+        int x = playerX - enemyX;
+        yMul = verticalCheck(y);
+        xMul = horizontalCheck(x);
+        double hypot = Math.sqrt(x*x + y*y);
+        double yNormalized = (y / hypot);
+        double xNormalized = (x / hypot);
+        xMoveSpeed = xNormalized * shotSpeed;
+        yMoveSpeed = yNormalized * shotSpeed;
+        double updateX = getActualPosX() + xMoveSpeed;
+        double updateY = getActualPosY() + yMoveSpeed;
+        setActualPosX(updateX);
+        setActualPosY(updateY);
+        setPosX((int)(Math.round(updateX)));
+        setPosY((int)(Math.round(updateY)));
+
     }
 
     public void doubleVectorCalc(String aboveOrBelow) {
@@ -157,6 +168,14 @@ public class Projectile {
         return false;
     }
 
+    public void explodePoolSpell(){
+        shotRad = 50;
+        cooldown++;
+        if((cooldown + 1) % 61 == 0){
+            draw = false;
+            cooldown = 0;
+        }
+    }
     public int getPosX() {
         return posX;
     }
@@ -326,5 +345,13 @@ public class Projectile {
 
     public void setDistanceTravelled(int distanceTravelled) {
         this.distanceTravelled = distanceTravelled;
+    }
+
+    public boolean isDraw() {
+        return draw;
+    }
+
+    public void setDraw(boolean draw) {
+        this.draw = draw;
     }
 }

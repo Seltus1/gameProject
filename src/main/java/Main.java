@@ -27,7 +27,7 @@ public class Main {
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(1);
+        enemies.addMultipleEnemies(amountOfEnemy);
 
         // Main game loop
         while (!WindowShouldClose()) {
@@ -41,13 +41,13 @@ public class Main {
 //           if(player1.getHp() >= 0) {
                // Update the player and enemies
 
-            player1.update(projectiles);
             player.update(enemies, projectiles);
             enemies.update(projectiles, player1);
             projectiles.update();
             if (enemies.size() == 0) {
                 enemies.addMultipleEnemies(1);
             }
+            player1.update(projectiles);
 
                // Display the current frames per second (FPS)
 
