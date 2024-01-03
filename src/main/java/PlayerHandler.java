@@ -139,7 +139,7 @@ public class PlayerHandler {
             int playerYPos = GetMouseY();
             Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), BLACK);
             shot.setShotTag("Player");
-            shot.vectorCalc();
+            shot.shootLine();
             projList.add(shot);
             player.setCanShoot(false);
             cooldown(player.getSHOT_COOLDOWN(), "shot");

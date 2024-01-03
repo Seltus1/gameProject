@@ -24,6 +24,7 @@ public class Enemy implements Creature {
 
     public double actualXPos;
     public double actualYPos;
+    private Vector vector;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
@@ -36,6 +37,7 @@ public class Enemy implements Creature {
         this.color = color;
         this.isAlive = true;
         this.pos = new Jaylib.Vector2(posX,posY);
+        vector = new Vector(posX, posY, moveSpeed);
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
     }
@@ -56,24 +58,12 @@ public class Enemy implements Creature {
     }
 
     public int calculateDistanceToPlayer(Player player){
-        int y = player.getPosY() - getPosY();
-        int x = player.getPosX() - getPosX();
-        int totalDist = Math.abs(x) + Math.abs(y);
-        return totalDist;
+        int totalDistance = vector.distanceToOtherObject(player.getPosX(), player.getPosY());
+        return totalDistance;
     }
 public void followPlayer(Player player, String tag) {
-    double[] positions = determinePositions(player, tag);
-    double verticalValues = positions[0];
-    double horizontalValues = positions[1];
-    double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
-    double xScaled = normalizedValues[0] * getMoveSpeed();
-    double yScaled = normalizedValues[1] * getMoveSpeed();
-
-    double[] updatedPositions = updatePositions(xScaled, yScaled);
-    double updateX = updatedPositions[0];
-    double updateY = updatedPositions[1];
-
-    updateObjectPositions(updateX, updateY);
+    vector.moveObject(player.getPos(), tag);
+    updateObjectPositions();
     DrawCircle(getPosX(), getPosY(), getSize(), getColor());
 }
 
@@ -123,20 +113,11 @@ public void followPlayer(Player player, String tag) {
         double xNormalized = horizontalValues / magnitude;
         return new double[]{xNormalized, yNormalized};
     }
-    private double[] updatePositions(double xScaled, double yScaled) {
-        double updateX = getActualXPos() + xScaled;
-        double updateY = getActualYPos() + yScaled;
-        setActualXPos(updateX);
-        setActualYPos(updateY);
-        setPosX((int) Math.round(updateX));
-        setPosY((int) Math.round(updateY));
-        return new double[]{updateX, updateY};
-    }
-    private void updateObjectPositions(double updateX, double updateY) {
-        setActualXPos(updateX);
-        setActualYPos(updateY);
-        setPosX((int) Math.round(updateX));
-        setPosY((int) Math.round(updateY));
+    private void updateObjectPositions() {
+        actualXPos = vector.getActualXPos();
+        actualYPos = vector.getActualYPos();
+        posX = vector.getPosX();
+        posY = vector.getPosY();
     }
     @Override
     public Raylib.Color getColor() {

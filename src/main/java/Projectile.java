@@ -1,8 +1,7 @@
+import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import static com.raylib.Raylib.*;
-
-import static com.raylib.Jaylib.*;
 
 public class Projectile {
     private int shotSpeed;
@@ -10,8 +9,8 @@ public class Projectile {
     private int posX;
     private int posY;
 
-    private double actualPosX;
-    private double actualPosY;
+    private double actualXPos;
+    private double actualYPos;
     private boolean isInBounds;
     private int angleOfMovement;
     private int damage;
@@ -33,6 +32,8 @@ public class Projectile {
     private int maxRange;
     private int distanceTravelled;
 
+    private Vector vector;
+
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
@@ -47,42 +48,35 @@ public class Projectile {
         this.shotTag = shotTag;
         DrawCircle(this.posX, this.posY, shotRad, color);
         this.maxRange = maxRange;
-        actualPosX = posX;
-        actualPosY = posY;
-
+        actualXPos = posX;
+        actualYPos = posY;
+        vector = new Vector(posX, posY, shotSpeed);
     }
 
     public boolean isInBounds() {
         return isInBounds;
     }
 
-    public void vectorCalc(){
-        int enemyX = posX, enemyY = posY;
-        int playerX = finalX, playerY = finalY;
-//        making a y = mx + b function
-        int y = playerY - enemyY;
-        int x = playerX - enemyX;
-        yMul = verticalCheck(y);
-        xMul = horizontalCheck(x);
-        double hypot = Math.sqrt(x*x + y*y);
-        double yNormalized = (y / hypot);
-        double xNormalized = (x / hypot);
-        xMoveSpeed = xNormalized * shotSpeed;
-        yMoveSpeed = yNormalized * shotSpeed;
-        double updateX = getActualPosX() + xMoveSpeed;
-        double updateY = getActualPosY() + yMoveSpeed;
-        setActualPosX(updateX);
-        setActualPosY(updateY);
-        setPosX((int)(Math.round(updateX)));
-        setPosY((int)(Math.round(updateY)));
+    public void shootLine(){
+        Jaylib.Vector2 position = new Jaylib.Vector2(finalX, finalY);
+        vector.moveObject(position, "to");
+        updateObjectPositions();
+    }
 
+    private void updateObjectPositions() {
+        actualXPos = vector.getActualXPos();
+        actualYPos = vector.getActualYPos();
+        posX = vector.getPosX();
+        posY = vector.getPosY();
+        yMoveSpeed = vector.getyNormalizedMovement();
+        xMoveSpeed = vector.getxNormalizedMovement();
     }
 
     public void doubleVectorCalc(String aboveOrBelow) {
-        vectorCalc();
-        double thing = xMoveSpeed;
-        xMoveSpeed = yMoveSpeed;
-        yMoveSpeed = thing;
+        shootLine();
+        double swap = xMoveSpeed;
+        vector.setxNormalizedMovement(vector.getyNormalizedMovement());
+        vector.setyNormalizedMovement(swap);
         if (aboveOrBelow.equals("above")){
             finalX += (xMoveSpeed * -3);
             finalY += (yMoveSpeed * 3);
@@ -91,65 +85,14 @@ public class Projectile {
             finalX -= (xMoveSpeed * -3);
             finalY -= (yMoveSpeed * 3);
         }
-        vectorCalc();
-    }
-
-    private int horizontalCheck(int xValues){
-        int left = 0;
-        int right = 0;
-        if (xValues < 0){
-            left = 1;
-        }
-        if (xValues > 0){
-            right = 1;
-        }
-        return right - left;
-    }
-
-    private int verticalCheck(int yValues){
-        int up = 0;
-        int down = 0;
-        if (yValues < 0){
-            up = 1;
-        }
-        if (yValues > 0){
-            down = 1;
-        }
-        return down - up;
-    }
-
-    private void quadrentCheck(double num, double deno){
-        if (num < 0 && deno < 0){
-            xMul = -1;
-            yMul = -1;
-            slopeMul = -1;
-        }
-        else if (num < 0 && deno > 0){
-            xMul = 1;
-            yMul = -1;
-            slopeMul = 1;
-        }
-        else if (num > 0 && deno > 0) {
-            xMul = 1;
-            yMul = 1;
-            slopeMul = -1;
-        }
-        else if( num == 0 && deno > 0){
-            xMul = 1;
-            yMul = 0;
-        }
-        else{
-            xMul = -1;
-            yMul = 1;
-            slopeMul = 1;
-        }
+        shootLine();
     }
 
     public void updateMove(){
-        this.actualPosY += yMoveSpeed;
-        this.posY = (int) Math.round(actualPosY);
-        this.actualPosX += xMoveSpeed;
-        this.posX = (int) Math.round(actualPosX);
+        this.actualYPos += yMoveSpeed;
+        this.posY = (int) Math.round(actualYPos);
+        this.actualXPos += xMoveSpeed;
+        this.posX = (int) Math.round(actualXPos);
         update();
     }
     public void boundsCheck(){
@@ -227,20 +170,20 @@ public class Projectile {
         this.posY = posY;
     }
 
-    public double getActualPosX() {
-        return actualPosX;
+    public double getActualXPos() {
+        return actualXPos;
     }
 
-    public void setActualPosX(double actualPosX) {
-        this.actualPosX = actualPosX;
+    public void setActualXPos(double actualXPos) {
+        this.actualXPos = actualXPos;
     }
 
-    public double getActualPosY() {
-        return actualPosY;
+    public double getActualYPos() {
+        return actualYPos;
     }
 
-    public void setActualPosY(double actualPosY) {
-        this.actualPosY = actualPosY;
+    public void setActualYPos(double actualYPos) {
+        this.actualYPos = actualYPos;
     }
 
     public void setInBounds(boolean inBounds) {

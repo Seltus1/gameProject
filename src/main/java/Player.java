@@ -48,7 +48,6 @@ public class Player implements Creature {
     private static final int MELEE_COOLDOWN = 1000;
     private long timeSinceHit;
 
-    private final float diagCheck = (float) Math.sqrt(0.5);
 
     //    instance of other stuffs
     private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
@@ -57,6 +56,7 @@ public class Player implements Creature {
     private int burnCountDown;
     private boolean isFireInRange;
     private int shotRange;
+    private Vector vector;
 
 
     public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
@@ -71,7 +71,6 @@ public class Player implements Creature {
         this.isAlive = true;
         this.color = color;
         this.pos = new Jaylib.Vector2(posX, posY);
-        ;
         this.canShoot = true;
         this.canMelee = true;
         isOnFire = false;
@@ -79,51 +78,21 @@ public class Player implements Creature {
         intialBurn = 10;
         burnDamage = 1;
         this.shotRange = shotRange;
-    }
-
-    public int horizontalCheck() {
-        int left = 0;
-        int right = 0;
-        if (IsKeyDown(KEY_A)) {
-            left = 1;
-        }
-        if (IsKeyDown(KEY_D)) {
-            right = 1;
-        }
-        return right - left;
-    }
-
-    public int verticalCheck() {
-        int up = 0;
-        int down = 0;
-        if (IsKeyDown(KEY_W)) {
-            up = 1;
-        }
-        if (IsKeyDown(KEY_S)) {
-            down = 1;
-        }
-        return down - up;
-    }
-
-
-    public void move() {
-        int hCheck = horizontalCheck();
-        int vCheck = verticalCheck();
-        if (hCheck != 0 && vCheck != 0) {
-            posX += (hCheck * moveSpeed) * diagCheck;
-            posY += (vCheck * moveSpeed) * diagCheck;
-        } else {
-            posX += (hCheck * moveSpeed);
-            posY += (vCheck * moveSpeed);
-        }
+        vector = new Vector(posX, posY, moveSpeed);
     }
 
     public void update(ProjectileHandler projList) {
-        move();
+        vector.playerMove();
+        updatePosition(vector.getPosX(), vector.getPosY());
         sword.update();
         burn();
         DrawCircle(posX, posY, size, color);
         setPos(new Jaylib.Vector2(posX,posY));
+    }
+
+    public void updatePosition(int xPos, int yPos){
+        posX = xPos;
+        posY = yPos;
     }
 
     public void burn() {
@@ -316,9 +285,6 @@ public class Player implements Creature {
         this.intialBurn = intialBurn;
     }
 
-    public float getDiagCheck() {
-        return diagCheck;
-    }
 
     public int getBurnCountDown() {
         return burnCountDown;
