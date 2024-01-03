@@ -100,6 +100,7 @@ public class Player implements Creature {
         if (burnTicks != 0) {
             if ((burnCountDown + 1) % 15 == 0) {
                 hp = (hp - burnDamage);
+                setTimeSinceHit(System.currentTimeMillis());
                 if (!isFireInRange) {
                     burnTicks -= burnDamage;
                 }

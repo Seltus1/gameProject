@@ -147,7 +147,7 @@ public class PlayerHandler {
     }
     public void regen(){
         if(System.currentTimeMillis() - player.getTimeSinceHit() > 5000){
-            if(player.getHp() < 100) {
+            if(player.getHp() < player.getInitalHp()) {
                 player.setHp(player.getHp() + 1);
             }
         }
@@ -207,6 +207,7 @@ public class PlayerHandler {
             cooldown++;
             if((cooldown + 1) % 15 == 0) {
                 player.setHp(player.getHp() - currProj.getDamage());
+                player.setTimeSinceHit(System.currentTimeMillis());
                 cooldown = 0;
             }
         }

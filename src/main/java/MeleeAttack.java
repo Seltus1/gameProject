@@ -1,11 +1,9 @@
-
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-//TEST
-//TESTING AGAIN
+
 public class MeleeAttack {
     private int damage;
     private int posX;
@@ -27,6 +25,7 @@ public class MeleeAttack {
         cooldown++;
         if(cooldown  % time == 0){
             player.setHp(player.getHp() - damage);
+            player.setTimeSinceHit(System.currentTimeMillis());
             cooldown = 0;
         }
 
