@@ -18,6 +18,7 @@ public class Enemy implements Creature {
     private boolean canMelee;
     private boolean canRange;
     private boolean isAlive;
+    private boolean shouldDraw;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
     private Ellipse2D.Double circle;
@@ -40,6 +41,7 @@ public class Enemy implements Creature {
         vector = new Vector(posX, posY, moveSpeed);
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
+        shouldDraw = true;
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {
@@ -64,7 +66,9 @@ public class Enemy implements Creature {
 public void followPlayer(Player player, String tag) {
     vector.moveObject(player.getPos(), tag);
     updateObjectPositions();
-    DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+    if(isShouldDraw()) {
+        DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+    }
 }
 
 
@@ -253,5 +257,13 @@ public void followPlayer(Player player, String tag) {
 
     public void setActualYPos(double actualYPos) {
         this.actualYPos = actualYPos;
+    }
+
+    public boolean isShouldDraw() {
+        return shouldDraw;
+    }
+
+    public void setShouldDraw(boolean shouldDraw) {
+        this.shouldDraw = shouldDraw;
     }
 }

@@ -47,6 +47,7 @@ public class Player implements Creature {
     private final int SHOT_COOLDOWN = 500;
     private static final int MELEE_COOLDOWN = 1000;
     private long timeSinceHit;
+    private int regenCooldown;
 
 
     //    instance of other stuffs
@@ -79,6 +80,7 @@ public class Player implements Creature {
         burnDamage = 1;
         this.shotRange = shotRange;
         vector = new Vector(posX, posY, moveSpeed);
+        regenCooldown = 5000;
     }
 
     public void update(ProjectileHandler projList) {
@@ -321,5 +323,13 @@ public class Player implements Creature {
 
     public void setTimeSinceHit(long timeSinceHit) {
         this.timeSinceHit = timeSinceHit;
+    }
+
+    public int getRegenCooldown() {
+        return regenCooldown;
+    }
+
+    public void setRegenCooldown(int regenCooldown) {
+        this.regenCooldown = regenCooldown;
     }
 }
