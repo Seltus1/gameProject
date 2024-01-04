@@ -1,6 +1,8 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import java.util.Random;
+
 import static com.raylib.Jaylib.*;
 
 public class StealthEnemy extends Enemy{
@@ -14,6 +16,8 @@ public class StealthEnemy extends Enemy{
     private int cooldown;
     private int footstepCooldown;
     private int numShots;
+    private Footstep footstep;
+    private Random rand;
 
     public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color){
         super(hp,damage,posX,posY,moveSpeed,size,range,color);
@@ -24,6 +28,8 @@ public class StealthEnemy extends Enemy{
         pos.x(posX);
         pos.y(posY);
         isReloading = false;
+        footstep = new Footstep(posX,posY,0);
+        rand = new Random();
 
     }
 
@@ -88,11 +94,12 @@ public class StealthEnemy extends Enemy{
     }
     public void footsteps(){
         if(isCloaked){
-            Footstep footstep;
             footstepCooldown++;
             if((footstepCooldown + 1) % 61 == 0){
-                footstep = new Footstep(getPosX(),getPosY(), 3000);
-                footstep.draw();
+                footstep.setLifeTime(200);
+                footstep.setPosX(getPosX() + rand.nextInt(200) - 100);
+                footstep.setPosY(getPosY()+ rand.nextInt(200) - 100);
+                footstep.setTimeFirstDrawn(System.currentTimeMillis());
             }
         }
     }
@@ -102,6 +109,7 @@ public class StealthEnemy extends Enemy{
         cloak(player);
         shoot(player, projList);
         footsteps();
+        footstep.draw();
     }
 
     public Raylib.Color getInitialColor() {
