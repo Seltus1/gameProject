@@ -42,7 +42,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 6){
-                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,20, PURPLE);
+                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,20, GRAY);
                 add(enemy);
             }
         }
@@ -99,10 +99,11 @@ public class EnemyHandler extends ListHandler {
             }
             Enemy enemy = (Enemy) get(i);
             enemy.gotDamagedRanged(projList);
+//            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);
             if (!enemy.isAlive()){
                 removeIndex(i);
             }
-            else{
+            else if(enemy.isShouldDraw()){
                 DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
             }
             if (falseCounter == counter){

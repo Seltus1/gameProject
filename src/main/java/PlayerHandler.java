@@ -146,7 +146,7 @@ public class PlayerHandler {
         }
     }
     public void regen(){
-        if(System.currentTimeMillis() - player.getTimeSinceHit() > 5000){
+        if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
             if(player.getHp() < player.getInitalHp()) {
                 player.setHp(player.getHp() + 1);
             }
