@@ -27,7 +27,7 @@ public class Main {
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(1);
+        enemies.addMultipleEnemies(10);
 
         // Main game loop
         while (!WindowShouldClose()) {

@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(6) + 1;
-            int randEnemy = 6;
+           int randEnemy = rand.nextInt(6) + 1;
+            //int randEnemy = 6;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;

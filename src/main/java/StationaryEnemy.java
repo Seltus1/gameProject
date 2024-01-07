@@ -23,8 +23,8 @@ public class StationaryEnemy extends Enemy{
         if((shotTimer +1 )% shotCooldown == 0) {
             int playerXPos = player.getPosX();
             int playerYPos = player.getPosY();
-            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, color);
-            shot.vectorCalculations();
+            Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, getRange(),color);
+            shot.doubleVectorCalc(shotTag);
             projList.add(shot);
             canShoot = false;
             shotTimer = 0;
