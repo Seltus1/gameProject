@@ -120,7 +120,10 @@ public class PlayerHandler {
                         player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
                         ((Projectile) projList.get(i)).setHitPlayer(true);
                         if (currProj.getShotTag().contains("Fire")) {
-                            fire.shootAttack(player, currProj);
+                            fire.shootAttack(player);
+                        }
+                        if(currProj.getShotTag().contains("Inferno")){
+                            fire.magicLongShoot(player);
                         }
                         projList.removeObject(currProj);
                     }
@@ -135,6 +138,7 @@ public class PlayerHandler {
 
     public void shoot(ProjectileHandler projList){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
+            player.setShooting(true);
             int playerXPos = GetMouseX();
             int playerYPos = GetMouseY();
             Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), BLACK);
@@ -143,6 +147,9 @@ public class PlayerHandler {
             projList.add(shot);
             player.setCanShoot(false);
             cooldown(player.getSHOT_COOLDOWN(), "shot");
+        }
+        else{
+            player.setShooting(false);
         }
     }
     public void regen(){
@@ -169,6 +176,23 @@ public class PlayerHandler {
         DrawRectangleLines(50, 900, 150, 40, BLACK);
         String s = String.format("BURN: %d", player.getBurnTicks());
         DrawText(s, 50, 900, 20, BLACK);
+    }
+
+    public void drawInferno(){
+        if(player.isInferno()) {
+            player.setColor(ORANGE);
+            if(!player.isOnFire()){
+                DrawCircle(50,920,25,BLACK);
+                DrawCircle(50,920,10,ORANGE);
+            }
+            else{
+                DrawCircle(230,920,25,BLACK);
+                DrawCircle(230,920,10,ORANGE);
+            }
+        }
+        else{
+            player.setColor(RED);
+        }
     }
 
 
@@ -198,6 +222,7 @@ public class PlayerHandler {
         if(player.isOnFire()){
             drawBurn();
         }
+        drawInferno();
         drawRange();
         regen();
     }

@@ -25,7 +25,7 @@ public class Enemy implements Creature {
 
     public double actualXPos;
     public double actualYPos;
-    private Vector vector;
+    private Vector2D vector;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
@@ -38,7 +38,7 @@ public class Enemy implements Creature {
         this.color = color;
         this.isAlive = true;
         this.pos = new Jaylib.Vector2(posX,posY);
-        vector = new Vector(posX, posY, moveSpeed);
+        vector = new Vector2D(posX, posY, moveSpeed);
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
         shouldDraw = true;

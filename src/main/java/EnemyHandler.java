@@ -17,7 +17,7 @@ public class EnemyHandler extends ListHandler {
     public boolean addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
 //            int randEnemy = rand.nextInt(6) + 1;
-            int randEnemy = 6;
+            int randEnemy = 7;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -34,15 +34,23 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 4){
-                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 2, size, 800, 550, 15, PURPLE);
+                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550,
+                        15, PURPLE);
                 add(enemy);
             }
             else if(randEnemy == 5){
-                FireSniperEnemy enemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1));
+                FireSniperEnemy enemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300,
+                        35, ColorFromHSV(29,1,1));
                 add(enemy);
             }
             else if (randEnemy == 6){
-                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,20, GRAY);
+                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,
+                        20, GRAY);
+                add(enemy);
+            }
+            else if (randEnemy == 7){
+                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size,
+                        800,1300,20, ORANGE);
                 add(enemy);
             }
         }
@@ -90,8 +98,16 @@ public class EnemyHandler extends ListHandler {
                 enemy.attack(player);
             }
             if (get(i) instanceof MagicEnemy){
-                MagicEnemy enemy = (MagicEnemy) get(i);
-                enemy.update(player, projList, DARKPURPLE);
+                if(get(i) instanceof FireMagicEnemy){
+                    FireMagicEnemy enemy = (FireMagicEnemy) get(i);
+                    enemy.update(player,projList,BLACK);
+                    enemy.move(player);
+                    enemy.drawHat();
+                }
+                else {
+                    MagicEnemy enemy = (MagicEnemy) get(i);
+                    enemy.update(player, projList, DARKPURPLE);
+                }
             }
             if( get(i) instanceof  StealthEnemy){
                 StealthEnemy enemy = (StealthEnemy) get(i);

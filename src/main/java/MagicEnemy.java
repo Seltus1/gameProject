@@ -1,7 +1,9 @@
 import com.raylib.Raylib;
 
 import java.util.Random;
+import java.util.Vector;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class MagicEnemy extends Enemy {
@@ -22,8 +24,8 @@ public class MagicEnemy extends Enemy {
         PoolColor = ColorFromHSV(278,.93f,.26f);
     }
 
-    public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, color);
+    public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag) {
+        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, color);
         spell.shootInLine();
         projList.add(spell);
     }
@@ -45,45 +47,55 @@ public class MagicEnemy extends Enemy {
         projList.add(poolShot);
     }
 
-    public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
+    public void shoot(Player player, ProjectileHandler projList, Raylib.Color color){
+        int rand = random.nextInt(2) + 1;
         if (getRange() > calculateDistanceToPlayer(player)) {
             spellCoolDown++;
-            DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), color);
-            int rand = random.nextInt(2) + 1;
             if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
-                if ((spellCoolDown + 1) % 91 == 0){
-                    if(rand == 1) {
-                        castLongSpell(player, projList, color);
-                    }
-                    else {
+                if ((spellCoolDown + 1) % 91 == 0) {
+                    if (rand == 1) {
+                        castLongSpell(player, projList, color, "Enemy");
+                    } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
                     spellCoolDown = 0;
                 }
-                followPlayer(player, "to");
-            }
-            else if (calculateDistanceToPlayer(player) < getRange() / 2) {
-                if ((spellCoolDown + 1) % 91 == 0){
+            } else if (calculateDistanceToPlayer(player) < getRange() / 2) {
+                if ((spellCoolDown + 1) % 91 == 0) {
                     castCloseSpell(player, projList, color);
                     spellCoolDown = 0;
                 }
-                followPlayer(player, "away");
-            }
-            else {
-                if ((spellCoolDown + 1) % 91 == 0){
-                    if(rand == 1) {
-                        castLongSpell(player, projList, color);
-                    }
-                    else {
+            } else {
+                if ((spellCoolDown + 1) % 91 == 0) {
+                    if (rand == 1) {
+                        castLongSpell(player, projList, color, "Enemy");
+                    } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
                     spellCoolDown = 0;
                 }
             }
-
         }
-        else{
+    }
+    public void move(Player player){
+        if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
             followPlayer(player, "to");
         }
+        else if (calculateDistanceToPlayer(player) < getRange() / 2) {
+            followPlayer(player, "away");
+        }
+    }
+
+    public void drawHat(){
+        Vector2D v1 = new Vector2D(getPosX(), getPosY() - 50, getMoveSpeed());
+        Vector2D v2 = new Vector2D(getPosX() - 20, getPosY() - 30, getMoveSpeed());
+        Vector2D v3 = new Vector2D(getPosX() + 20, getPosY() - 30, getMoveSpeed());
+        DrawTriangle(v1.getPosition(),v2.getPosition(),v3.getPosition(),BLACK);
+    }
+    public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
+        DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), color);
+        shoot(player,projList, color);
+        move(player);
+        drawHat();
     }
 }

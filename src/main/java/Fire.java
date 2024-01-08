@@ -37,18 +37,23 @@ public class Fire {
         }
     }
 
-    public void shootAttack(Player player, Projectile proj){
-            player.setOnFire(true);
-            if(player.getBurnTicks() < player.getIntialBurn()) {
-                if(player.getBurnTicks() + 5 >= player.getIntialBurn()){
-                    player.setBurnTicks(player.getIntialBurn());
-                }
-                else {
-                    player.setBurnTicks(player.getBurnTicks() + 5);
-                }
+    public void shootAttack(Player player){
+        player.setOnFire(true);
+        if(player.getBurnTicks() < player.getIntialBurn()) {
+            if(player.getBurnTicks() + 5 >= player.getIntialBurn()){
+                player.setBurnTicks(player.getIntialBurn());
             }
-
+            else {
+                player.setBurnTicks(player.getBurnTicks() + 5);
+            }
         }
+
+    }
+
+    public void magicLongShoot(Player player){
+        player.setInferno(true);
+        player.setInfernoCount(10);
+    }
 
 
     public String getCurrency() {

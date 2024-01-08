@@ -34,7 +34,7 @@ public class Main {
             // Begin drawing on the window
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
-            ClearBackground(RAYWHITE);
+                ClearBackground(RAYWHITE);
 //            if(game.isIsinMenu()){
 //                game.update();
 //            }

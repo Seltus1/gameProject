@@ -32,7 +32,7 @@ public class Projectile {
     private int maxRange;
     private int distanceTravelled;
 
-    private Vector vector;
+    private Vector2D vector;
 
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
@@ -50,7 +50,7 @@ public class Projectile {
         this.maxRange = maxRange;
         actualXPos = posX;
         actualYPos = posY;
-        vector = new Vector(posX, posY, shotSpeed);
+        vector = new Vector2D(posX, posY, shotSpeed);
     }
 
     public boolean isInBounds() {

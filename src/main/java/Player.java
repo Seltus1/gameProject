@@ -1,10 +1,6 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import static com.raylib.Raylib.*;
 
 public class Player implements Creature {
@@ -37,17 +33,20 @@ public class Player implements Creature {
     //    Player states
     private boolean isAlive;
     private boolean isOnFire;
+    private boolean isInferno;
     private int burnTicks;
     private int intialBurn;
+    private boolean isShooting;
 
 //    cooldowns
 
     private boolean canShoot;
     private boolean canMelee;
     private final int SHOT_COOLDOWN = 500;
-    private static final int MELEE_COOLDOWN = 1000;
     private long timeSinceHit;
     private int regenCooldown;
+    private int infernoCooldown;
+
 
 
     //    instance of other stuffs
@@ -55,9 +54,10 @@ public class Player implements Creature {
 
     private int burnDamage;
     private int burnCountDown;
+    private int InfernoCount;
     private boolean isFireInRange;
     private int shotRange;
-    private Vector vector;
+    private Vector2D vector;
 
 
     public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
@@ -79,7 +79,7 @@ public class Player implements Creature {
         intialBurn = 10;
         burnDamage = 1;
         this.shotRange = shotRange;
-        vector = new Vector(posX, posY, moveSpeed);
+        vector = new Vector2D(posX, posY, moveSpeed);
         regenCooldown = 5000;
     }
 
@@ -87,6 +87,7 @@ public class Player implements Creature {
         vector.playerMove();
         updatePosition(vector.getPosX(), vector.getPosY());
         sword.update();
+        inferno();
         burn();
         DrawCircle(posX, posY, size, color);
         setPos(new Jaylib.Vector2(posX,posY));
@@ -109,6 +110,22 @@ public class Player implements Creature {
             }
         } else {
             isOnFire = false;
+        }
+    }
+    public void inferno(){
+        if(getInfernoCount() != 0) {
+            infernoCooldown++;
+            if((infernoCooldown + 1) % 15 == 0){
+                setTimeSinceHit(System.currentTimeMillis());
+                setInfernoCount(getInfernoCount() - 1);
+            }
+            if(isShooting){
+                burnTicks += 3;
+                isOnFire = true;
+            }
+        }
+        else{
+            isInferno = false;
         }
     }
 
@@ -331,5 +348,29 @@ public class Player implements Creature {
 
     public void setRegenCooldown(int regenCooldown) {
         this.regenCooldown = regenCooldown;
+    }
+
+    public boolean isInferno() {
+        return isInferno;
+    }
+
+    public void setInferno(boolean inferno) {
+        isInferno = inferno;
+    }
+
+    public int getInfernoCount() {
+        return InfernoCount;
+    }
+
+    public void setInfernoCount(int infernoCount) {
+        InfernoCount = infernoCount;
+    }
+
+    public boolean isShooting() {
+        return isShooting;
+    }
+
+    public void setShooting(boolean shooting) {
+        isShooting = shooting;
     }
 }

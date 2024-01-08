@@ -2,7 +2,7 @@ import com.raylib.Jaylib;
 
 import static com.raylib.Raylib.*;
 
-public class Vector {
+public class Vector2D {
     private final float diagCheck = (float) Math.sqrt(0.5);
     private int posX;
     private int posY;
@@ -12,7 +12,7 @@ public class Vector {
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
-    public Vector(int posX, int posY, int moveSpeed){
+    public Vector2D(int posX, int posY, int moveSpeed){
         this.posX = posX;
         actualXPos = posX;
         this.posY = posY;
