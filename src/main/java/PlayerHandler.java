@@ -14,6 +14,7 @@ public class PlayerHandler {
     private boolean isAlive;
     private Fire fire;
     private int cooldown;
+    private int cooldown2;
     private int thingy;
     private double xDir;
     private double yDir;
@@ -131,8 +132,16 @@ public class PlayerHandler {
     }
     public void regen(){
         if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
-            if(player.getHp() < player.getInitalHp()) {
-                player.setHp(player.getHp() + 1);
+            cooldown2++;
+            if((cooldown2 + 1) % 15 == 0){
+                if(player.getHp() < player.getInitalHp()) {
+                    if(player.getHp() + 10 < player.getInitalHp()) {
+                        player.setHp(player.getHp() + 10);
+                    }
+                    else{
+                        player.setHp(player.getInitalHp());
+                    }
+                }
             }
         }
     }

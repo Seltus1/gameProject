@@ -13,10 +13,11 @@ public class ProjectileHandler extends ListHandler{
             if (projectile.getShotTag().contains("Fire_Wall")){
                 projectile.drawWall();
             }
+
             else{
                 projectile.updateMove();
-                projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());
             }
+            projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());
         }
     }
 
@@ -30,9 +31,13 @@ public class ProjectileHandler extends ListHandler{
                     removeObject(projectile);
                 }
             }
-        }
-        else {
+            if(projectile.getShotTag().contains("Wall")){
+                projectile.setxMoveSpeed(0);
+                projectile.setyMoveSpeed(0);
+            }
+        else{
             removeObject(projectile);
+        }
         }
     }
 

@@ -14,10 +14,10 @@ public class EnemyHandler extends ListHandler {
         super();
     }
 
-    public boolean addMultipleEnemies(int amount){
+    public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(6) + 1;
-            int randEnemy = 7;
+            int randEnemy = rand.nextInt(6) + 1;
+//            int randEnemy = 7;
             int Xpos = rand.nextInt(1920);
             int Ypos = rand.nextInt(1080);
             int size = 25;
@@ -50,11 +50,10 @@ public class EnemyHandler extends ListHandler {
             }
             else if (randEnemy == 7){
                 FireMagicEnemy enemy = new FireMagicEnemy(1, 2, 550, 850, 3, size,
-                        800,1,20, ORANGE);
+                        800,20,20, ORANGE);
                 add(enemy);
             }
         }
-        return true;
     }
 
     public ArrayList<Enemy> getEnemyList(){

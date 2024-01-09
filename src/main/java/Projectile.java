@@ -36,6 +36,11 @@ public class Projectile {
     private Vector2D vector;
     private boolean circle;
 
+    private int wallXpoint1;
+    private int wallYPoint1;
+    private int wallXPoint2;
+    private int wallYPoint2;
+
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
@@ -106,12 +111,21 @@ public class Projectile {
         array[1] = actualYPos - (vector.getyNormalizedMovement() * 12);
         array[2] = actualXPos + (vector.getxNormalizedMovement() * -12);
         array[3] = actualYPos + (vector.getyNormalizedMovement() * 12);
+        wallXpoint1 = (int) array[0];
+        wallYPoint1 = (int) array[1];
+        wallXPoint2 = (int) array[2];
+        wallYPoint2 = (int) array[3];
         return array;
     }
 
     public void drawWall() {
-        double[] array = updateDoubleVectorPosition();
-        DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
+        if (distanceTravelled <= maxRange) {
+            double[] array = updateDoubleVectorPosition();
+            DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
+        }
+        else{
+            DrawLine(wallXpoint1, wallYPoint1, wallXPoint2, wallYPoint2, BLACK);
+        }
     }
 
     public void updateMove(){
@@ -145,6 +159,9 @@ public class Projectile {
             cooldown = 0;
         }
     }
+    public void update(){
+        DrawCircle(posX, posY, shotRad, color);
+    }
     public int getPosX() {
         return posX;
     }
@@ -161,14 +178,6 @@ public class Projectile {
         return damage;
     }
 
-    public void update(){
-        if (circle){
-            DrawCircle(posX, posY, shotRad, color);
-        }
-        else{
-            DrawRectangle(posX, posY, 20, 60, color);
-        }
-    }
 
     public double getXMoveSpeed() {return xMoveSpeed;}
     public double getYMoveSpeed() {return yMoveSpeed;}
@@ -254,7 +263,7 @@ public class Projectile {
     }
 
     public void setxMoveSpeed(double xMoveSpeed) {
-        this.xMoveSpeed = xMoveSpeed;
+        vector.setxNormalizedMovement(xMoveSpeed);
     }
 
     public double getyMoveSpeed() {
@@ -262,7 +271,7 @@ public class Projectile {
     }
 
     public void setyMoveSpeed(double yMoveSpeed) {
-        this.yMoveSpeed = yMoveSpeed;
+        vector.setyNormalizedMovement(yMoveSpeed);
     }
 
     public int getxMul() {
