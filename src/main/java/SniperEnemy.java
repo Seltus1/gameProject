@@ -14,15 +14,13 @@ public class SniperEnemy extends Enemy{
     public SniperEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color) {
         super(hp, dps, posX, posY, moveSpeed, size, range, color);
         this.shotSpeed = shotSpeed;
-        setActualXPos(posX);
-        setActualYPos(posY);
     }
 
     public void shootPlayer(Player player, ProjectileHandler projList, String shotTag, Raylib.Color color){
         if (getRange() > calculateDistanceToPlayer(player)){
             shotTimer++;
             shotCooldown = rand.nextInt(30) + 30;
-            if((shotTimer +1 ) % shotCooldown == 0) {
+            if((shotTimer + 1) % shotCooldown == 0) {
                 int playerXPos = player.getPosX();
                 int playerYPos = player.getPosY();
                 Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, getRange(), true, color);

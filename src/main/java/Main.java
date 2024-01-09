@@ -5,8 +5,8 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // Define screen width and height constants
-        final int SCREENWIDTH = 1920;
-        final int SCREENHEIGHT = 1080;
+        final int SCREENWIDTH = GetScreenWidth();
+        final int SCREENHEIGHT = GetRenderHeight();
 
         // Create a window with specified dimensions and title
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");

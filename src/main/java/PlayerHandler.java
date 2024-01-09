@@ -55,7 +55,7 @@ public class PlayerHandler {
 
     public void drawRange() {
         Raylib.Vector2 mousePos = GetMousePosition();
-        Raylib.Vector2 playerPos = player.getPos();
+        Raylib.Vector2 playerPos = player.getPosition();
         float shotRange = player.getShotRange();
 
         // Calculate the direction vector from player to mouse
@@ -83,8 +83,8 @@ public class PlayerHandler {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             //lol without this, the collision bounds never got moved
-            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(), player.getPosY());
-            if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad())) {
+//            Jaylib.Vector2 playerPos = player.getPosition();
+            if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
                 if (currProj.getShotTag().contains("Enemy")) {
                     if(currProj.getShotTag().contains("Pool")) {

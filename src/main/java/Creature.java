@@ -10,7 +10,6 @@ public interface Creature {
     int getMoveSpeed();
     int getSize();
     boolean isAlive();
-    Jaylib.Vector2 getPos();
     Raylib.Color getColor();
 
     void setHp(int hp);
@@ -21,6 +20,5 @@ public interface Creature {
     void setMoveSpeed(int moveSpeed);
     void setSize(int size);
     void setAlive(boolean isAlive);
-    void setPos(Jaylib.Vector2 position);
     void setColor(Raylib.Color color);
 }

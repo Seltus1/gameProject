@@ -5,27 +5,19 @@ import static com.raylib.Raylib.*;
 
 public class Player implements Creature {
 //    HP
-
     private int hp;
     private int initalHp;
 
 //    DMG
-
     private int damage;
     private int range;
 
 //    POS
-
-    private int posX;
-    private int posY;
-    private Jaylib.Vector2 pos;
-
+    private Vector2D vector;
 //    Move
-
     private int moveSpeed;
 
 //    size/color
-
     private int size;
     private Raylib.Color color;
 
@@ -39,39 +31,28 @@ public class Player implements Creature {
     private boolean isShooting;
 
 //    cooldowns
-
     private boolean canShoot;
     private boolean canMelee;
     private final int SHOT_COOLDOWN = 250;
     private long timeSinceHit;
     private int regenCooldown;
     private int infernoCooldown;
-
-
-
     //    instance of other stuffs
-    private MeleeAttack sword = new MeleeAttack(damage, posX, posY);
-
     private int burnDamage;
     private int burnCountDown;
     private int InfernoCount;
     private boolean isFireInRange;
     private int shotRange;
-    private Vector2D vector;
-
 
     public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
         this.hp = hp;
         initalHp = hp;
         this.damage = damage;
         this.range = meleeRange;
-        this.posX = posX;
-        this.posY = posY;
         this.moveSpeed = moveSpeed;
         this.size = size;
         this.isAlive = true;
         this.color = color;
-        this.pos = new Jaylib.Vector2(posX, posY);
         this.canShoot = true;
         this.canMelee = true;
         isOnFire = false;
@@ -86,16 +67,17 @@ public class Player implements Creature {
     public void update(ProjectileHandler projList) {
         vector.playerMove();
         updatePosition(vector.getPosX(), vector.getPosY());
-        sword.update();
         inferno();
         burn();
-        DrawCircle(posX, posY, size, color);
-        setPos(new Jaylib.Vector2(posX,posY));
+        DrawCircle(getPosX(), getPosY(), size, color);
+
+//        CHECK THIS I DONT REMEBER WHAT IS DOES BUT MAY NOT UPDATE THE PLAYER POSITION
+//        setPos(new Jaylib.Vector2(getPosX(), getPosY()));
     }
 
-    public void updatePosition(int xPos, int yPos){
-        posX = xPos;
-        posY = yPos;
+    public void updatePosition(int posX, int posY){
+        setPosX(posX);
+        setPosY(posY);
     }
 
     public void burn() {
@@ -184,22 +166,26 @@ public class Player implements Creature {
 
     @Override
     public int getPosX() {
-        return posX;
+        return vector.getPosX();
     }
 
     @Override
     public void setPosX(int posX) {
-        this.posX = posX;
+        vector.setPosX(posX);
     }
 
     @Override
     public int getPosY() {
-        return posY;
+        return vector.getPosY();
     }
 
     @Override
     public void setPosY(int posY) {
-        this.posY = posY;
+        vector.setPosY(posY);
+    }
+
+    public Jaylib.Vector2 getPosition() {
+        return vector.getPosition();
     }
 
     @Override
@@ -242,16 +228,6 @@ public class Player implements Creature {
         this.color = color;
     }
 
-    @Override
-    public Jaylib.Vector2 getPos() {
-        return pos;
-    }
-
-    @Override
-    public void setPos(Jaylib.Vector2 pos) {
-        this.pos = pos;
-    }
-
     public int getInitalHp() {
         return initalHp;
     }
@@ -280,13 +256,6 @@ public class Player implements Creature {
         return SHOT_COOLDOWN;
     }
 
-    public MeleeAttack getSword() {
-        return sword;
-    }
-
-    public void setSword(MeleeAttack sword) {
-        this.sword = sword;
-    }
     public boolean isOnFire() {
         return isOnFire;
     }

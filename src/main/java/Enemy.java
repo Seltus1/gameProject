@@ -12,8 +12,6 @@ public class Enemy implements Creature {
     private int hp;
     private int damage;
     private int range;
-    private int posX;
-    private int posY;
     private int moveSpeed;
     private int size;
     private boolean canMelee;
@@ -23,9 +21,6 @@ public class Enemy implements Creature {
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
     private Ellipse2D.Double circle;
-
-    public double actualXPos;
-    public double actualYPos;
     private Vector2D vector;
     private Random rand;
 
@@ -33,14 +28,12 @@ public class Enemy implements Creature {
         this.hp = hp;
         this.damage = damage;
         this.range = range;
-        this.posX = posX;
-        this.posY = posY;
+        vector = new Vector2D(posX, posY, moveSpeed);
         this.moveSpeed = moveSpeed;
         this.size = size;
         this.color = color;
         this.isAlive = true;
         this.pos = new Jaylib.Vector2(posX,posY);
-        vector = new Vector2D(posX, posY, moveSpeed);
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
         shouldDraw = true;
@@ -51,7 +44,7 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(posX, posY);
+            Jaylib.Vector2 enemyPos = vector.getPosition();
             if (CheckCollisionCircles(enemyPos, size, currPos, currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
                 projList.removeIndex(i);
                 hp -= currProj.getDamage();
@@ -67,8 +60,8 @@ public class Enemy implements Creature {
         return totalDistance;
     }
     public void followPlayer(Player player, String tag) {
-        vector.moveObject(player.getPos(), tag);
-        updateObjectPositions();
+        vector.moveObject(player.getPosition(), tag);
+//        updateObjectPositions();
         if(isShouldDraw()) {
             DrawCircle(getPosX(), getPosY(), getSize(), getColor());
         }
@@ -82,16 +75,16 @@ public class Enemy implements Creature {
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * getMoveSpeed();
         double yScaled = normalizedValues[1] * getMoveSpeed();
-        double updateX = getActualXPos() + xScaled;
-        double updateY = getActualYPos() + yScaled;
+        double updateX = vector.getPosX() + xScaled;
+        double updateY = vector.getPosY() + yScaled;
         Jaylib.Vector2 projectedVector = new Jaylib.Vector2((float) updateX,(float) updateY);
         for (int i = 0; i < enemyList.size(); i++) {
             Enemy otherEnemy = enemyList.get(i);
             if (otherEnemy.equals(this)){
                 continue;
             }
-            double otherPosX = otherEnemy.getActualXPos();
-            double otherPosY = otherEnemy.getActualYPos();
+            double otherPosX = otherEnemy.getPosX();
+            double otherPosY = otherEnemy.getPosY();
             Jaylib.Vector2 enemyPos = new Jaylib.Vector2((float) otherPosX,(float) otherPosY);
             if (CheckCollisionCircles(projectedVector,getSize(),enemyPos,otherEnemy.getSize())){
                 return true;
@@ -104,11 +97,11 @@ public class Enemy implements Creature {
         if (tag.equals("to")) {
             playerXPos = player.getPosX();
             playerYPos = player.getPosY();
-            myXPos = getActualXPos();
-            myYPos = getActualYPos();
+            myXPos = vector.getPosX();
+            myYPos = vector.getPosY();
         } else {
-            playerXPos = getActualXPos();
-            playerYPos = getActualYPos();
+            playerXPos = vector.getActualXPos();
+            playerYPos = vector.getActualYPos();
             myXPos = player.getPosX();
             myYPos = player.getPosY();
         }
@@ -120,12 +113,12 @@ public class Enemy implements Creature {
         double xNormalized = horizontalValues / magnitude;
         return new double[]{xNormalized, yNormalized};
     }
-    private void updateObjectPositions() {
-        actualXPos = vector.getActualXPos();
-        actualYPos = vector.getActualYPos();
-        posX = vector.getPosX();
-        posY = vector.getPosY();
-    }
+//    private void updateObjectPositions() {
+//        actualXPos = vector.getActualXPos();
+//        actualYPos = vector.getActualYPos();
+//        posX = vector.getPosX();
+//        posY = vector.getPosY();
+//    }
     @Override
     public Raylib.Color getColor() {
         return color;
@@ -167,22 +160,22 @@ public class Enemy implements Creature {
 
     @Override
     public int getPosX() {
-        return posX;
+        return vector.getPosX();
     }
 
     @Override
     public void setPosX(int posX) {
-        this.posX = posX;
+        vector.setPosX(posX);
     }
 
     @Override
     public int getPosY() {
-        return posY;
+        return vector.getPosY();
     }
 
     @Override
     public void setPosY(int posY) {
-        this.posY = posY;
+        vector.setPosY(posY);
     }
 
     @Override
@@ -199,7 +192,6 @@ public class Enemy implements Creature {
     public int getSize() {
         return size;
     }
-
     @Override
     public void setSize(int size) {
         this.size = size;
@@ -210,16 +202,6 @@ public class Enemy implements Creature {
 
     public void setAlive(boolean alive) {
         isAlive = alive;
-    }
-
-    @Override
-    public Jaylib.Vector2 getPos() {
-        return pos;
-    }
-
-    @Override
-    public void setPos(Jaylib.Vector2 pos) {
-        this.pos = pos;
     }
 
     public boolean isCanRange() {
@@ -244,22 +226,6 @@ public class Enemy implements Creature {
 
     public void setCircle(Ellipse2D.Double circle) {
         this.circle = circle;
-    }
-
-    public double getActualXPos() {
-        return actualXPos;
-    }
-
-    public void setActualXPos(double actualXPos) {
-        this.actualXPos = actualXPos;
-    }
-
-    public double getActualYPos() {
-        return actualYPos;
-    }
-
-    public void setActualYPos(double actualYPos) {
-        this.actualYPos = actualYPos;
     }
 
     public boolean isShouldDraw() {

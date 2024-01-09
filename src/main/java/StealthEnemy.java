@@ -128,15 +128,6 @@ public class StealthEnemy extends Enemy{
         this.vector = vector;
     }
 
-    @Override
-    public Jaylib.Vector2 getPos() {
-        return pos;
-    }
-
-    @Override
-    public void setPos(Jaylib.Vector2 pos) {
-        this.pos = pos;
-    }
 
     public int getShotSpeed() {
         return shotSpeed;

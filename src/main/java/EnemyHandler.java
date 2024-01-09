@@ -16,10 +16,10 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(6) + 1;
+            int randEnemy = rand.nextInt(7) + 1;
 //            int randEnemy = 7;
-            int Xpos = rand.nextInt(1920);
-            int Ypos = rand.nextInt(1080);
+            int Xpos = rand.nextInt(GetScreenWidth());
+            int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
             if(randEnemy == 1){
                 SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN);
@@ -50,7 +50,7 @@ public class EnemyHandler extends ListHandler {
             }
             else if (randEnemy == 7){
                 FireMagicEnemy enemy = new FireMagicEnemy(1, 2, 550, 850, 3, size,
-                        800,20,20, ORANGE);
+                        800,500,20, ORANGE);
                 add(enemy);
             }
         }
@@ -91,7 +91,7 @@ public class EnemyHandler extends ListHandler {
                         enemy.attack(player);
                     }
                     else {
-                        DrawCircle((int)enemy.getActualXPos(),(int) enemy.getActualYPos(),enemy.getSize(),enemy.getColor());
+                        DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
                     }
                 }
                 enemy.attack(player);

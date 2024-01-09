@@ -16,8 +16,6 @@ public class MagicEnemy extends Enemy {
 
     public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color) {
         super(hp, damage, posX, posY, moveSpeed, size, moveRange, color);
-        setActualYPos(posY);
-        setActualXPos(posX);
         this.shotSpeed = shotSpeed;
         this.spellRange = spellRange;
         random = new Random();

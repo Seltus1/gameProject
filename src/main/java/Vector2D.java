@@ -12,6 +12,7 @@ public class Vector2D {
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
+
     public Vector2D(int posX, int posY, int moveSpeed){
         this.posX = posX;
         actualXPos = posX;
@@ -31,6 +32,12 @@ public class Vector2D {
             posX += (hCheck * moveSpeed);
             posY += (vCheck * moveSpeed);
         }
+        updatePosition();
+    }
+
+    private void updatePosition(){
+        Jaylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
+        setPosition(updatedPosition);
     }
 
     public int playerHorizontalCheck() {
