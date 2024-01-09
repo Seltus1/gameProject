@@ -25,7 +25,7 @@ public class MagicEnemy extends Enemy {
     }
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag) {
-        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, color);
+        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
         spell.shootInLine();
         projList.add(spell);
     }
@@ -33,8 +33,8 @@ public class MagicEnemy extends Enemy {
 
 
     public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, color);
-        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, color);
+        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
+        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
         closeSpell1.doubleVectorCalc("above");
         closeSpell2.doubleVectorCalc("below");
         projList.add(closeSpell1);
@@ -42,7 +42,7 @@ public class MagicEnemy extends Enemy {
     }
 
     public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool", spellRange, color);
+        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool", spellRange, true, color);
         poolShot.shootInLine();
         projList.add(poolShot);
     }
@@ -97,5 +97,53 @@ public class MagicEnemy extends Enemy {
         shoot(player,projList, color);
         move(player);
         drawHat();
+    }
+
+    public int getSpellCoolDown() {
+        return spellCoolDown;
+    }
+
+    public void setSpellCoolDown(int spellCoolDown) {
+        this.spellCoolDown = spellCoolDown;
+    }
+
+    public int getShotSpeed() {
+        return shotSpeed;
+    }
+
+    public void setShotSpeed(int shotSpeed) {
+        this.shotSpeed = shotSpeed;
+    }
+
+    public float getDrawRadious() {
+        return drawRadious;
+    }
+
+    public void setDrawRadious(float drawRadious) {
+        this.drawRadious = drawRadious;
+    }
+
+    public int getSpellRange() {
+        return spellRange;
+    }
+
+    public void setSpellRange(int spellRange) {
+        this.spellRange = spellRange;
+    }
+
+    public Color getPoolColor() {
+        return PoolColor;
+    }
+
+    public void setPoolColor(Color poolColor) {
+        PoolColor = poolColor;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

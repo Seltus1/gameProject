@@ -3,6 +3,7 @@ import com.raylib.Raylib;
 
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.Random;
 
 import static com.raylib.Raylib.CheckCollisionCircles;
 import static com.raylib.Raylib.DrawCircle;
@@ -26,6 +27,7 @@ public class Enemy implements Creature {
     public double actualXPos;
     public double actualYPos;
     private Vector2D vector;
+    private Random rand;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
@@ -42,6 +44,7 @@ public class Enemy implements Creature {
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
         shouldDraw = true;
+        rand = new Random();
     }
 
     public void gotDamagedRanged(ProjectileHandler projList) {
@@ -63,13 +66,13 @@ public class Enemy implements Creature {
         int totalDistance = vector.distanceToOtherObject(player.getPosX(), player.getPosY());
         return totalDistance;
     }
-public void followPlayer(Player player, String tag) {
-    vector.moveObject(player.getPos(), tag);
-    updateObjectPositions();
-    if(isShouldDraw()) {
-        DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+    public void followPlayer(Player player, String tag) {
+        vector.moveObject(player.getPos(), tag);
+        updateObjectPositions();
+        if(isShouldDraw()) {
+            DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+        }
     }
-}
 
 
     public boolean collisionWIthOtherEnemy(ArrayList<Enemy> enemyList, Player player, String tag){
@@ -265,5 +268,21 @@ public void followPlayer(Player player, String tag) {
 
     public void setShouldDraw(boolean shouldDraw) {
         this.shouldDraw = shouldDraw;
+    }
+
+    public Vector2D getVector() {
+        return vector;
+    }
+
+    public void setVector(Vector2D vector) {
+        this.vector = vector;
+    }
+
+    public Random getRand() {
+        return rand;
+    }
+
+    public void setRand(Random rand) {
+        this.rand = rand;
     }
 }

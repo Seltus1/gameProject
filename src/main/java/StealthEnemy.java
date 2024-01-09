@@ -74,7 +74,7 @@ public class StealthEnemy extends Enemy{
                 if(canShoot) {
                     canShoot = false;
                     numShots++;
-                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), BLACK);
+                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, BLACK);
                     projList.add(proj);
                     proj.shootInLine();
                     if (numShots > 10) {

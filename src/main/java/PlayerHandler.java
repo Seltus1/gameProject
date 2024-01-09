@@ -19,13 +19,11 @@ public class PlayerHandler {
     private double yDir;
     private double cursorX;
     private double cursorY;
-    private Date date;
 
     public PlayerHandler(Player player){
         this.player = player;
         isAlive = true;
         fire = new Fire();
-        date = new Date();
 
     }
 
@@ -79,29 +77,6 @@ public class PlayerHandler {
         DrawLineV(playerPos, endPoint, BLACK);
     }
 
-    private int horizontalCheck(int xValues){
-        int left = 0;
-        int right = 0;
-        if (xValues < 0){
-            left = 1;
-        }
-        if (xValues > 0){
-            right = 1;
-        }
-        return right - left;
-    }
-
-    private int verticalCheck(int yValues){
-        int up = 0;
-        int down = 0;
-        if (yValues < 0){
-            up = 1;
-        }
-        if (yValues > 0){
-            down = 1;
-        }
-        return down - up;
-    }
     public void gotDamagedRanged(ProjectileHandler projList) {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
@@ -137,19 +112,21 @@ public class PlayerHandler {
         }
 
     public void shoot(ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             player.setShooting(true);
-            int playerXPos = GetMouseX();
-            int playerYPos = GetMouseY();
-            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), BLACK);
-            shot.setShotTag("Player");
-            shot.shootInLine();
-            projList.add(shot);
-            player.setCanShoot(false);
-            cooldown(player.getSHOT_COOLDOWN(), "shot");
-        }
-        else{
-            player.setShooting(false);
+            if (player.canShoot()) {
+                int playerXPos = GetMouseX();
+                int playerYPos = GetMouseY();
+                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), true, BLACK);
+                shot.setShotTag("Player");
+                shot.shootInLine();
+                projList.add(shot);
+                player.setCanShoot(false);
+                cooldown(player.getSHOT_COOLDOWN(), "shot");
+            }
+            else {
+                player.setShooting(false);
+            }
         }
     }
     public void regen(){

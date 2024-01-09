@@ -42,7 +42,7 @@ public class Player implements Creature {
 
     private boolean canShoot;
     private boolean canMelee;
-    private final int SHOT_COOLDOWN = 500;
+    private final int SHOT_COOLDOWN = 250;
     private long timeSinceHit;
     private int regenCooldown;
     private int infernoCooldown;
@@ -112,7 +112,7 @@ public class Player implements Creature {
             isOnFire = false;
         }
     }
-    public void inferno(){
+    public void inferno() {
         if(getInfernoCount() != 0) {
             infernoCooldown++;
             if((infernoCooldown + 1) % 15 == 0){
@@ -120,8 +120,14 @@ public class Player implements Creature {
                 setInfernoCount(getInfernoCount() - 1);
             }
             if(isShooting){
-                burnTicks += 3;
-                isOnFire = true;
+
+                if (burnTicks + 3 > 10){
+                    burnTicks = 10;
+                }
+                else{
+                    burnTicks += 3;
+                    isOnFire = true;
+                }
             }
         }
         else{

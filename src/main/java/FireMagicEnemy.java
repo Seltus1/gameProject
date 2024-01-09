@@ -19,12 +19,21 @@ public class FireMagicEnemy extends MagicEnemy{
 
     }
 
-    public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
+    public void castFireWall(Player player, ProjectileHandler projList, Raylib.Color color) {
+        Projectile wall = new Projectile(4, getPosX(), getPosY(), 5, player.getPosX(), player.getPosY(), "Enemy_Fire_Wall", getSpellRange(), true, color);
+        projList.add(wall);
     }
     public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
         longCooldown++;
+//        int rand = getRand().nextInt(2) + 1;
+        int rand = 0;
         if ((longCooldown + 1) % 91 == 0) {
-            castInferno(player, projList, color);
+            if (rand == 1){
+                castInferno(player, projList, color);
+            }
+            else{
+                castFireWall(player, projList, color);
+            }
             longCooldown = 0;
         }
     }

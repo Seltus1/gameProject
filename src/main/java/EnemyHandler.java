@@ -49,8 +49,8 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 7){
-                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size,
-                        800,1300,20, ORANGE);
+                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, 550, 850, 3, size,
+                        800,1,20, ORANGE);
                 add(enemy);
             }
         }
@@ -92,7 +92,7 @@ public class EnemyHandler extends ListHandler {
                         enemy.attack(player);
                     }
                     else {
-                        DrawCircle((int)enemy.getActualXPos(),(int)enemy.getActualYPos(),enemy.getSize(),enemy.getColor());
+                        DrawCircle((int)enemy.getActualXPos(),(int) enemy.getActualYPos(),enemy.getSize(),enemy.getColor());
                     }
                 }
                 enemy.attack(player);

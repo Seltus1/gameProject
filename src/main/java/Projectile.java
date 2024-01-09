@@ -1,6 +1,7 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class Projectile {
@@ -33,8 +34,9 @@ public class Projectile {
     private int distanceTravelled;
 
     private Vector2D vector;
+    private boolean circle;
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, Raylib.Color color) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.posX = posX;
         this.posY = posY;
@@ -46,11 +48,17 @@ public class Projectile {
         damage = 10;
         this.color = color;
         this.shotTag = shotTag;
-        DrawCircle(this.posX, this.posY, shotRad, color);
+        if (circle){
+            DrawCircle(this.posX, this.posY, shotRad, color);
+        }
+        else{
+            DrawRectangle(posX, posY, 20, 60, color);
+        }
         this.maxRange = maxRange;
         actualXPos = posX;
         actualYPos = posY;
         vector = new Vector2D(posX, posY, shotSpeed);
+        this.circle = circle;
     }
 
     public boolean isInBounds() {
@@ -86,6 +94,24 @@ public class Projectile {
             finalY -= (yMoveSpeed * 3);
         }
         shootInLine();
+    }
+
+    public double[] updateDoubleVectorPosition() {
+        shootInLine();
+        double[] array = new double[4];
+        double swap = xMoveSpeed;
+        vector.setxNormalizedMovement(vector.getyNormalizedMovement());
+        vector.setyNormalizedMovement(swap);
+        array[0] = actualXPos - (vector.getxNormalizedMovement() * -12);
+        array[1] = actualYPos - (vector.getyNormalizedMovement() * 12);
+        array[2] = actualXPos + (vector.getxNormalizedMovement() * -12);
+        array[3] = actualYPos + (vector.getyNormalizedMovement() * 12);
+        return array;
+    }
+
+    public void drawWall() {
+        double[] array = updateDoubleVectorPosition();
+        DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
     }
 
     public void updateMove(){
@@ -136,7 +162,12 @@ public class Projectile {
     }
 
     public void update(){
-        DrawCircle(posX, posY, shotRad, color);
+        if (circle){
+            DrawCircle(posX, posY, shotRad, color);
+        }
+        else{
+            DrawRectangle(posX, posY, 20, 60, color);
+        }
     }
 
     public double getXMoveSpeed() {return xMoveSpeed;}
