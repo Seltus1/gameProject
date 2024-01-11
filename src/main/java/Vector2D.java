@@ -12,6 +12,7 @@ public class Vector2D {
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
+    private Jaylib.Vector2 shotPosition;
 
     public Vector2D(int posX, int posY, int moveSpeed){
         this.posX = posX;
@@ -113,8 +114,24 @@ public class Vector2D {
         posY = (int) Math.round(updateY);
         xNormalizedMovement = xScaled;
         yNormalizedMovement = yScaled;
+        setPosition(new Jaylib.Vector2(posX, posY));
     }
 
+    public void setShootLine() {
+        double[] positions = determinePositions(getShotPosition(), "to");
+        double[] normalizedValues = normalizeValues(positions[0], positions[1]);
+        double xScaled = normalizedValues[0] * moveSpeed;
+        double yScaled = normalizedValues[1] * moveSpeed;
+        setxNormalizedMovement(xScaled);
+        setyNormalizedMovement(yScaled);
+    }
+    public void updateShootLinePosition(){
+        actualXPos = actualXPos + xNormalizedMovement;
+        posX = (int) actualXPos;
+        actualYPos = actualYPos + yNormalizedMovement;
+        posY = (int) actualYPos;
+        updatePosition();
+    }
     public int getPosX() {
         return posX;
     }
@@ -177,5 +194,12 @@ public class Vector2D {
 
     public void setxNormalizedMovement(double xNormalizedMovement) {
         this.xNormalizedMovement = xNormalizedMovement;
+    }
+
+    public Jaylib.Vector2 getShotPosition() {
+        return shotPosition;
+    }
+    public void setShotPosition(Jaylib.Vector2 shotPosition) {
+        this.shotPosition = shotPosition;
     }
 }

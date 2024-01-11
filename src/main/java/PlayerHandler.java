@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
-import java.util.*;
 
 public class PlayerHandler {
     private Player player;
@@ -82,8 +81,6 @@ public class PlayerHandler {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-            //lol without this, the collision bounds never got moved
-//            Jaylib.Vector2 playerPos = player.getPosition();
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
                 if (currProj.getShotTag().contains("Enemy")) {
@@ -116,11 +113,11 @@ public class PlayerHandler {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             player.setShooting(true);
             if (player.canShoot()) {
-                int playerXPos = GetMouseX();
-                int playerYPos = GetMouseY();
-                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), true, BLACK);
+                int mouseX = GetMouseX();
+                int mouseY = GetMouseY();
+                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Player", player.getShotRange(), true, BLACK);
                 shot.setShotTag("Player");
-                shot.shootInLine();
+                shot.shootLine();
                 projList.add(shot);
                 player.setCanShoot(false);
                 cooldown(player.getSHOT_COOLDOWN(), "shot");

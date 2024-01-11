@@ -35,9 +35,7 @@ public class ProjectileHandler extends ListHandler{
                 projectile.setxMoveSpeed(0);
                 projectile.setyMoveSpeed(0);
             }
-        else{
             removeObject(projectile);
-        }
         }
     }
 

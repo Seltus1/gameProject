@@ -1,7 +1,6 @@
 import com.raylib.Raylib;
 
 import java.util.Random;
-import java.util.Vector;
 
 import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
@@ -24,7 +23,7 @@ public class MagicEnemy extends Enemy {
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag) {
         Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
-        spell.shootInLine();
+        spell.shootLine();
         projList.add(spell);
     }
 
@@ -41,7 +40,7 @@ public class MagicEnemy extends Enemy {
 
     public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
         Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool", spellRange, true, color);
-        poolShot.shootInLine();
+        poolShot.shootLine();
         projList.add(poolShot);
     }
 

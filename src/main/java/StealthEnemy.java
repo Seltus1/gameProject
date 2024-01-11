@@ -76,7 +76,7 @@ public class StealthEnemy extends Enemy{
                     numShots++;
                     Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, BLACK);
                     projList.add(proj);
-                    proj.shootInLine();
+                    proj.shootLine();
                     if (numShots > 10) {
                         isReloading = true;
                         numShots = 0;

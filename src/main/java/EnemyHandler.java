@@ -16,8 +16,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(7) + 1;
-//            int randEnemy = 7;
+//            int randEnemy = rand.nextInt(7) + 1;
+            int randEnemy = 2;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
