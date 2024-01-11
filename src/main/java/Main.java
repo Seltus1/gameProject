@@ -5,8 +5,8 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // Define screen width and height constants
-        final int SCREENWIDTH = 1920;
-        final int SCREENHEIGHT = 1080;
+        final int SCREENWIDTH = GetScreenWidth();
+        final int SCREENHEIGHT = GetRenderHeight();
 
         // Create a window with specified dimensions and title
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");
@@ -27,14 +27,14 @@ public class Main {
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(10);
+        enemies.addMultipleEnemies(amountOfEnemy);
 
         // Main game loop
         while (!WindowShouldClose()) {
             // Begin drawing on the window
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
-            ClearBackground(RAYWHITE);
+                ClearBackground(RAYWHITE);
 //            if(game.isIsinMenu()){
 //                game.update();
 //            }

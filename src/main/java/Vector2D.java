@@ -2,7 +2,7 @@ import com.raylib.Jaylib;
 
 import static com.raylib.Raylib.*;
 
-public class Vector {
+public class Vector2D {
     private final float diagCheck = (float) Math.sqrt(0.5);
     private int posX;
     private int posY;
@@ -12,7 +12,9 @@ public class Vector {
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
-    public Vector(int posX, int posY, int moveSpeed){
+    private Jaylib.Vector2 shotPosition;
+
+    public Vector2D(int posX, int posY, int moveSpeed){
         this.posX = posX;
         actualXPos = posX;
         this.posY = posY;
@@ -31,6 +33,12 @@ public class Vector {
             posX += (hCheck * moveSpeed);
             posY += (vCheck * moveSpeed);
         }
+        updatePosition();
+    }
+
+    private void updatePosition(){
+        Jaylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
+        setPosition(updatedPosition);
     }
 
     public int playerHorizontalCheck() {
@@ -106,8 +114,24 @@ public class Vector {
         posY = (int) Math.round(updateY);
         xNormalizedMovement = xScaled;
         yNormalizedMovement = yScaled;
+        setPosition(new Jaylib.Vector2(posX, posY));
     }
 
+    public void setShootLine() {
+        double[] positions = determinePositions(getShotPosition(), "to");
+        double[] normalizedValues = normalizeValues(positions[0], positions[1]);
+        double xScaled = normalizedValues[0] * moveSpeed;
+        double yScaled = normalizedValues[1] * moveSpeed;
+        setxNormalizedMovement(xScaled);
+        setyNormalizedMovement(yScaled);
+    }
+    public void updateShootLinePosition(){
+        actualXPos = actualXPos + xNormalizedMovement;
+        posX = (int) actualXPos;
+        actualYPos = actualYPos + yNormalizedMovement;
+        posY = (int) actualYPos;
+        updatePosition();
+    }
     public int getPosX() {
         return posX;
     }
@@ -170,5 +194,12 @@ public class Vector {
 
     public void setxNormalizedMovement(double xNormalizedMovement) {
         this.xNormalizedMovement = xNormalizedMovement;
+    }
+
+    public Jaylib.Vector2 getShotPosition() {
+        return shotPosition;
+    }
+    public void setShotPosition(Jaylib.Vector2 shotPosition) {
+        this.shotPosition = shotPosition;
     }
 }

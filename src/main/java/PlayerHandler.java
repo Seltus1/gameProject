@@ -7,35 +7,26 @@ import java.util.concurrent.TimeUnit;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
-import java.util.*;
 
 public class PlayerHandler {
     private Player player;
     private boolean isAlive;
     private Fire fire;
     private int cooldown;
+    private int cooldown2;
     private int thingy;
     private double xDir;
     private double yDir;
     private double cursorX;
     private double cursorY;
-    private Date date;
 
     public PlayerHandler(Player player){
         this.player = player;
         isAlive = true;
         fire = new Fire();
-        date = new Date();
 
     }
 
-    public void playerIframe(int iFrame){
-        try {
-            Thread.sleep(iFrame);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * A primitive method that checks for all enemies for collision
@@ -56,7 +47,7 @@ public class PlayerHandler {
 
     public void drawRange() {
         Raylib.Vector2 mousePos = GetMousePosition();
-        Raylib.Vector2 playerPos = player.getPos();
+        Raylib.Vector2 playerPos = player.getPosition();
         float shotRange = player.getShotRange();
 
         // Calculate the direction vector from player to mouse
@@ -79,76 +70,71 @@ public class PlayerHandler {
         DrawLineV(playerPos, endPoint, BLACK);
     }
 
-    private int horizontalCheck(int xValues){
-        int left = 0;
-        int right = 0;
-        if (xValues < 0){
-            left = 1;
-        }
-        if (xValues > 0){
-            right = 1;
-        }
-        return right - left;
-    }
-
-    private int verticalCheck(int yValues){
-        int up = 0;
-        int down = 0;
-        if (yValues < 0){
-            up = 1;
-        }
-        if (yValues > 0){
-            down = 1;
-        }
-        return down - up;
-    }
     public void gotDamagedRanged(ProjectileHandler projList) {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-            //lol without this, the collision bounds never got moved
-            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(), player.getPosY());
-            if (CheckCollisionCircles(playerPos, player.getSize(), currPos, currProj.getShotRad())) {
+            if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
                 if (currProj.getShotTag().contains("Enemy")) {
-                    if(currProj.getShotTag().contains("Pool")) {
-                        currProj.setyMoveSpeed(0);
-                        currProj.setxMoveSpeed(0);
-                        updatePool(currProj,projList);
-                    }
-                    else {
-                        player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
-                        ((Projectile) projList.get(i)).setHitPlayer(true);
-                        if (currProj.getShotTag().contains("Fire")) {
-                            fire.shootAttack(player, currProj);
-                        }
-                        projList.removeObject(currProj);
-                    }
+                    enemyShots(currProj, projList);
                 }
-                else {
-                    ((Projectile) projList.get(i)).setHitPlayer(false);
+                else{
+                    currProj.setHitPlayer(false);
                 }
+            }
+        }
+    }
 
+        public void enemyShots(Projectile currProj, ProjectileHandler projList){
+            if(currProj.getShotTag().contains("Pool")) {
+                currProj.setyMoveSpeed(0);
+                currProj.setxMoveSpeed(0);
+                updatePool(currProj,projList);
+            }
+            else {
+                player.setHp(player.getHp() - currProj.getDamage());
+                currProj.setHitPlayer(true);
+                if (currProj.getShotTag().contains("Fire")) {
+                    fire.shootAttack(player);
                 }
+                if(currProj.getShotTag().contains("Inferno")){
+                    fire.magicLongShoot(player);
+                }
+                projList.removeObject(currProj);
             }
         }
 
     public void shoot(ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && player.canShoot()) {
-            int playerXPos = GetMouseX();
-            int playerYPos = GetMouseY();
-            Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, playerXPos, playerYPos, "Player", player.getShotRange(), BLACK);
-            shot.setShotTag("Player");
-            shot.shootInLine();
-            projList.add(shot);
-            player.setCanShoot(false);
-            cooldown(player.getSHOT_COOLDOWN(), "shot");
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+            player.setShooting(true);
+            if (player.canShoot()) {
+                int mouseX = GetMouseX();
+                int mouseY = GetMouseY();
+                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Player", player.getShotRange(), true, BLACK);
+                shot.setShotTag("Player");
+                shot.shootLine();
+                projList.add(shot);
+                player.setCanShoot(false);
+                cooldown(player.getSHOT_COOLDOWN(), "shot");
+            }
+            else {
+                player.setShooting(false);
+            }
         }
     }
     public void regen(){
         if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
-            if(player.getHp() < player.getInitalHp()) {
-                player.setHp(player.getHp() + 1);
+            cooldown2++;
+            if((cooldown2 + 1) % 15 == 0){
+                if(player.getHp() < player.getInitalHp()) {
+                    if(player.getHp() + 10 < player.getInitalHp()) {
+                        player.setHp(player.getHp() + 10);
+                    }
+                    else{
+                        player.setHp(player.getInitalHp());
+                    }
+                }
             }
         }
     }
@@ -156,10 +142,10 @@ public class PlayerHandler {
     public void drawHp(){
         double thing = (double) player.getHp() /  player.getInitalHp();
         double width = thing * 150;
-        DrawRectangle(50, 1000, (int) width, 40, DARKGREEN);
-        DrawRectangleLines(50, 1000, 150, 40, BLACK);
+        DrawRectangle(50, GetScreenHeight() - 100, (int) width, 40, DARKGREEN);
+        DrawRectangleLines(50, GetScreenHeight() - 100, 150, 40, BLACK);
         String s = String.format("HP: %d", player.getHp());
-        DrawText(s, 50, 1000, 20, BLACK);
+        DrawText(s, 50, GetScreenHeight() - 100, 20, BLACK);
     }
 
     public void drawBurn(){
@@ -169,6 +155,23 @@ public class PlayerHandler {
         DrawRectangleLines(50, 900, 150, 40, BLACK);
         String s = String.format("BURN: %d", player.getBurnTicks());
         DrawText(s, 50, 900, 20, BLACK);
+    }
+
+    public void drawInferno(){
+        if(player.isInferno()) {
+            player.setColor(ORANGE);
+            if(!player.isOnFire()){
+                DrawCircle(50,920,25,BLACK);
+                DrawCircle(50,920,10,ORANGE);
+            }
+            else{
+                DrawCircle(230,920,25,BLACK);
+                DrawCircle(230,920,10,ORANGE);
+            }
+        }
+        else{
+            player.setColor(RED);
+        }
     }
 
 
@@ -198,6 +201,7 @@ public class PlayerHandler {
         if(player.isOnFire()){
             drawBurn();
         }
+        drawInferno();
         drawRange();
         regen();
     }

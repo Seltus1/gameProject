@@ -1,28 +1,18 @@
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class Projectile {
     private int shotSpeed;
     private int shotRad;
-    private int posX;
-    private int posY;
-
-    private double actualXPos;
-    private double actualYPos;
     private boolean isInBounds;
     private int angleOfMovement;
     private int damage;
     private int finalX;
     private int finalY;
     private String shotTag;
-    private double xMoveSpeed;
-    private double yMoveSpeed;
-
-    private int xMul;
-    private int yMul;
-    private int slopeMul;
     private int cooldown;
 
     private boolean hitPlayer;
@@ -32,83 +22,108 @@ public class Projectile {
     private int maxRange;
     private int distanceTravelled;
 
-    private Vector vector;
+    private Vector2D vector;
+    private boolean circle;
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, Raylib.Color color) {
+    private int wallXpoint1;
+    private int wallYPoint1;
+    private int wallXPoint2;
+    private int wallYPoint2;
+
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
-        this.posX = posX;
-        this.posY = posY;
         this.shotRad = shotRad;
         isInBounds = true;
+        vector = new Vector2D(posX, posY, shotSpeed);
         this.finalX = finalX;
         this.finalY = finalY;
         //Add this to constructor later when we have weapons
         damage = 10;
         this.color = color;
         this.shotTag = shotTag;
-        DrawCircle(this.posX, this.posY, shotRad, color);
+        if (circle){
+            DrawCircle(getPosX(), getPosY(), shotRad, color);
+        }
+        else{
+            DrawRectangle(posX, posY, 20, 60, color);
+        }
         this.maxRange = maxRange;
-        actualXPos = posX;
-        actualYPos = posY;
-        vector = new Vector(posX, posY, shotSpeed);
+        this.circle = circle;
     }
 
     public boolean isInBounds() {
         return isInBounds;
     }
 
-    public void shootInLine(){
-        Jaylib.Vector2 position = new Jaylib.Vector2(finalX, finalY);
-        vector.moveObject(position, "to");
-        updateObjectPositions();
-    }
-
-    private void updateObjectPositions() {
-        actualXPos = vector.getActualXPos();
-        actualYPos = vector.getActualYPos();
-        posX = vector.getPosX();
-        posY = vector.getPosY();
-        yMoveSpeed = vector.getyNormalizedMovement();
-        xMoveSpeed = vector.getxNormalizedMovement();
+    public void shootLine(){
+        Jaylib.Vector2 shotPosition = new Jaylib.Vector2(finalX, finalY);
+        vector.setShotPosition(shotPosition);
+        vector.setShootLine();
     }
 
     public void doubleVectorCalc(String aboveOrBelow) {
-        shootInLine();
-        double swap = xMoveSpeed;
+        shootLine();
+        double swap = vector.getxNormalizedMovement();
         vector.setxNormalizedMovement(vector.getyNormalizedMovement());
         vector.setyNormalizedMovement(swap);
         if (aboveOrBelow.equals("above")){
-            finalX += (xMoveSpeed * -3);
-            finalY += (yMoveSpeed * 3);
+            finalX += (vector.getxNormalizedMovement() * -3);
+            finalY += (vector.getyNormalizedMovement() * 3);
         }
         else{
-            finalX -= (xMoveSpeed * -3);
-            finalY -= (yMoveSpeed * 3);
+            finalX -= (vector.getxNormalizedMovement() * -3);
+            finalY -= (vector.getyNormalizedMovement() * 3);
         }
-        shootInLine();
+        shootLine();
+    }
+
+    public double[] updateDoubleVectorPosition() {
+        shootLine();
+        double[] array = new double[4];
+        double swap = vector.getxNormalizedMovement();
+        vector.setxNormalizedMovement(vector.getyNormalizedMovement());
+        vector.setyNormalizedMovement(swap);
+        array[0] = vector.getActualXPos() - (vector.getxNormalizedMovement() * -12);
+        array[1] = vector.getActualYPos() - (vector.getyNormalizedMovement() * 12);
+        array[2] = vector.getActualXPos() + (vector.getxNormalizedMovement() * -12);
+        array[3] = vector.getActualYPos() + (vector.getyNormalizedMovement() * 12);
+        wallXpoint1 = (int) array[0];
+        wallYPoint1 = (int) array[1];
+        wallXPoint2 = (int) array[2];
+        wallYPoint2 = (int) array[3];
+        return array;
+    }
+
+    public void drawWall() {
+        if (distanceTravelled <= maxRange) {
+            double[] array = updateDoubleVectorPosition();
+            DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
+        }
+        else{
+            DrawLine(wallXpoint1, wallYPoint1, wallXPoint2, wallYPoint2, BLACK);
+        }
     }
 
     public void updateMove(){
-        this.actualYPos += yMoveSpeed;
-        this.posY = (int) Math.round(actualYPos);
-        this.actualXPos += xMoveSpeed;
-        this.posX = (int) Math.round(actualXPos);
-        update();
+        vector.updateShootLinePosition();
+        DrawCircle(getPosX(), getPosY(), shotRad, color);
+//        this.actualYPos += yMoveSpeed;
+//        this.posY = (int) Math.round(actualYPos);
+//        this.actualXPos += xMoveSpeed;
+//        this.posX = (int) Math.round(actualXPos);
+//        update();
     }
     public void boundsCheck(){
-        if(posX < 0 || posX > GetScreenWidth()){
+        if(getPosX() < 0 || getPosX() > GetScreenWidth()){
             isInBounds = false;
         }
-        if(posY < 0 || posY > GetScreenHeight()){
+        if(getPosY() < 0 || getPosY() > GetScreenHeight()){
             isInBounds = false;
         }
     }
 
-    public boolean distanceTravelled(){
-        if (distanceTravelled >= maxRange){
-            return true;
-        }
-        return false;
+    public boolean pastMaxDistanceTravelled(){
+        return distanceTravelled >= maxRange;
     }
 
     public void explodePoolSpell(){
@@ -120,11 +135,11 @@ public class Projectile {
         }
     }
     public int getPosX() {
-        return posX;
+        return vector.getPosX();
     }
 
     public int getPosY() {
-        return posY;
+        return vector.getPosY();
     }
 
     public int getShotRad() {
@@ -134,14 +149,6 @@ public class Projectile {
     public int getDamage(){
         return damage;
     }
-
-    public void update(){
-        DrawCircle(posX, posY, shotRad, color);
-    }
-
-    public double getXMoveSpeed() {return xMoveSpeed;}
-    public double getYMoveSpeed() {return yMoveSpeed;}
-
     public void setShotTag(String tag){
         shotTag = tag;
     }
@@ -163,29 +170,12 @@ public class Projectile {
     }
 
     public void setPosX(int posX) {
-        this.posX = posX;
+        vector.setPosX(posX);
     }
 
     public void setPosY(int posY) {
-        this.posY = posY;
+        vector.setPosY(posY);
     }
-
-    public double getActualXPos() {
-        return actualXPos;
-    }
-
-    public void setActualXPos(double actualXPos) {
-        this.actualXPos = actualXPos;
-    }
-
-    public double getActualYPos() {
-        return actualYPos;
-    }
-
-    public void setActualYPos(double actualYPos) {
-        this.actualYPos = actualYPos;
-    }
-
     public void setInBounds(boolean inBounds) {
         isInBounds = inBounds;
     }
@@ -218,46 +208,13 @@ public class Projectile {
         this.finalY = finalY;
     }
 
-    public double getxMoveSpeed() {
-        return xMoveSpeed;
-    }
 
     public void setxMoveSpeed(double xMoveSpeed) {
-        this.xMoveSpeed = xMoveSpeed;
+        vector.setxNormalizedMovement(xMoveSpeed);
     }
-
-    public double getyMoveSpeed() {
-        return yMoveSpeed;
-    }
-
     public void setyMoveSpeed(double yMoveSpeed) {
-        this.yMoveSpeed = yMoveSpeed;
+        vector.setyNormalizedMovement(yMoveSpeed);
     }
-
-    public int getxMul() {
-        return xMul;
-    }
-
-    public void setxMul(int xMul) {
-        this.xMul = xMul;
-    }
-
-    public int getyMul() {
-        return yMul;
-    }
-
-    public void setyMul(int yMul) {
-        this.yMul = yMul;
-    }
-
-    public int getSlopeMul() {
-        return slopeMul;
-    }
-
-    public void setSlopeMul(int slopeMul) {
-        this.slopeMul = slopeMul;
-    }
-
     public Raylib.Color getColor() {
         return color;
     }
@@ -296,5 +253,13 @@ public class Projectile {
 
     public void setDraw(boolean draw) {
         this.draw = draw;
+    }
+
+    public Jaylib.Vector2 getPosition(){
+        return vector.getPosition();
+    }
+
+    public Vector2D getVector() {
+        return vector;
     }
 }

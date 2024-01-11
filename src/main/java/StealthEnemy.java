@@ -7,7 +7,7 @@ import static com.raylib.Jaylib.*;
 
 public class StealthEnemy extends Enemy{
     private Raylib.Color initialColor;
-    private Vector vector;
+    private Vector2D vector;
     private Jaylib.Vector2 pos;
     private int shotSpeed;
     private boolean isReloading;
@@ -22,7 +22,7 @@ public class StealthEnemy extends Enemy{
     public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color){
         super(hp,damage,posX,posY,moveSpeed,size,range,color);
         initialColor = color;
-        vector = new Vector(posX, posY, moveSpeed);
+        vector = new Vector2D(posX, posY, moveSpeed);
         this.shotSpeed = shotSpeed;
         pos = new Jaylib.Vector2();
         pos.x(posX);
@@ -74,9 +74,9 @@ public class StealthEnemy extends Enemy{
                 if(canShoot) {
                     canShoot = false;
                     numShots++;
-                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), BLACK);
+                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, BLACK);
                     projList.add(proj);
-                    proj.shootInLine();
+                    proj.shootLine();
                     if (numShots > 10) {
                         isReloading = true;
                         numShots = 0;
@@ -120,23 +120,14 @@ public class StealthEnemy extends Enemy{
         this.initialColor = initialColor;
     }
 
-    public Vector getVector() {
+    public Vector2D getVector() {
         return vector;
     }
 
-    public void setVector(Vector vector) {
+    public void setVector(Vector2D vector) {
         this.vector = vector;
     }
 
-    @Override
-    public Jaylib.Vector2 getPos() {
-        return pos;
-    }
-
-    @Override
-    public void setPos(Jaylib.Vector2 pos) {
-        this.pos = pos;
-    }
 
     public int getShotSpeed() {
         return shotSpeed;
