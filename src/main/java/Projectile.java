@@ -122,7 +122,7 @@ public class Projectile {
         }
     }
 
-    public boolean distanceTravelled(){
+    public boolean pastMaxDistanceTravelled(){
         return distanceTravelled >= maxRange;
     }
 

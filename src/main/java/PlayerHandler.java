@@ -27,13 +27,6 @@ public class PlayerHandler {
 
     }
 
-    public void playerIframe(int iFrame){
-        try {
-            Thread.sleep(iFrame);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /**
      * A primitive method that checks for all enemies for collision
@@ -84,28 +77,31 @@ public class PlayerHandler {
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
                 if (currProj.getShotTag().contains("Enemy")) {
-                    if(currProj.getShotTag().contains("Pool")) {
-                        currProj.setyMoveSpeed(0);
-                        currProj.setxMoveSpeed(0);
-                        updatePool(currProj,projList);
-                    }
-                    else {
-                        player.setHp(player.getHp() - ((Projectile) projList.get(i)).getDamage());
-                        ((Projectile) projList.get(i)).setHitPlayer(true);
-                        if (currProj.getShotTag().contains("Fire")) {
-                            fire.shootAttack(player);
-                        }
-                        if(currProj.getShotTag().contains("Inferno")){
-                            fire.magicLongShoot(player);
-                        }
-                        projList.removeObject(currProj);
-                    }
+                    enemyShots(currProj, projList);
                 }
-                else {
-                    ((Projectile) projList.get(i)).setHitPlayer(false);
+                else{
+                    currProj.setHitPlayer(false);
                 }
+            }
+        }
+    }
 
+        public void enemyShots(Projectile currProj, ProjectileHandler projList){
+            if(currProj.getShotTag().contains("Pool")) {
+                currProj.setyMoveSpeed(0);
+                currProj.setxMoveSpeed(0);
+                updatePool(currProj,projList);
+            }
+            else {
+                player.setHp(player.getHp() - currProj.getDamage());
+                currProj.setHitPlayer(true);
+                if (currProj.getShotTag().contains("Fire")) {
+                    fire.shootAttack(player);
                 }
+                if(currProj.getShotTag().contains("Inferno")){
+                    fire.magicLongShoot(player);
+                }
+                projList.removeObject(currProj);
             }
         }
 
@@ -146,10 +142,10 @@ public class PlayerHandler {
     public void drawHp(){
         double thing = (double) player.getHp() /  player.getInitalHp();
         double width = thing * 150;
-        DrawRectangle(50, 1000, (int) width, 40, DARKGREEN);
-        DrawRectangleLines(50, 1000, 150, 40, BLACK);
+        DrawRectangle(50, GetScreenHeight() - 100, (int) width, 40, DARKGREEN);
+        DrawRectangleLines(50, GetScreenHeight() - 100, 150, 40, BLACK);
         String s = String.format("HP: %d", player.getHp());
-        DrawText(s, 50, 1000, 20, BLACK);
+        DrawText(s, 50, GetScreenHeight() - 100, 20, BLACK);
     }
 
     public void drawBurn(){

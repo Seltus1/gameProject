@@ -21,30 +21,29 @@ public class ProjectileHandler extends ListHandler{
         }
     }
 
-    public void checkMaxDistance(Projectile projectile){
-        if (projectile.distanceTravelled()){
-            if(projectile.getShotTag().contains("Pool")){
-                projectile.explodePoolSpell();
+    public void poolshot(Projectile projectile){
+        if (projectile.pastMaxDistanceTravelled()) {
                 projectile.setxMoveSpeed(0);
                 projectile.setyMoveSpeed(0);
+                projectile.explodePoolSpell();
                 if(!projectile.isDraw()){
                     removeObject(projectile);
                 }
             }
-            if(projectile.getShotTag().contains("Wall")){
-                projectile.setxMoveSpeed(0);
-                projectile.setyMoveSpeed(0);
-            }
-            removeObject(projectile);
+
         }
-    }
+
 
     public void update(){
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
-            checkMaxDistance(projectile);
+            if(projectile.getShotTag().contains("Pool")) {
+                poolshot(projectile);
+            }
+            else if(projectile.pastMaxDistanceTravelled()) {
+                removeObject(projectile);
+            }
             checkProjectilesBounds(projectile);
-
         }
     }
 }
