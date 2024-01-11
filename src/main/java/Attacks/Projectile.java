@@ -47,11 +47,8 @@ public class Projectile {
         damage = 10;
         this.color = color;
         this.shotTag = shotTag;
-        if (circle){
+        if ((circle) && isDraw()){
             DrawCircle(getPosX(), getPosY(), shotRad, color);
-        }
-        else{
-            DrawRectangle(posX, posY, 20, 60, color);
         }
         this.maxRange = maxRange;
         this.circle = circle;
@@ -112,7 +109,9 @@ public class Projectile {
 
     public void updateMove(){
         vector.updateShootLinePosition();
-        DrawCircle(getPosX(), getPosY(), shotRad, color);
+        if(isDraw()) {
+            DrawCircle(getPosX(), getPosY(), shotRad, color);
+        }
 //        this.actualYPos += yMoveSpeed;
 //        this.posY = (int) Math.round(actualYPos);
 //        this.actualXPos += xMoveSpeed;
@@ -134,11 +133,8 @@ public class Projectile {
 
     public void explodePoolSpell(){
         shotRad = 50;
-        cooldown++;
-        if((cooldown + 1) % 61 == 0){
-            draw = false;
-            cooldown = 0;
-        }
+        setxMoveSpeed(0);
+        setyMoveSpeed(0);
     }
     public int getPosX() {
         return vector.getPosX();

@@ -6,6 +6,7 @@ import Attacks.*;
 import Elements.*;
 
 public class ProjectileHandler extends ListHandler {
+    private int cooldown;
 
     public ProjectileHandler(){
         super();
@@ -30,11 +31,13 @@ public class ProjectileHandler extends ListHandler {
 
     public void poolshot(Projectile projectile){
         if (projectile.pastMaxDistanceTravelled()) {
-            projectile.setxMoveSpeed(0);
-            projectile.setyMoveSpeed(0);
             projectile.explodePoolSpell();
-            if(!projectile.isDraw()){
-                removeObject(projectile);
+            if (projectile.isDraw()){
+                cooldown++;
+                if((cooldown + 1) % 61 == 0){
+                    projectile.setDraw(false);
+                    cooldown = 0;
+                }
             }
         }
     }

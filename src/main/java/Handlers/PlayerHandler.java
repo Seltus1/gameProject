@@ -82,7 +82,7 @@ public class PlayerHandler {
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
-                if (currProj.getShotTag().contains("Creatures.Enemies.Enemy")) {
+                if (currProj.getShotTag().contains("Enemy")) {
                     enemyShots(currProj, projList);
                 }
                 else{
@@ -212,18 +212,8 @@ public class PlayerHandler {
         regen();
     }
     public void updatePool(Projectile currProj, ProjectileHandler projList){
-        if(currProj.isDraw()){
-            currProj.setShotRad(50);
-            cooldown++;
-            if((cooldown + 1) % 15 == 0) {
-                player.setHp(player.getHp() - currProj.getDamage());
-                player.setTimeSinceHit(System.currentTimeMillis());
-                cooldown = 0;
-            }
-        }
-        else {
-            projList.removeObject(currProj);
+        if(currProj.isDraw()) {
+            currProj.explodePoolSpell();
         }
     }
-
 }
