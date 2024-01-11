@@ -1,3 +1,9 @@
+package Creatures.Enemies;
+import Handlers.*;
+import Creatures.*;
+import Attacks.*;
+import Elements.*;
+
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -44,7 +50,7 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 enemyPos = vector.getPosition();
-            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
+            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Creatures.Player")) {
                 projList.removeIndex(i);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {

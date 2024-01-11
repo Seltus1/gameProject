@@ -1,3 +1,5 @@
+package Handlers;
+
 import com.raylib.Jaylib;
 
 import static com.raylib.Raylib.*;

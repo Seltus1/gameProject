@@ -1,4 +1,11 @@
-public class ProjectileHandler extends ListHandler{
+package Handlers;
+
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
+
+public class ProjectileHandler extends ListHandler {
 
     public ProjectileHandler(){
         super();
@@ -23,15 +30,14 @@ public class ProjectileHandler extends ListHandler{
 
     public void poolshot(Projectile projectile){
         if (projectile.pastMaxDistanceTravelled()) {
-                projectile.setxMoveSpeed(0);
-                projectile.setyMoveSpeed(0);
-                projectile.explodePoolSpell();
-                if(!projectile.isDraw()){
-                    removeObject(projectile);
-                }
+            projectile.setxMoveSpeed(0);
+            projectile.setyMoveSpeed(0);
+            projectile.explodePoolSpell();
+            if(!projectile.isDraw()){
+                removeObject(projectile);
             }
-
         }
+    }
 
 
     public void update(){

@@ -1,3 +1,7 @@
+import Creatures.*;
+import Handlers.*;
+import Creatures.Player;
+
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 import java.util.Random;
@@ -18,7 +22,7 @@ public class Main {
         // Create instances of necessary game objects
         Random rand = new Random();
         ProjectileHandler projectiles = new ProjectileHandler();
-        Player player1 = new Player(100, 12, 15, 550, 250, 5, 20, 700, RED);
+        Creatures.Player player1 = new Creatures.Player(100, 12, 15, 550, 250, 5, 20, 700, RED);
         EnemyHandler enemies = new EnemyHandler();
         PlayerHandler player = new PlayerHandler(player1);
         GameHandler game = new GameHandler();

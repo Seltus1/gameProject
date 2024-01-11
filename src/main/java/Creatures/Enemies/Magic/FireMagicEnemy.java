@@ -1,6 +1,12 @@
-import com.raylib.Raylib;
+package Creatures.Enemies.Magic;
 
-public class FireMagicEnemy extends MagicEnemy{
+import com.raylib.Raylib;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
+
+public class FireMagicEnemy extends MagicEnemy {
     private Fire fire;
     private int longCooldown;
 

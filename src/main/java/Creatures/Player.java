@@ -1,3 +1,8 @@
+package Creatures;
+
+import Creatures.Creature;
+import Handlers.ProjectileHandler;
+import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -22,7 +27,7 @@ public class Player implements Creature {
     private Raylib.Color color;
 
 
-    //    Player states
+    //    Creatures.Player states
     private boolean isAlive;
     private boolean isOnFire;
     private boolean isInferno;

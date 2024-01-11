@@ -1,11 +1,18 @@
+package Creatures.Enemies.Stealth;
+
+import Creatures.Enemies.Enemy;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import java.util.Random;
 
 import static com.raylib.Jaylib.*;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
 
-public class StealthEnemy extends Enemy{
+public class StealthEnemy extends Enemy {
     private Raylib.Color initialColor;
     private Vector2D vector;
     private Jaylib.Vector2 pos;
@@ -74,7 +81,7 @@ public class StealthEnemy extends Enemy{
                 if(canShoot) {
                     canShoot = false;
                     numShots++;
-                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, BLACK);
+                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, BLACK);
                     projList.add(proj);
                     proj.shootLine();
                     if (numShots > 10) {

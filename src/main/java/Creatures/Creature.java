@@ -1,3 +1,5 @@
+package Creatures;
+
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 

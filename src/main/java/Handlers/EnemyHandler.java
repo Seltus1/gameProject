@@ -1,3 +1,14 @@
+package Handlers;
+import Creatures.Enemies.Brawler.BrawlerEnemy;
+import Creatures.Enemies.Brawler.FireBrawlerEnemy;
+import Creatures.Enemies.Enemy;
+import Creatures.Enemies.Magic.FireMagicEnemy;
+import Creatures.Enemies.Magic.MagicEnemy;
+import Creatures.Enemies.Sniper.FireSniperEnemy;
+import Creatures.Enemies.Sniper.SniperEnemy;
+import Creatures.Enemies.Stealth.StealthEnemy;
+import Creatures.Player;
+
 import java.util.*;
 import java.util.Random;
 
@@ -71,7 +82,7 @@ public class EnemyHandler extends ListHandler {
                 }
                 else {
                     SniperEnemy enemy = (SniperEnemy) get(i);
-                    enemy.shootPlayer(player, projList, "Enemy", BLACK);
+                    enemy.shootPlayer(player, projList, "Creatures.Enemies.Enemy", BLACK);
                 }
 
             }

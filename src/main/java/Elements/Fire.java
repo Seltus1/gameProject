@@ -1,3 +1,8 @@
+package Elements;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+
 public class Fire {
     private String currency;
     private int numCoins;

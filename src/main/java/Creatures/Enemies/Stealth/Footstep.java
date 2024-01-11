@@ -1,3 +1,5 @@
+package Creatures.Enemies.Stealth;
+
 import com.raylib.Raylib;
 
 import java.util.Random;

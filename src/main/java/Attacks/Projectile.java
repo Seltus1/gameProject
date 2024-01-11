@@ -1,3 +1,9 @@
+package Attacks;
+import Handlers.*;
+import Creatures.*;
+import Elements.*;
+
+import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 

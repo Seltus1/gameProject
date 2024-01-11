@@ -1,8 +1,14 @@
+package Creatures.Enemies.Sniper;
+
+import Creatures.Enemies.Enemy;
 import com.raylib.Raylib;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
 
 import java.util.Random;
 
-public class SniperEnemy extends Enemy{
+public class SniperEnemy extends Enemy {
     private boolean canShoot;
     private Random rand = new Random();
     private int shotSpeed;

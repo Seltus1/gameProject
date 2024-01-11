@@ -1,3 +1,9 @@
+package Handlers;
+import Creatures.*;
+import Attacks.*;
+import Elements.*;
+import Creatures.Player;
+
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -35,7 +41,7 @@ public class PlayerHandler {
      * @param
      */
     public void enemyCollision(EnemyHandler enemy){
-//        ArrayList<Enemy> enemyList = enemy.getEnemyList();
+//        ArrayList<Creatures.Enemies.Enemy> enemyList = enemy.getEnemyList();
 //        for (int i = 0; i < enemyList.size(); i++) {
 //            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
 //            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
@@ -76,7 +82,7 @@ public class PlayerHandler {
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
-                if (currProj.getShotTag().contains("Enemy")) {
+                if (currProj.getShotTag().contains("Creatures.Enemies.Enemy")) {
                     enemyShots(currProj, projList);
                 }
                 else{
@@ -95,7 +101,7 @@ public class PlayerHandler {
             else {
                 player.setHp(player.getHp() - currProj.getDamage());
                 currProj.setHitPlayer(true);
-                if (currProj.getShotTag().contains("Fire")) {
+                if (currProj.getShotTag().contains("Elements.Fire")) {
                     fire.shootAttack(player);
                 }
                 if(currProj.getShotTag().contains("Inferno")){
@@ -111,8 +117,8 @@ public class PlayerHandler {
             if (player.canShoot()) {
                 int mouseX = GetMouseX();
                 int mouseY = GetMouseY();
-                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Player", player.getShotRange(), true, BLACK);
-                shot.setShotTag("Player");
+                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
+                shot.setShotTag("Creatures.Player");
                 shot.shootLine();
                 projList.add(shot);
                 player.setCanShoot(false);
