@@ -2,6 +2,7 @@ package Creatures;
 
 import Creatures.Creature;
 import Handlers.ProjectileHandler;
+import Elements.Fire;
 import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -49,6 +50,7 @@ public class Player implements Creature {
     private int InfernoCount;
     private boolean isFireInRange;
     private int shotRange;
+    private final Fire fire;
 
     public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
         this.hp = hp;
@@ -68,32 +70,23 @@ public class Player implements Creature {
         this.shotRange = shotRange;
         vector = new Vector2D(posX, posY, moveSpeed);
         regenCooldown = 5000;
+        fire = new Fire();
+
     }
 
     public void update() {
         vector.playerMove();
-        inferno();
-        burn();
+        if (isOnFire){
+            inferno();
+            burn();
+        }
         DrawCircle(getPosX(), getPosY(), size, color);
-
-//        CHECK THIS I DONT REMEBER WHAT IS DOES BUT MAY NOT UPDATE THE PLAYER POSITION
-//        setPos(new Jaylib.Vector2(getPosX(), getPosY()));
     }
 
     public void burn() {
-        burnCountDown++;
-        if (burnTicks != 0) {
-            if (burnCountDown % 15 == 0) {
-                hp = (hp - burnDamage);
-                setTimeSinceHit(System.currentTimeMillis());
-                if (!isFireInRange) {
-                    burnTicks -= burnDamage;
-                }
-            }
-        } else {
-            isOnFire = false;
-        }
+       fire.burn(this);
     }
+
     public void inferno() {
         if(getInfernoCount() != 0) {
             infernoCooldown++;

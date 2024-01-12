@@ -7,7 +7,6 @@ public class Fire {
     private String currency;
     private int numCoins;
     private int burnTime;
-
     private int burnDamage;
     private int burnCooldown;
     private int burnCountdown;
@@ -15,14 +14,7 @@ public class Fire {
     private boolean isInRange;
     private boolean isPushFireCalled;
     private int range;
-
-    public boolean isInRange() {
-        return isInRange;
-    }
-
-    public void setInRange(boolean inRange) {
-        isInRange = inRange;
-    }
+    private int burnCountDown;
 
     public Fire(){
         currency = "Flame";
@@ -31,6 +23,20 @@ public class Fire {
         burnTime = 10;
         isInRange = false;
         range = 75;
+    }
+
+    public void burn(Creature creature){
+        burnCountDown++;
+        if (creature.getBurnTicks() != 0) {
+            if (burnCountDown % 15 == 0) {
+                creature.setHp(creature.getHp() - burnDamage);
+                if (creature.isOnFire()) {
+                    creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
+                }
+            }
+        } else {
+            creature.setOnFire(false);
+        }
     }
 
     public void meleeAttack(Player player) {
@@ -130,5 +136,12 @@ public class Fire {
 
     public void setRange(int range) {
         this.range = range;
+    }
+
+    public void setBurnCountDown(int burnCountDown) {
+        this.burnCountDown = burnCountDown;
+    }
+    public int getBurnCountDown(){
+        return burnCountDown;
     }
 }
