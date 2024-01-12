@@ -1,11 +1,13 @@
+package Creatures.Enemies.Brawler;
+
+import Creatures.Enemies.Brawler.BrawlerEnemy;
 import com.raylib.Raylib;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
 
-import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Raylib.ColorTint;
-import static com.raylib.Raylib.*;
-import static com.raylib.Jaylib.*;
-
-public class FireBrawlerEnemy extends BrawlerEnemy{
+public class FireBrawlerEnemy extends BrawlerEnemy {
     private Fire fire;
     private int burnCountDown;
 

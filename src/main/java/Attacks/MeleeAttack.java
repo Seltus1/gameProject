@@ -1,8 +1,13 @@
+package Attacks;
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
 
 public class MeleeAttack {
     private int damage;

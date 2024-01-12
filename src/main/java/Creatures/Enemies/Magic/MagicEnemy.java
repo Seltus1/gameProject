@@ -1,5 +1,10 @@
-import com.raylib.Raylib;
+package Creatures.Enemies.Magic;
 
+import Creatures.Enemies.Enemy;
+import com.raylib.Raylib;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
 import java.util.Random;
 
 import static com.raylib.Jaylib.BLACK;
@@ -30,8 +35,8 @@ public class MagicEnemy extends Enemy {
 
 
     public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
-        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
+        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
+        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
         closeSpell1.doubleVectorCalc("above");
         closeSpell2.doubleVectorCalc("below");
         projList.add(closeSpell1);
@@ -44,6 +49,12 @@ public class MagicEnemy extends Enemy {
         projList.add(poolShot);
     }
 
+    public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed){
+        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
+        spell.homingShot(moveSpeed,player);
+        projList.add(spell);
+    }
+
     public void shoot(Player player, ProjectileHandler projList, Raylib.Color color){
         int rand = random.nextInt(2) + 1;
         if (getRange() > calculateDistanceToPlayer(player)) {
@@ -51,7 +62,8 @@ public class MagicEnemy extends Enemy {
             if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
                 if ((spellCoolDown + 1) % 91 == 0) {
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Enemy");
+                        castLongSpell(player, projList, color, "Creatures.Enemies.Enemy");
+                        castHomingSpell(player,projList,color,"homing",3);
                     } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
@@ -65,7 +77,7 @@ public class MagicEnemy extends Enemy {
             } else {
                 if ((spellCoolDown + 1) % 91 == 0) {
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Enemy");
+                        castLongSpell(player, projList, color, "Creatures.Enemies.Enemy");
                     } else {
                         castPoolSpell(player, projList, PoolColor);
                     }

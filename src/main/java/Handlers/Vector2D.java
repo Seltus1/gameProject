@@ -1,3 +1,5 @@
+package Handlers;
+
 import com.raylib.Jaylib;
 
 import static com.raylib.Raylib.*;
@@ -81,6 +83,18 @@ public class Vector2D {
         double yScaled = normalizedValues[1] * moveSpeed;
         updatePositions(xScaled, yScaled);
     }
+
+    public void moveObject(Jaylib.Vector2 otherPosition, String tag, double moveSpeed){
+        double[] positions = determinePositions(otherPosition, tag);
+        double verticalValues = positions[0];
+        double horizontalValues = positions[1];
+        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
+        double xScaled = normalizedValues[0] * moveSpeed;
+        double yScaled = normalizedValues[1] * moveSpeed;
+        updatePositions(xScaled, yScaled);
+    }
+
+
 
     public double[] determinePositions(Jaylib.Vector2 position, String tag) {
         double otherX, otherY, myXPos, myYPos;

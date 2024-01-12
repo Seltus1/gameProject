@@ -1,3 +1,9 @@
+package Creatures.Enemies;
+import Handlers.*;
+import Creatures.*;
+import Attacks.*;
+import Elements.*;
+
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -44,7 +50,7 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 enemyPos = vector.getPosition();
-            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
+            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Creatures.Player")) {
                 projList.removeIndex(i);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {
@@ -112,21 +118,37 @@ public class Enemy implements Creature {
         double xNormalized = horizontalValues / magnitude;
         return new double[]{xNormalized, yNormalized};
     }
-//    private void updateObjectPositions() {
-//        actualXPos = vector.getActualXPos();
-//        actualYPos = vector.getActualYPos();
-//        posX = vector.getPosX();
-//        posY = vector.getPosY();
-//    }
+
     @Override
     public Raylib.Color getColor() {
         return color;
     }
 
     @Override
+    public int getBurnTicks() {
+        return 0;
+    }
+
+    @Override
+    public boolean isOnFire() {
+        return false;
+    }
+
+    @Override
     public void setColor(Raylib.Color color) {
         this.color = color;
     }
+
+    @Override
+    public void setBurnTicks(int burn1) {
+
+    }
+
+    @Override
+    public void setOnFire(boolean onFire) {
+
+    }
+
     @Override
     public int getHp() {
         return hp;

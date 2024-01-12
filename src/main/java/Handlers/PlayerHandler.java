@@ -1,3 +1,9 @@
+package Handlers;
+import Creatures.*;
+import Attacks.*;
+import Elements.*;
+import Creatures.Player;
+
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -25,24 +31,6 @@ public class PlayerHandler {
         isAlive = true;
         fire = new Fire();
 
-    }
-
-
-    /**
-     * A primitive method that checks for all enemies for collision
-     * Soon, implement a circle that is approx 2x the size of our players and only check for collisions when an enemy
-     * is inside that circle.
-     * @param
-     */
-    public void enemyCollision(EnemyHandler enemy){
-//        ArrayList<Enemy> enemyList = enemy.getEnemyList();
-//        for (int i = 0; i < enemyList.size(); i++) {
-//            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
-//            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
-//            if (CheckCollisionCircles(playerPos,player.getSize(),enemyPos,enemyList.get(i).getSize())){
-//                player.setHp((player.getHp()-enemyList.get(i).getDamage()));
-//            }
-//        }
     }
 
     public void drawRange() {
@@ -86,24 +74,24 @@ public class PlayerHandler {
         }
     }
 
-        public void enemyShots(Projectile currProj, ProjectileHandler projList){
-            if(currProj.getShotTag().contains("Pool")) {
-                currProj.setyMoveSpeed(0);
-                currProj.setxMoveSpeed(0);
-                updatePool(currProj,projList);
-            }
-            else {
-                player.setHp(player.getHp() - currProj.getDamage());
-                currProj.setHitPlayer(true);
-                if (currProj.getShotTag().contains("Fire")) {
-                    fire.shootAttack(player);
-                }
-                if(currProj.getShotTag().contains("Inferno")){
-                    fire.magicLongShoot(player);
-                }
-                projList.removeObject(currProj);
-            }
+    public void enemyShots(Projectile currProj, ProjectileHandler projList){
+        if(currProj.getShotTag().contains("Pool")) {
+            currProj.setyMoveSpeed(0);
+            currProj.setxMoveSpeed(0);
+            updatePool(currProj,projList);
         }
+        else {
+            player.setHp(player.getHp() - currProj.getDamage());
+            currProj.setHitPlayer(true);
+            if (currProj.getShotTag().contains("Elements.Fire")) {
+                fire.shootAttack(player);
+            }
+            if(currProj.getShotTag().contains("Inferno")){
+                fire.magicLongShoot(player);
+            }
+            projList.removeObject(currProj);
+        }
+    }
 
     public void shoot(ProjectileHandler projList){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -111,8 +99,8 @@ public class PlayerHandler {
             if (player.canShoot()) {
                 int mouseX = GetMouseX();
                 int mouseY = GetMouseY();
-                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Player", player.getShotRange(), true, BLACK);
-                shot.setShotTag("Player");
+                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
+                shot.setShotTag("Creatures.Player");
                 shot.shootLine();
                 projList.add(shot);
                 player.setCanShoot(false);
@@ -191,7 +179,6 @@ public class PlayerHandler {
     }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
-        enemyCollision(enemy);
         shoot(projList);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
@@ -206,18 +193,8 @@ public class PlayerHandler {
         regen();
     }
     public void updatePool(Projectile currProj, ProjectileHandler projList){
-        if(currProj.isDraw()){
-            currProj.setShotRad(50);
-            cooldown++;
-            if((cooldown + 1) % 15 == 0) {
-                player.setHp(player.getHp() - currProj.getDamage());
-                player.setTimeSinceHit(System.currentTimeMillis());
-                cooldown = 0;
-            }
-        }
-        else {
-            projList.removeObject(currProj);
+        if(currProj.isDraw()) {
+            currProj.explodePoolSpell();
         }
     }
-
 }

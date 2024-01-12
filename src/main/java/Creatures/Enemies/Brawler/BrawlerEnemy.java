@@ -1,8 +1,12 @@
-import static com.raylib.Raylib.*;
+package Creatures.Enemies.Brawler;
 
+import Creatures.Enemies.Enemy;
 import com.raylib.Raylib;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
 
-public class BrawlerEnemy extends Enemy{
+public class BrawlerEnemy extends Enemy {
 
     private int xMul;
     private int yMul;

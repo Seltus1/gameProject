@@ -1,4 +1,12 @@
-public class ProjectileHandler extends ListHandler{
+package Handlers;
+
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
+
+public class ProjectileHandler extends ListHandler {
+    private int cooldown;
 
     public ProjectileHandler(){
         super();
@@ -23,27 +31,28 @@ public class ProjectileHandler extends ListHandler{
 
     public void poolshot(Projectile projectile){
         if (projectile.pastMaxDistanceTravelled()) {
-                projectile.setxMoveSpeed(0);
-                projectile.setyMoveSpeed(0);
-                projectile.explodePoolSpell();
-                if(!projectile.isDraw()){
-                    removeObject(projectile);
+            projectile.explodePoolSpell();
+            if (projectile.isDraw()){
+                cooldown++;
+                if((cooldown + 1) % 61 == 0){
+                    projectile.setDraw(false);
+                    cooldown = 0;
                 }
             }
-
         }
+    }
 
 
     public void update(){
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
+            checkProjectilesBounds(projectile);
             if(projectile.getShotTag().contains("Pool")) {
                 poolshot(projectile);
             }
             else if(projectile.pastMaxDistanceTravelled()) {
                 removeObject(projectile);
             }
-            checkProjectilesBounds(projectile);
         }
     }
 }

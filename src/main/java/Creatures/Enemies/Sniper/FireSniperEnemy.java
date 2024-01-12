@@ -1,6 +1,12 @@
+package Creatures.Enemies.Sniper;
+
 import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.*;
+import Creatures.*;
+import Handlers.*;
+import Attacks.*;
+import Elements.*;
 
 public class FireSniperEnemy extends SniperEnemy {
     private Fire fire;
