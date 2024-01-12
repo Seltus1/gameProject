@@ -33,24 +33,6 @@ public class PlayerHandler {
 
     }
 
-
-    /**
-     * A primitive method that checks for all enemies for collision
-     * Soon, implement a circle that is approx 2x the size of our players and only check for collisions when an enemy
-     * is inside that circle.
-     * @param
-     */
-    public void enemyCollision(EnemyHandler enemy){
-//        ArrayList<Creatures.Enemies.Enemy> enemyList = enemy.getEnemyList();
-//        for (int i = 0; i < enemyList.size(); i++) {
-//            Jaylib.Vector2 playerPos = new Jaylib.Vector2(player.getPosX(),player.getPosY());
-//            Jaylib.Vector2 enemyPos = new Jaylib.Vector2(enemyList.get(i).getPosX(),enemyList.get(i).getPosY());
-//            if (CheckCollisionCircles(playerPos,player.getSize(),enemyPos,enemyList.get(i).getSize())){
-//                player.setHp((player.getHp()-enemyList.get(i).getDamage()));
-//            }
-//        }
-    }
-
     public void drawRange() {
         Raylib.Vector2 mousePos = GetMousePosition();
         Raylib.Vector2 playerPos = player.getPosition();
@@ -92,24 +74,24 @@ public class PlayerHandler {
         }
     }
 
-        public void enemyShots(Projectile currProj, ProjectileHandler projList){
-            if(currProj.getShotTag().contains("Pool")) {
-                currProj.setyMoveSpeed(0);
-                currProj.setxMoveSpeed(0);
-                updatePool(currProj,projList);
-            }
-            else {
-                player.setHp(player.getHp() - currProj.getDamage());
-                currProj.setHitPlayer(true);
-                if (currProj.getShotTag().contains("Elements.Fire")) {
-                    fire.shootAttack(player);
-                }
-                if(currProj.getShotTag().contains("Inferno")){
-                    fire.magicLongShoot(player);
-                }
-                projList.removeObject(currProj);
-            }
+    public void enemyShots(Projectile currProj, ProjectileHandler projList){
+        if(currProj.getShotTag().contains("Pool")) {
+            currProj.setyMoveSpeed(0);
+            currProj.setxMoveSpeed(0);
+            updatePool(currProj,projList);
         }
+        else {
+            player.setHp(player.getHp() - currProj.getDamage());
+            currProj.setHitPlayer(true);
+            if (currProj.getShotTag().contains("Elements.Fire")) {
+                fire.shootAttack(player);
+            }
+            if(currProj.getShotTag().contains("Inferno")){
+                fire.magicLongShoot(player);
+            }
+            projList.removeObject(currProj);
+        }
+    }
 
     public void shoot(ProjectileHandler projList){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -197,7 +179,6 @@ public class PlayerHandler {
     }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
-        enemyCollision(enemy);
         shoot(projList);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){

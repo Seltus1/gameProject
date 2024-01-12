@@ -65,7 +65,6 @@ public class Projectile {
     }
 
     public void doubleVectorCalc(String aboveOrBelow) {
-        shootLine();
         double swap = vector.getxNormalizedMovement();
         vector.setxNormalizedMovement(vector.getyNormalizedMovement());
         vector.setyNormalizedMovement(swap);
@@ -77,7 +76,10 @@ public class Projectile {
             finalX -= (vector.getxNormalizedMovement() * -3);
             finalY -= (vector.getyNormalizedMovement() * 3);
         }
-        shootLine();
+    }
+
+    public void homingShot(double moveSpeed, Player player){
+        vector.moveObject(player.getPosition(),"to",moveSpeed);
     }
 
     public double[] updateDoubleVectorPosition() {
@@ -112,11 +114,6 @@ public class Projectile {
         if(isDraw()) {
             DrawCircle(getPosX(), getPosY(), shotRad, color);
         }
-//        this.actualYPos += yMoveSpeed;
-//        this.posY = (int) Math.round(actualYPos);
-//        this.actualXPos += xMoveSpeed;
-//        this.posX = (int) Math.round(actualXPos);
-//        update();
     }
     public void boundsCheck(){
         if(getPosX() < 0 || getPosX() > GetScreenWidth()){

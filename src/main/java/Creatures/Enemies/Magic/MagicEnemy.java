@@ -49,6 +49,12 @@ public class MagicEnemy extends Enemy {
         projList.add(poolShot);
     }
 
+    public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed){
+        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
+        spell.homingShot(moveSpeed,player);
+        projList.add(spell);
+    }
+
     public void shoot(Player player, ProjectileHandler projList, Raylib.Color color){
         int rand = random.nextInt(2) + 1;
         if (getRange() > calculateDistanceToPlayer(player)) {
@@ -57,6 +63,7 @@ public class MagicEnemy extends Enemy {
                 if ((spellCoolDown + 1) % 91 == 0) {
                     if (rand == 1) {
                         castLongSpell(player, projList, color, "Creatures.Enemies.Enemy");
+                        castHomingSpell(player,projList,color,"homing",3);
                     } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
