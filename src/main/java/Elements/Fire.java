@@ -1,7 +1,5 @@
 package Elements;
 import Creatures.*;
-import Handlers.*;
-import Attacks.*;
 
 public class Fire {
     private String currency;
@@ -14,7 +12,8 @@ public class Fire {
     private boolean isInRange;
     private boolean isPushFireCalled;
     private int range;
-    private int burnCountDown;
+    private int burnFPSCount;
+    private int fireHexFPSCount;
 
     public Fire(){
         currency = "Flame";
@@ -26,17 +25,40 @@ public class Fire {
     }
 
     public void burn(Creature creature){
-        burnCountDown++;
+        burnFPSCount++;
         if (creature.getBurnTicks() != 0) {
-            if (burnCountDown % 15 == 0) {
+            if (burnFPSCount % 15 == 0) {
                 creature.setHp(creature.getHp() - burnDamage);
                 if (creature.isOnFire()) {
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
                 }
             }
-        } else {
-            creature.setOnFire(false);
+            return;
         }
+        creature.setOnFire(false);
+    }
+
+    public void fireHex(Creature creature) {
+        if(creature.getFireHexCount() != 0) {
+            fireHexFPSCount++;
+
+//            calculating how the hex should last
+            if(fireHexFPSCount % 30 == 0) { // % 30 being 1/2 of a second lasting 10 iterations (5 seconds)
+                creature.setFireHexCount(creature.getFireHexCount() - 1);
+            }
+            if(creature.isShooting()){
+                if (creature.getBurnTicks() + 3 > 10){
+                    creature.setBurnTicks(getBurnTime());
+                }
+                else{
+                    creature.setBurnTicks(creature.getBurnTicks() + 3);
+                }
+                creature.setOnFire(true);
+            }
+            return;
+        }
+        creature.setFireHex(false);
+
     }
 
     public void meleeAttack(Player player) {
@@ -62,7 +84,7 @@ public class Fire {
     }
 
     public void magicLongShoot(Player player){
-        player.setInferno(true);
+        player.setFireHex(true);
         player.setInfernoCount(10);
     }
 
@@ -138,10 +160,10 @@ public class Fire {
         this.range = range;
     }
 
-    public void setBurnCountDown(int burnCountDown) {
-        this.burnCountDown = burnCountDown;
+    public void setBurnFPSCount(int burnFPSCount) {
+        this.burnFPSCount = burnFPSCount;
     }
-    public int getBurnCountDown(){
-        return burnCountDown;
+    public int getBurnFPSCount(){
+        return burnFPSCount;
     }
 }

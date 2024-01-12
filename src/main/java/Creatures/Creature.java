@@ -15,6 +15,10 @@ public interface Creature {
     Raylib.Color getColor();
     int getBurnTicks();
     boolean isOnFire();
+    int getFireHexCount();
+    boolean isShooting();
+    boolean isFireHex();
+
 
     void setHp(int hp);
     void setDamage(int dps);
@@ -25,6 +29,8 @@ public interface Creature {
     void setSize(int size);
     void setAlive(boolean isAlive);
     void setColor(Raylib.Color color);
-    void setBurnTicks(int burn1);
+    void setBurnTicks(int burn);
     void setOnFire(boolean onFire);
+    void setFireHexCount(int hex);
+    void setFireHex(boolean fireHex);
 }

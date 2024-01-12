@@ -1,12 +1,13 @@
 package Creatures;
 
-import Creatures.Creature;
+import Attacks.Projectile;
 import Handlers.ProjectileHandler;
 import Elements.Fire;
 import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class Player implements Creature {
@@ -31,7 +32,7 @@ public class Player implements Creature {
     //    Creatures.Player states
     private boolean isAlive;
     private boolean isOnFire;
-    private boolean isInferno;
+    private boolean isFireHex;
     private int burnTicks;
     private int intialBurn;
     private boolean isShooting;
@@ -51,6 +52,8 @@ public class Player implements Creature {
     private boolean isFireInRange;
     private int shotRange;
     private final Fire fire;
+    private int fireHexCount;
+    private int shotFrameCount;
 
     public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
         this.hp = hp;
@@ -74,35 +77,50 @@ public class Player implements Creature {
 
     }
 
-    public void update() {
+    public void update(ProjectileHandler projList) {
         vector.playerMove();
-        if (isOnFire){
-            inferno();
-            fire.burn(this);
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+            shoot(projList);
         }
+        shotCooldown();
+        setShooting(false);
+        fireHex();
+        burn();
         DrawCircle(getPosX(), getPosY(), size, color);
     }
 
-    public void inferno() {
-        if(getInfernoCount() != 0) {
-            infernoCooldown++;
-            if((infernoCooldown + 1) % 15 == 0){
-                setTimeSinceHit(System.currentTimeMillis());
-                setInfernoCount(getInfernoCount() - 1);
-            }
-            if(isShooting){
+    public void burn() {
+        if (isOnFire){
+            fire.burn(this);
+        }
+    }
 
-                if (burnTicks + 3 > 10){
-                    burnTicks = 10;
-                }
-                else{
-                    burnTicks += 3;
-                    isOnFire = true;
-                }
+    public void shoot(ProjectileHandler projList) {
+        if (canShoot()) {
+            setShooting(true);
+            int mouseX = GetMouseX();
+            int mouseY = GetMouseY();
+            Projectile shot = new Projectile(13, getPosX(), getPosY(), 7, mouseX, mouseY, "Player", getShotRange(), true, BLACK);
+            shot.setShotTag("Player");
+            shot.shootLine();
+            projList.add(shot);
+            setCanShoot(false);
+        }
+    }
+
+    public void shotCooldown(){
+        if (!canShoot()){
+            shotFrameCount++;
+            if (shotFrameCount % 15 == 0){
+                setCanShoot(true);
+                shotFrameCount = 0;
             }
         }
-        else{
-            isInferno = false;
+    }
+
+    public void fireHex() {
+        if (isFireHex()){
+            fire.fireHex(this);
         }
     }
 
@@ -249,8 +267,23 @@ public class Player implements Creature {
         return isOnFire;
     }
 
+    @Override
+    public int getFireHexCount() {
+        return fireHexCount;
+    }
+
     public void setOnFire(boolean onFire) {
         isOnFire = onFire;
+    }
+
+    @Override
+    public void setFireHexCount(int hex) {
+        fireHexCount = hex;
+    }
+
+    @Override
+    public void setFireHex(boolean fireHex) {
+        isFireHex = fireHex;
     }
 
     public int getBurnTicks() {
@@ -314,14 +347,6 @@ public class Player implements Creature {
         this.regenCooldown = regenCooldown;
     }
 
-    public boolean isInferno() {
-        return isInferno;
-    }
-
-    public void setInferno(boolean inferno) {
-        isInferno = inferno;
-    }
-
     public int getInfernoCount() {
         return InfernoCount;
     }
@@ -333,6 +358,13 @@ public class Player implements Creature {
     public boolean isShooting() {
         return isShooting;
     }
+
+    @Override
+    public boolean isFireHex() {
+        return isFireHex;
+    }
+
+
 
     public void setShooting(boolean shooting) {
         isShooting = shooting;

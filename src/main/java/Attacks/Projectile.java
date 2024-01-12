@@ -47,9 +47,6 @@ public class Projectile {
         damage = 10;
         this.color = color;
         this.shotTag = shotTag;
-        if ((circle) && isDraw()){
-            DrawCircle(getPosX(), getPosY(), shotRad, color);
-        }
         this.maxRange = maxRange;
         this.circle = circle;
     }

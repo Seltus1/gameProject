@@ -1,5 +1,4 @@
 package Handlers;
-import Creatures.*;
 import Attacks.*;
 import Elements.*;
 import Creatures.Player;
@@ -93,24 +92,25 @@ public class PlayerHandler {
         }
     }
 
-    public void shoot(ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            player.setShooting(true);
-            if (player.canShoot()) {
-                int mouseX = GetMouseX();
-                int mouseY = GetMouseY();
-                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
-                shot.setShotTag("Creatures.Player");
-                shot.shootLine();
-                projList.add(shot);
-                player.setCanShoot(false);
-                cooldown(player.getSHOT_COOLDOWN(), "shot");
-            }
-            else {
-                player.setShooting(false);
-            }
-        }
-    }
+//    public void shoot(ProjectileHandler projList){
+//        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+//            player.setShooting(true);
+//            if (player.canShoot()) {
+//                int mouseX = GetMouseX();
+//                int mouseY = GetMouseY();
+//                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
+//                shot.setShotTag("Creatures.Player");
+//                shot.shootLine();
+//                projList.add(shot);
+//                player.setCanShoot(false);
+//                cooldown(player.getSHOT_COOLDOWN(), "shot");
+//            }
+//            else {
+//                player.setShooting(false);
+//            }
+//        }
+//    }
+
     public void regen(){
         if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
             cooldown2++;
@@ -145,8 +145,8 @@ public class PlayerHandler {
         DrawText(s, 50, 900, 20, BLACK);
     }
 
-    public void drawInferno(){
-        if(player.isInferno()) {
+    public void drawFireFex(){
+        if(player.isFireHex()) {
             player.setColor(ORANGE);
             if(!player.isOnFire()){
                 DrawCircle(50,920,25,BLACK);
@@ -179,7 +179,7 @@ public class PlayerHandler {
     }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
-        shoot(projList);
+//        shoot(projList);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;
@@ -188,7 +188,7 @@ public class PlayerHandler {
         if(player.isOnFire()){
             drawBurn();
         }
-        drawInferno();
+        drawFireFex();
         drawRange();
         regen();
     }

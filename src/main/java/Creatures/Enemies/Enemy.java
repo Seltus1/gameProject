@@ -135,6 +135,21 @@ public class Enemy implements Creature {
     }
 
     @Override
+    public int getFireHexCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean isShooting() {
+        return false;
+    }
+
+    @Override
+    public boolean isFireHex() {
+        return false;
+    }
+
+    @Override
     public void setColor(Raylib.Color color) {
         this.color = color;
     }
@@ -146,6 +161,16 @@ public class Enemy implements Creature {
 
     @Override
     public void setOnFire(boolean onFire) {
+
+    }
+
+    @Override
+    public void setFireHexCount(int hex) {
+
+    }
+
+    @Override
+    public void setFireHex(boolean fireHex) {
 
     }
 
