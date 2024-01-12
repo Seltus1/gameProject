@@ -72,18 +72,12 @@ public class Player implements Creature {
 
     public void update() {
         vector.playerMove();
-        updatePosition(getPosX(), getPosY());
         inferno();
         burn();
         DrawCircle(getPosX(), getPosY(), size, color);
 
 //        CHECK THIS I DONT REMEBER WHAT IS DOES BUT MAY NOT UPDATE THE PLAYER POSITION
 //        setPos(new Jaylib.Vector2(getPosX(), getPosY()));
-    }
-
-    public void updatePosition(int posX, int posY){
-        setPosX(posX);
-        setPosY(posY);
     }
 
     public void burn() {

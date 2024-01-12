@@ -50,6 +50,12 @@ public class PlayerTest {
     }
 
     @Test
-    void name() {
+    void brun_deals_correct_amount_of_damage() {
+        player.setBurnTicks(10);
+        player.setOnFire(true);
+        for (int i = 0; i < 300; i++) {
+            player.burn();
+        }
+        assertEquals(90, player.getHp());
     }
 }
