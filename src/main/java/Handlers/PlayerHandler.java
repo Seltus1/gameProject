@@ -74,24 +74,24 @@ public class PlayerHandler {
         }
     }
 
-        public void enemyShots(Projectile currProj, ProjectileHandler projList){
-            if(currProj.getShotTag().contains("Pool")) {
-                currProj.setyMoveSpeed(0);
-                currProj.setxMoveSpeed(0);
-                updatePool(currProj,projList);
-            }
-            else {
-                player.setHp(player.getHp() - currProj.getDamage());
-                currProj.setHitPlayer(true);
-                if (currProj.getShotTag().contains("Elements.Fire")) {
-                    fire.shootAttack(player);
-                }
-                if(currProj.getShotTag().contains("Inferno")){
-                    fire.magicLongShoot(player);
-                }
-                projList.removeObject(currProj);
-            }
+    public void enemyShots(Projectile currProj, ProjectileHandler projList){
+        if(currProj.getShotTag().contains("Pool")) {
+            currProj.setyMoveSpeed(0);
+            currProj.setxMoveSpeed(0);
+            updatePool(currProj,projList);
         }
+        else {
+            player.setHp(player.getHp() - currProj.getDamage());
+            currProj.setHitPlayer(true);
+            if (currProj.getShotTag().contains("Elements.Fire")) {
+                fire.shootAttack(player);
+            }
+            if(currProj.getShotTag().contains("Inferno")){
+                fire.magicLongShoot(player);
+            }
+            projList.removeObject(currProj);
+        }
+    }
 
     public void shoot(ProjectileHandler projList){
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
