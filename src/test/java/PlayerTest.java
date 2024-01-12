@@ -20,42 +20,4 @@ public class PlayerTest {
         setPlayer.setHp(10);
         assertEquals(setPlayer.getHp(), getPlayer.getHp());
     }
-
-    @Test
-    void burn_does_not_set_player_on_fire() {
-        for (int i = 0; i < gameTicks; i++) {
-            player.burn();
-        }
-        assertFalse(player.isOnFire());
-    }
-
-    @Test
-    void burn_does_increases_burn_ticks_on_fire() {
-        player.setOnFire(true);
-        player.setBurnTicks(10);
-        for (int i = 0; i < gameTicks; i++) {
-            player.burn();
-        }
-        assertTrue(player.getBurnTicks() < 10);
-    }
-
-    @Test
-    void brun_deals_damage_every_15_seconds() {
-        player.setBurnTicks(10);
-        player.setOnFire(true);
-        for (int i = 0; i < 150; i++) {
-            player.burn();
-        }
-        assertEquals(0, player.getBurnTicks());
-    }
-
-    @Test
-    void brun_deals_correct_amount_of_damage() {
-        player.setBurnTicks(10);
-        player.setOnFire(true);
-        for (int i = 0; i < 300; i++) {
-            player.burn();
-        }
-        assertEquals(90, player.getHp());
-    }
 }

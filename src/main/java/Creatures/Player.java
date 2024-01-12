@@ -78,13 +78,9 @@ public class Player implements Creature {
         vector.playerMove();
         if (isOnFire){
             inferno();
-            burn();
+            fire.burn(this);
         }
         DrawCircle(getPosX(), getPosY(), size, color);
-    }
-
-    public void burn() {
-       fire.burn(this);
     }
 
     public void inferno() {
