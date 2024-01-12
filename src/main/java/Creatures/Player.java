@@ -42,6 +42,7 @@ public class Player implements Creature {
     private long timeSinceHit;
     private int regenCooldown;
     private int infernoCooldown;
+
     //    instance of other stuffs
     private int burnDamage;
     private int burnCountDown;
@@ -69,9 +70,8 @@ public class Player implements Creature {
         regenCooldown = 5000;
     }
 
-    public void update(ProjectileHandler projList) {
+    public void update() {
         vector.playerMove();
-        updatePosition(vector.getPosX(), vector.getPosY());
         inferno();
         burn();
         DrawCircle(getPosX(), getPosY(), size, color);
@@ -80,15 +80,10 @@ public class Player implements Creature {
 //        setPos(new Jaylib.Vector2(getPosX(), getPosY()));
     }
 
-    public void updatePosition(int posX, int posY){
-        setPosX(posX);
-        setPosY(posY);
-    }
-
     public void burn() {
         burnCountDown++;
         if (burnTicks != 0) {
-            if ((burnCountDown + 1) % 15 == 0) {
+            if (burnCountDown % 15 == 0) {
                 hp = (hp - burnDamage);
                 setTimeSinceHit(System.currentTimeMillis());
                 if (!isFireInRange) {

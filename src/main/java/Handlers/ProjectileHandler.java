@@ -46,13 +46,13 @@ public class ProjectileHandler extends ListHandler {
     public void update(){
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
+            checkProjectilesBounds(projectile);
             if(projectile.getShotTag().contains("Pool")) {
                 poolshot(projectile);
             }
             else if(projectile.pastMaxDistanceTravelled()) {
                 removeObject(projectile);
             }
-            checkProjectilesBounds(projectile);
         }
     }
 }
