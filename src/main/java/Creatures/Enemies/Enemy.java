@@ -29,6 +29,7 @@ public class Enemy implements Creature {
     private Ellipse2D.Double circle;
     private Vector2D vector;
     private Random rand;
+    private boolean shooting;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
@@ -50,7 +51,7 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 enemyPos = vector.getPosition();
-            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Creatures.Player")) {
+            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
                 projList.removeIndex(i);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {
@@ -296,5 +297,9 @@ public class Enemy implements Creature {
 
     public void setRand(Random rand) {
         this.rand = rand;
+    }
+
+    public void setShooting(boolean shooting){
+        this.shooting = shooting;
     }
 }

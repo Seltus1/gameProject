@@ -63,7 +63,7 @@ public class PlayerHandler {
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 player.setTimeSinceHit(System.currentTimeMillis());
-                if (currProj.getShotTag().contains("Enemy")) {
+                if (currProj.getShotTag().toLowerCase().contains("enemy")) {
                     enemyShots(currProj, projList);
                 }
                 else{
@@ -82,7 +82,7 @@ public class PlayerHandler {
         else {
             player.setHp(player.getHp() - currProj.getDamage());
             currProj.setHitPlayer(true);
-            if (currProj.getShotTag().contains("Elements.Fire")) {
+            if (currProj.getShotTag().contains("Fire")) {
                 fire.shootAttack(player);
             }
             if(currProj.getShotTag().contains("Inferno")){

@@ -82,9 +82,9 @@ public class Player implements Creature {
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
             shoot(projList);
         }
-        shotCooldown();
-        setShooting(false);
         fireHex();
+        setShooting(false);
+        shotCooldown();
         burn();
         DrawCircle(getPosX(), getPosY(), size, color);
     }
@@ -119,9 +119,7 @@ public class Player implements Creature {
     }
 
     public void fireHex() {
-        if (isFireHex()){
-            fire.fireHex(this);
-        }
+        fire.fireHex(this);
     }
 
 

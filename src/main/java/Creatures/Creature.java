@@ -33,4 +33,7 @@ public interface Creature {
     void setOnFire(boolean onFire);
     void setFireHexCount(int hex);
     void setFireHex(boolean fireHex);
+
+    void setShooting(boolean b);
+
 }
