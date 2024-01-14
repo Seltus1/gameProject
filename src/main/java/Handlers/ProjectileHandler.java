@@ -19,7 +19,7 @@ public class ProjectileHandler extends ListHandler {
         }
         else{
             if (projectile.getShotTag().contains("Fire_Wall")){
-                projectile.drawWall();
+//                projectile.drawWall();
             }
 
             else{

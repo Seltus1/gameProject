@@ -1,6 +1,7 @@
 package Creatures;
 
 import Attacks.Projectile;
+import Handlers.CooldownHandler;
 import Handlers.ProjectileHandler;
 import Elements.Fire;
 import Handlers.Vector2D;
@@ -43,6 +44,7 @@ public class Player implements Creature {
     private final int SHOT_COOLDOWN = 250;
     private long timeSinceHit;
     private int regenCooldown;
+    private CooldownHandler cooldown;
     private int infernoCooldown;
 
     //    instance of other stuffs
@@ -62,19 +64,19 @@ public class Player implements Creature {
         this.range = meleeRange;
         this.moveSpeed = moveSpeed;
         this.size = size;
-        this.isAlive = true;
         this.color = color;
+        this.shotRange = shotRange;
+        this.isAlive = true;
         this.canShoot = true;
-        this.canMelee = true;
         isOnFire = false;
+        this.canMelee = true;
         burnCountDown = 0;
         intialBurn = 10;
         burnDamage = 1;
-        this.shotRange = shotRange;
-        vector = new Vector2D(posX, posY, moveSpeed);
         regenCooldown = 5000;
         fire = new Fire();
-
+        vector = new Vector2D(posX, posY, moveSpeed);
+        cooldown = new CooldownHandler();
     }
 
     public void update(ProjectileHandler projList) {
@@ -110,10 +112,8 @@ public class Player implements Creature {
 
     public void shotCooldown(){
         if (!canShoot()){
-            shotFrameCount++;
-            if (shotFrameCount % 15 == 0){
-                setCanShoot(true);
-                shotFrameCount = 0;
+            if(cooldown.cooldown(250)){
+                canShoot = true;
             }
         }
     }

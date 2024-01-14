@@ -1,5 +1,10 @@
 package Elements;
 import Creatures.*;
+import Handlers.CooldownHandler;
+import com.raylib.Jaylib;
+import com.raylib.Raylib;
+import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
 
 public class Fire {
     private String currency;
@@ -25,9 +30,8 @@ public class Fire {
     }
 
     public void burn(Creature creature){
-        burnFPSCount++;
-        if (creature.getBurnTicks() != 0) {
-            if (burnFPSCount % 15 == 0) {
+        if (cooldown.cooldown(250)){
+            if (creature.getBurnTicks() != 0) {
                 creature.setHp(creature.getHp() - burnDamage);
                 if (creature.isOnFire()) {
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
@@ -39,26 +43,21 @@ public class Fire {
     }
 
     public void fireHex(Creature creature) {
-        if(creature.getFireHexCount() != 0) {
-            fireHexFPSCount++;
-
-//            calculating how the hex should last
-            if(fireHexFPSCount % 30 == 0) { // % 30 being 1/2 of a second lasting 10 iterations (5 seconds)
+        if (creature.getFireHexCount() != 0) {
+            if (cooldown.cooldown(500)) {
                 creature.setFireHexCount(creature.getFireHexCount() - 1);
-            }
-            if(creature.isShooting()){
-                if (creature.getBurnTicks() + 3 > 10){
-                    creature.setBurnTicks(getBurnTime());
+                if (creature.isShooting()) {
+                    if (creature.getBurnTicks() + 3 > 10) {
+                        creature.setBurnTicks(getBurnTime());
+                    } else {
+                        creature.setBurnTicks(creature.getBurnTicks() + 3);
+                    }
+                    creature.setOnFire(true);
                 }
-                else{
-                    creature.setBurnTicks(creature.getBurnTicks() + 3);
-                }
-                creature.setOnFire(true);
+                return;
             }
-            return;
+            creature.setFireHex(false);
         }
-        creature.setFireHex(false);
-
     }
 
     public void meleeAttack(Player player) {
@@ -83,9 +82,9 @@ public class Fire {
 
     }
 
-    public void magicLongShoot(Player player){
-        player.setFireHex(true);
-        player.setInfernoCount(10);
+    public void magicLongShoot(Creature creature){
+        creature.setFireHex(true);
+        creature.setFireHexCount(10);
     }
 
 

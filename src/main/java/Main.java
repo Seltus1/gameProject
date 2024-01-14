@@ -9,6 +9,7 @@ import java.util.Random;
 public class Main {
     public static void main(String[] args) {
         // Define screen width and height constants
+        final int frameRate = 60;
         final int SCREENWIDTH = GetScreenWidth();
         final int SCREENHEIGHT = GetRenderHeight();
 
@@ -38,35 +39,34 @@ public class Main {
             // Begin drawing on the window
             BeginDrawing();
             // Clear the window background with a color (RAYWHITE)
-                ClearBackground(RAYWHITE);
+            ClearBackground(RAYWHITE);
 //            if(game.isIsinMenu()){
 //                game.update();
 //            }
 //           if(player1.getHp() >= 0) {
-               // Update the player and enemies
+            // Update the player and enemies
 
             player.update(enemies, projectiles);
             enemies.update(projectiles, player1);
             projectiles.update();
             if (enemies.size() == 0) {
-                enemies.addMultipleEnemies(1);
+                enemies.addMultipleEnemies(amountOfEnemy);
             }
             player1.update(projectiles);
 
-               // Display the current frames per second (FPS)
+            // Display the current frames per second (FPS)
 
 //           }
 //           else{
 //               game.update(player1, enemies);
 //           }
-               DrawFPS(100, 100);
+            DrawFPS(100, 100);
 
-               // End drawing
-               EndDrawing();
+            // End drawing
+            EndDrawing();
         }
 
         // Close the window when the loop exits (window closed or Esc pressed)
         CloseWindow();
     }
-
 }
