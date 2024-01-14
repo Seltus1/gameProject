@@ -32,7 +32,7 @@ public class PlayerTest {
     }
 
     @Test
-    void burn_does_increases_burn_ticks_on_fire() {
+    void brun_Increases_Brun_ticks() {
         player.setOnFire(true);
         player.setBurnTicks(10);
         for (int i = 0; i < gameTicks; i++) {
@@ -42,7 +42,7 @@ public class PlayerTest {
     }
 
     @Test
-    void brun_deals_damage_every_15_frames() {
+    void Brun_Deals_Damage_Every_Brun_Cooldown() {
         player.setBurnTicks(10);
         player.setOnFire(true);
         for (int i = 0; i < 150; i++) {

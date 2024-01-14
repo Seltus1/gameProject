@@ -121,8 +121,6 @@ public class Player implements Creature {
     public void fireHex() {
         fire.fireHex(this);
     }
-
-
     public int getBurnDamage() {
         return burnDamage;
     }

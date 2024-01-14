@@ -19,6 +19,7 @@ public class Fire {
     private int range;
     private int burnFPSCount;
     private int fireHexFPSCount;
+    private CooldownHandler cooldown;
 
     public Fire(){
         currency = "Flame";
@@ -27,6 +28,7 @@ public class Fire {
         burnTime = 10;
         isInRange = false;
         range = 75;
+        cooldown = new CooldownHandler();
     }
 
     public void burn(Creature creature){
@@ -37,9 +39,8 @@ public class Fire {
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
                 }
             }
-            return;
+            creature.setOnFire(false);
         }
-        creature.setOnFire(false);
     }
 
     public void fireHex(Creature creature) {
