@@ -48,8 +48,11 @@ public class Projectile {
         this.circle = circle;
     }
 
-    public boolean isInBounds() {
-        return isInBounds;
+    public void updateMove(){
+        vector.updateShootLinePosition();
+        if(isDraw()) {
+            DrawCircle(getPosX(), getPosY(), shotRad, color);
+        }
     }
 
     public void shootLine(){
@@ -57,36 +60,8 @@ public class Projectile {
         vector.setShotPosition(shotPosition);
         vector.setShootLine();
     }
-    public void updateDoublePosition(){
-        shootLine();
-//        vector.updateWallDoubleVector();
-    }
 
-    public void triangleShot(String aboveOrBelow){
-        shootLine();
-        int[] newFinals = vector.TriangleShotVectorCalc(aboveOrBelow,finalX,finalY);
-        finalX = newFinals[0];
-        finalY = newFinals[1];
-    }
-
-
-
-
-    public void homingShot(double moveSpeed, Player player){
-        vector.moveObject(player.getPosition(),"to",moveSpeed);
-    }
-
-
-
-
-
-    public void updateMove(){
-        vector.updateShootLinePosition();
-        if(isDraw()) {
-            DrawCircle(getPosX(), getPosY(), shotRad, color);
-        }
-    }
-    public void boundsCheck(){
+    public void checkProjIsOnScreen(){
         if(getPosX() < 0 || getPosX() > GetScreenWidth()){
             isInBounds = false;
         }
@@ -99,11 +74,30 @@ public class Projectile {
         return distanceTravelled >= maxRange;
     }
 
+    public void triangleShot(String aboveOrBelow){
+        shootLine();
+        int[] newFinals = vector.TriangleShotVectorCalc(aboveOrBelow,finalX,finalY);
+        finalX = newFinals[0];
+        finalY = newFinals[1];
+    }
+//    ZENE ADD THIS LAATER
+
+//    public void homingShot(double moveSpeed, Player player){
+
+//        vector.moveObject(player.getPosition(),"to",moveSpeed);
+
+//    }
+
     public void explodePoolSpell(){
         shotRad = 50;
         setxMoveSpeed(0);
         setyMoveSpeed(0);
     }
+
+    public boolean isInBounds() {
+        return isInBounds;
+    }
+
     public int getPosX() {
         return vector.getPosX();
     }

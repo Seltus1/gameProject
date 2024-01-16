@@ -21,7 +21,7 @@ public class Fire {
     private int fireHexFPSCount;
     private CooldownHandler cooldown;
 
-    public Fire(){
+    public Fire() {
         currency = "Flame";
         numCoins = 10;
         burnDamage = 1;
@@ -31,34 +31,45 @@ public class Fire {
         cooldown = new CooldownHandler();
     }
 
-    public void burn(Creature creature){
-        if (cooldown.cooldown(250)){
-            if (creature.getBurnTicks() != 0) {
-                creature.setHp(creature.getHp() - burnDamage);
+    public void burn(Creature creature) {
+        if (creature.getBurnTicks() != 0) {
+            if (cooldown.cooldown(250)) {
+                dealDamage(burnDamage, creature);
                 if (creature.isOnFire()) {
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
                 }
             }
-            creature.setOnFire(false);
+            return;
         }
+        creature.setOnFire(false);
     }
 
     public void fireHex(Creature creature) {
+        // checking if the fireHex is on
         if (creature.getFireHexCount() != 0) {
+//            setting a cd that the fireHex last X amount of time
             if (cooldown.cooldown(500)) {
                 creature.setFireHexCount(creature.getFireHexCount() - 1);
-                if (creature.isShooting()) {
-                    if (creature.getBurnTicks() + 3 > 10) {
-                        creature.setBurnTicks(getBurnTime());
-                    } else {
-                        creature.setBurnTicks(creature.getBurnTicks() + 3);
-                    }
-                    creature.setOnFire(true);
-                }
-                return;
             }
-            creature.setFireHex(false);
+
+//            checking if the creature has created a projectile
+            if (creature.isShooting()) {
+
+//                adding burnTicks to the creature but never over 10
+                if (creature.getBurnTicks() + 3 > 10) {
+                    creature.setBurnTicks(getBurnTime());
+                } else {
+                    creature.setBurnTicks(creature.getBurnTicks() + 3);
+                }
+
+//                setting the creature on fire so that the brun deals damage
+                creature.setOnFire(true);
+            }
+            return;
         }
+
+//      the hex is over
+        creature.setFireHex(false);
     }
 
     public void meleeAttack(Player player) {
@@ -86,6 +97,10 @@ public class Fire {
     public void magicLongShoot(Creature creature){
         creature.setFireHex(true);
         creature.setFireHexCount(10);
+    }
+
+    private void dealDamage(int damage, Creature creature) {
+        creature.setHp(creature.getHp() - damage);
     }
 
 
