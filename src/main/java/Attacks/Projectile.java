@@ -1,13 +1,10 @@
 package Attacks;
 import Handlers.*;
-import Creatures.*;
-import Elements.*;
 
 import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class Projectile {
@@ -19,7 +16,7 @@ public class Projectile {
     private int finalX;
     private int finalY;
     private String shotTag;
-    private int cooldown;
+    private CooldownHandler cooldown;
 
     private boolean hitPlayer;
     private boolean draw = true;

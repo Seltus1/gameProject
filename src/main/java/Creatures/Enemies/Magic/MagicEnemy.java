@@ -16,7 +16,12 @@ public class MagicEnemy extends Enemy {
     private float drawRadious;
     private int spellRange;
     private Raylib.Color PoolColor;
-    Random random;
+    private CooldownHandler cooldown;
+    private CooldownHandler cooldown2;
+    private CooldownHandler cooldown3;
+
+
+    private Random random;
 
     public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color) {
         super(hp, damage, posX, posY, moveSpeed, size, moveRange, color);
@@ -24,6 +29,9 @@ public class MagicEnemy extends Enemy {
         this.spellRange = spellRange;
         random = new Random();
         PoolColor = ColorFromHSV(278,.93f,.26f);
+        cooldown = new CooldownHandler();
+        cooldown2 = new CooldownHandler();
+        cooldown3 = new CooldownHandler();
     }
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag) {
@@ -32,13 +40,11 @@ public class MagicEnemy extends Enemy {
         projList.add(spell);
     }
 
-
-
     public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
         Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
         Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
-        closeSpell1.doubleVectorCalc("above");
-        closeSpell2.doubleVectorCalc("below");
+        closeSpell1.triangleShot("above");
+        closeSpell2.triangleShot("below");
         projList.add(closeSpell1);
         projList.add(closeSpell2);
     }
@@ -58,30 +64,26 @@ public class MagicEnemy extends Enemy {
     public void shoot(Player player, ProjectileHandler projList, Raylib.Color color){
         int rand = random.nextInt(2) + 1;
         if (getRange() > calculateDistanceToPlayer(player)) {
-            spellCoolDown++;
             if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
-                if ((spellCoolDown + 1) % 91 == 0) {
+                if (cooldown.cooldown(1500)){
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Creatures.Enemies.Enemy");
+                        castLongSpell(player, projList, color, "Enemy");
                         castHomingSpell(player,projList,color,"homing",3);
                     } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
-                    spellCoolDown = 0;
                 }
             } else if (calculateDistanceToPlayer(player) < getRange() / 2) {
-                if ((spellCoolDown + 1) % 91 == 0) {
+                if (cooldown2.cooldown(1500)){
                     castCloseSpell(player, projList, color);
-                    spellCoolDown = 0;
                 }
             } else {
-                if ((spellCoolDown + 1) % 91 == 0) {
+                if (cooldown3.cooldown(1500)){
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Creatures.Enemies.Enemy");
+                        castLongSpell(player, projList, color, "Enemy");
                     } else {
                         castPoolSpell(player, projList, PoolColor);
                     }
-                    spellCoolDown = 0;
                 }
             }
         }

@@ -150,4 +150,13 @@ public class PlayerTest {
         }
         assertEquals(20, projectileList.size());
     }
+    @Test
+    void check_regenCooldown_works_properly(){
+        player.setHp(7);
+//        player.getCooldown().setCurrentFrame(0);
+        for(int i = 0; i < gameTicks + 28; i++){
+            player.regen();
+        }
+        assertEquals(37, player.getHp());
+    }
 }

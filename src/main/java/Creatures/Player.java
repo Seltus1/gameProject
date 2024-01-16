@@ -8,8 +8,7 @@ import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
 
 public class Player implements Creature {
 //    HP
@@ -37,14 +36,19 @@ public class Player implements Creature {
     private int burnTicks;
     private int intialBurn;
     private boolean isShooting;
+    private boolean isRegening;
 
 //    cooldowns
     private boolean canShoot;
     private boolean canMelee;
+    private boolean canRegen;
     private final int SHOT_COOLDOWN = 250;
     private long timeSinceHit;
-    private int regenCooldown;
-    private CooldownHandler cooldown;
+    private int regenCooldownMilliseconds;
+    private CooldownHandler regenCooldown;
+    private CooldownHandler shotCooldown;
+    private CooldownHandler applyRegenCooldown;
+
     private int infernoCooldown;
 
     //    instance of other stuffs
@@ -70,13 +74,16 @@ public class Player implements Creature {
         this.canShoot = true;
         isOnFire = false;
         this.canMelee = true;
+        isRegening = false;
         burnCountDown = 0;
         intialBurn = 10;
         burnDamage = 1;
         regenCooldown = 5000;
         fire = new Fire();
         vector = new Vector2D(posX, posY, moveSpeed);
-        cooldown = new CooldownHandler();
+        regenCooldown = new CooldownHandler();
+        applyRegenCooldown = new CooldownHandler();
+        shotCooldown = new CooldownHandler();
     }
 
     public void update(ProjectileHandler projList) {
@@ -88,7 +95,8 @@ public class Player implements Creature {
         setShooting(false);
         shotCooldown();
         burn();
-        DrawCircle(getPosX(), getPosY(), size, color);
+        regen();
+        DrawCircle(getPosX(), getPosY(), size, RED);
     }
 
     public void burn() {
@@ -99,6 +107,7 @@ public class Player implements Creature {
 
     public void shoot(ProjectileHandler projList) {
         if (canShoot()) {
+            setCanShoot(false);
             setShooting(true);
             int mouseX = GetMouseX();
             int mouseY = GetMouseY();
@@ -106,14 +115,51 @@ public class Player implements Creature {
             shot.setShotTag("Player");
             shot.shootLine();
             projList.add(shot);
-            setCanShoot(false);
         }
     }
+
 
     public void shotCooldown(){
         if (!canShoot()){
             if(cooldown.cooldown(250)){
                 canShoot = true;
+            }
+        }
+    }
+
+    public void regen() {
+        if (checkHPToInitalHP()) {
+//        if the hp is less then initalHp start the regen counter
+            if (hp < initalHp) {
+                boolean regenCD = regenCooldown.cooldown(regenCooldownMilliseconds);
+                if (regenCD) {
+                    canRegen = true;
+                }
+                if (canRegen) {
+                    applyingRegen();
+                }
+            }
+            return;
+        }
+//        if the hp is equal to the initial hp no need to regen
+        canRegen = false;
+        isRegening = false;
+    }
+
+    private boolean checkHPToInitalHP(){
+        if (hp < initalHp) {
+            return true;
+        }
+        return false;
+    }
+
+    private void applyingRegen() {
+        boolean canRegenCooldown = applyRegenCooldown.cooldown(150);
+        if (canRegenCooldown) {
+            if (getHp() + 10 < getInitalHp()) {
+                setHp(getHp() + 10);
+            } else {
+                setHp(getInitalHp());
             }
         }
     }
@@ -360,7 +406,81 @@ public class Player implements Creature {
         return isFireHex;
     }
 
+    public Vector2D getVector() {
+        return vector;
+    }
 
+    public void setVector(Vector2D vector) {
+        this.vector = vector;
+    }
+
+    public boolean isRegening() {
+        return isRegening;
+    }
+
+    public void setRegening(boolean regening) {
+        isRegening = regening;
+    }
+
+    public boolean isCanRegen() {
+        return canRegen;
+    }
+
+    public void setCanRegen(boolean canRegen) {
+        this.canRegen = canRegen;
+    }
+
+    public int getRegenCooldownMilliseconds() {
+        return regenCooldownMilliseconds;
+    }
+
+    public void setRegenCooldownMilliseconds(int regenCooldownMilliseconds) {
+        this.regenCooldownMilliseconds = regenCooldownMilliseconds;
+    }
+
+    public void setRegenCooldown(CooldownHandler regenCooldown) {
+        this.regenCooldown = regenCooldown;
+    }
+
+    public CooldownHandler getShotCooldown() {
+        return shotCooldown;
+    }
+
+    public void setShotCooldown(CooldownHandler shotCooldown) {
+        this.shotCooldown = shotCooldown;
+    }
+
+    public CooldownHandler getApplyRegenCooldown() {
+        return applyRegenCooldown;
+    }
+
+    public void setApplyRegenCooldown(CooldownHandler applyRegenCooldown) {
+        this.applyRegenCooldown = applyRegenCooldown;
+    }
+
+    public int getInfernoCooldown() {
+        return infernoCooldown;
+    }
+
+    public void setInfernoCooldown(int infernoCooldown) {
+        this.infernoCooldown = infernoCooldown;
+    }
+
+    public int getBurnDamage() {
+        return burnDamage;
+    }
+
+    public Fire getFire() {
+        return fire;
+    }
+
+    public int getShotFrameCount() {
+        return shotFrameCount;
+    }
+
+    public void setShotFrameCount(int shotFrameCount) {
+        this.shotFrameCount = shotFrameCount;
+    }
 
     public void setShooting(boolean shooting) {
         isShooting = shooting;

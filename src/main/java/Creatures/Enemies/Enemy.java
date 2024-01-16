@@ -52,7 +52,7 @@ public class Enemy implements Creature {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 enemyPos = vector.getPosition();
             if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
-                projList.removeIndex(i);
+                projList.removeObject(currProj);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {
                     isAlive = false;

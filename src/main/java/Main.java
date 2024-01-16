@@ -50,7 +50,7 @@ public class Main {
             enemies.update(projectiles, player1);
             projectiles.update();
             if (enemies.size() == 0) {
-                enemies.addMultipleEnemies(amountOfEnemy);
+                enemies.addMultipleEnemies(1);
             }
             player1.update(projectiles);
 

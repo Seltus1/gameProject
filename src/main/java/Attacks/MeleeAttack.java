@@ -15,7 +15,8 @@ public class MeleeAttack {
     private int posY;
     private boolean draw;
     private int lifeTime;
-    private int cooldown = 0;
+    private CooldownHandler cooldown;
+
 
 
     public MeleeAttack(int damage, int posX, int posY){
@@ -24,39 +25,20 @@ public class MeleeAttack {
         this.posY = posY;
         lifeTime = 1000;
         draw = false;
-        cooldown = 0;
+        cooldown = new CooldownHandler();
     }
     public void attack(Player player, int time){
-        cooldown++;
-        if(cooldown  % time == 0){
+        if(cooldown.cooldown(time)){
             player.setHp(player.getHp() - damage);
             player.setTimeSinceHit(System.currentTimeMillis());
-            cooldown = 0;
         }
-
         update();
-
     }
     public void setPosX(int posX){
         this.posX = posX;
     }
     public void setPosY(int posY){
         this.posY = posY;
-    }
-
-    public void cooldown(int cooldown, String type) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(cooldown);
-            } catch (InterruptedException e) {
-                System.out.println("got interrupted!");
-            }
-
-            draw = false;
-            executor.shutdown();
-        });
     }
 
     public void update(){

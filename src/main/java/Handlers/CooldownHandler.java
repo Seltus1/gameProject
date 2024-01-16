@@ -6,7 +6,6 @@ public class CooldownHandler {
 
     public CooldownHandler(){
         this.frameRate = 60;
-
     }
 
     public boolean cooldown(double milliSeconds){
@@ -21,4 +20,22 @@ public class CooldownHandler {
     private double milliSecondsToFrames(double milliSeconds){
         return (milliSeconds/(1000.00)) * frameRate;
     }
+
+    public int getCurrentFrame() {
+        return currentFrame;
+    }
+
+    public void setCurrentFrame(int currentFrame) {
+        this.currentFrame = currentFrame;
+    }
+
+    public int getFrameRate() {
+        return frameRate;
+    }
+
+    public void setFrameRate(int frameRate) {
+        this.frameRate = frameRate;
+    }
 }
+
+

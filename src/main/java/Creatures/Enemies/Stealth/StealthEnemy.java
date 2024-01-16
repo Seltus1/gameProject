@@ -20,7 +20,7 @@ public class StealthEnemy extends Enemy {
     private boolean isReloading;
     private boolean canShoot;
     private boolean isCloaked;
-    private int cooldown;
+    private CooldownHandler cooldown;
     private int footstepCooldown;
     private int numShots;
     private Footstep footstep;
@@ -37,7 +37,7 @@ public class StealthEnemy extends Enemy {
         isReloading = false;
         footstep = new Footstep(posX,posY,0);
         rand = new Random();
-
+        cooldown = new CooldownHandler();
     }
 
     public void cloak(Player player){
@@ -73,12 +73,10 @@ public class StealthEnemy extends Enemy {
     public void shoot(Player player, ProjectileHandler projList) {
         if (!isReloading) {
             if (calculateDistanceToPlayer(player) <= getRange()) {
-            cooldown++;
-                if(((cooldown + 1) % 31) == 0){
+                if (cooldown.cooldown(500)) {
                     canShoot = true;
-                    cooldown = 0;
                 }
-                if(canShoot) {
+                if (canShoot) {
                     canShoot = false;
                     numShots++;
                     Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, BLACK);
@@ -90,12 +88,9 @@ public class StealthEnemy extends Enemy {
                     }
                 }
             }
-        }
-        else{
-            cooldown++;
-            if(((cooldown + 1) % 500) == 0){
+        } else {
+            if (cooldown.cooldown(8333)) {
                 isReloading = false;
-                cooldown = 0;
             }
         }
     }
@@ -167,15 +162,6 @@ public class StealthEnemy extends Enemy {
     public void setCloaked(boolean cloaked) {
         isCloaked = cloaked;
     }
-
-    public int getCooldown() {
-        return cooldown;
-    }
-
-    public void setCooldown(int cooldown) {
-        this.cooldown = cooldown;
-    }
-
     public int getFootstepCooldown() {
         return footstepCooldown;
     }

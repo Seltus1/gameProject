@@ -63,7 +63,6 @@ public class PlayerHandler {
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
                 if (currProj.getShotTag().toLowerCase().contains("enemy")) {
-                    player.setTimeSinceHit(System.currentTimeMillis());
                     enemyShots(currProj, projList);
                 }
                 else{
@@ -73,20 +72,19 @@ public class PlayerHandler {
         }
     }
 
-    public void enemyShots(Projectile currProj, ProjectileHandler projList){
-
+    private void enemyShots(Projectile currProj, ProjectileHandler projList){
         if(currProj.getShotTag().contains("Pool")) {
             currProj.setyMoveSpeed(0);
             currProj.setxMoveSpeed(0);
-            updatePool(currProj,projList);
+            currProj.explodePoolSpell();
             if(cooldown.cooldown(150)){
                 player.setHp(player.getHp() - currProj.getDamage());
-                player.setTimeSinceHit(System.currentTimeMillis());
+//                player.getCooldown().setCurrentFrame(0);
             }
         }
         else {
             player.setHp(player.getHp() - currProj.getDamage());
-            player.setTimeSinceHit(System.currentTimeMillis());
+//            player.getCooldown().setCurrentFrame(0);
             currProj.setHitPlayer(true);
             if (currProj.getShotTag().contains("Fire")) {
                 fire.shootAttack(player);
@@ -94,41 +92,8 @@ public class PlayerHandler {
             if(currProj.getShotTag().contains("Inferno")){
                 fire.magicLongShoot(player);
             }
+            currProj.setDraw(false);
             projList.removeObject(currProj);
-        }
-    }
-
-//    public void shoot(ProjectileHandler projList){
-//        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-//            player.setShooting(true);
-//            if (player.canShoot()) {
-//                int mouseX = GetMouseX();
-//                int mouseY = GetMouseY();
-//                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
-//                shot.setShotTag("Creatures.Player");
-//                shot.shootLine();
-//                projList.add(shot);
-//                player.setCanShoot(false);
-//                cooldown(player.getSHOT_COOLDOWN(), "shot");
-//            }
-//            else {
-//                player.setShooting(false);
-//            }
-//        }
-//    }
-
-    public void regen(){
-        if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
-            if(cooldown.cooldown(150)){
-                if(player.getHp() < player.getInitalHp()) {
-                    if(player.getHp() + 10 < player.getInitalHp()) {
-                        player.setHp(player.getHp() + 10);
-                    }
-                    else{
-                        player.setHp(player.getInitalHp());
-                    }
-                }
-            }
         }
     }
 
@@ -144,22 +109,22 @@ public class PlayerHandler {
     public void drawBurn(){
         double thing = (double) player.getBurnTicks() / player.getIntialBurn();
         double width = thing * 150;
-        DrawRectangle(50, 900, (int) width, 40, ORANGE);
-        DrawRectangleLines(50, 900, 150, 40, BLACK);
+        DrawRectangle(50, GetScreenHeight() - 200, (int) width, 40, ORANGE);
+        DrawRectangleLines(50, GetScreenHeight() - 200, 150, 40, BLACK);
         String s = String.format("BURN: %d", player.getBurnTicks());
-        DrawText(s, 50, 900, 20, BLACK);
+        DrawText(s, 50, GetScreenHeight() - 200, 20, BLACK);
     }
 
     public void drawFireFex(){
         if(player.isFireHex()) {
             player.setColor(ORANGE);
             if(!player.isOnFire()){
-                DrawCircle(50,920,25,BLACK);
-                DrawCircle(50,920,10,ORANGE);
+                DrawCircle(50,GetScreenHeight() - 180,25,BLACK);
+                DrawCircle(50,GetScreenHeight() - 180,10,ORANGE);
             }
             else{
-                DrawCircle(230,920,25,BLACK);
-                DrawCircle(230,920,10,ORANGE);
+                DrawCircle(230,GetScreenHeight() - 180,25,BLACK);
+                DrawCircle(230,GetScreenHeight() - 180,10,ORANGE);
             }
         }
         else{
@@ -179,14 +144,5 @@ public class PlayerHandler {
         }
         drawFireFex();
         drawRange();
-        regen();
-    }
-    public void updatePool(Projectile currProj, ProjectileHandler projList){
-        if(currProj.isDraw()) {
-            currProj.explodePoolSpell();
-        }
-        else{
-            projList.removeObject(currProj);
-        }
     }
 }
