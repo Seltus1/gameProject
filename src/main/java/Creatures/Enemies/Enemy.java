@@ -47,20 +47,6 @@ public class Enemy implements Creature {
         rand = new Random();
     }
 
-    public void gotDamagedRanged(ProjectileHandler projList) {
-        for (int i = 0; i < projList.size(); i++) {
-            Projectile currProj = (Projectile) projList.get(i);
-            Jaylib.Vector2 enemyPos = vector.getPosition();
-            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
-                projList.removeObject(currProj);
-                hp -= currProj.getDamage();
-                if (hp <= 0) {
-                    isAlive = false;
-                }
-            }
-        }
-    }
-
     public int calculateDistanceToPlayer(Player player){
         int totalDistance = vector.distanceToOtherObject(player.getPosX(), player.getPosY());
         return totalDistance;
@@ -301,5 +287,9 @@ public class Enemy implements Creature {
 
     public void setShooting(boolean shooting){
         this.shooting = shooting;
+    }
+
+    public Jaylib.Vector2 getPos(){
+        return vector.getPosition();
     }
 }

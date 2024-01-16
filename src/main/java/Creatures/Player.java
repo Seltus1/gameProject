@@ -378,13 +378,14 @@ public class Player implements Creature {
         this.timeSinceHit = timeSinceHit;
     }
 
-    public int getRegenCooldown() {
-        return regenCooldownMilliseconds;
+    public CooldownHandler getRegenCooldown() {
+        return regenCooldown;
     }
 
     public void setRegenCooldown(int regenCooldown) {
         this.regenCooldownMilliseconds = regenCooldown;
     }
+
 
     public int getInfernoCount() {
         return InfernoCount;
@@ -433,10 +434,6 @@ public class Player implements Creature {
 
     public void setRegenCooldownMilliseconds(int regenCooldownMilliseconds) {
         this.regenCooldownMilliseconds = regenCooldownMilliseconds;
-    }
-
-    public void setRegenCooldown(CooldownHandler regenCooldown) {
-        this.regenCooldown = regenCooldown;
     }
 
     public CooldownHandler getShotCooldown() {

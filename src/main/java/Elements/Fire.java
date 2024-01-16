@@ -94,7 +94,7 @@ public class Fire {
 
     }
 
-    public void magicLongShoot(Creature creature){
+    public void castInferno(Creature creature){
         creature.setFireHex(true);
         creature.setFireHexCount(10);
     }

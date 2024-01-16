@@ -124,7 +124,6 @@ public class EnemyHandler extends ListHandler {
                 enemy.update(player, projList);
             }
             Enemy enemy = (Enemy) get(i);
-            enemy.gotDamagedRanged(projList);
 //            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);
             if (!enemy.isAlive()){
                 removeIndex(i);

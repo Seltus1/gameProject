@@ -50,9 +50,10 @@ public class MagicEnemy extends Enemy {
     }
 
     public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool", spellRange, true, color);
+        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool_Shot", spellRange, true, color);
         poolShot.shootLine();
         projList.add(poolShot);
+
     }
 
     public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed){

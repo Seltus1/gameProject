@@ -57,46 +57,6 @@ public class PlayerHandler {
         DrawLineV(playerPos, endPoint, BLACK);
     }
 
-    public void gotDamagedRanged(ProjectileHandler projList) {
-        for (int i = 0; i < projList.size(); i++) {
-            Projectile currProj = (Projectile) projList.get(i);
-            Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
-            if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
-                if (currProj.getShotTag().toLowerCase().contains("enemy")) {
-                    enemyShots(currProj, projList);
-                }
-                else{
-                    currProj.setHitPlayer(false);
-                }
-            }
-        }
-    }
-
-    private void enemyShots(Projectile currProj, ProjectileHandler projList){
-        if(currProj.getShotTag().contains("Pool")) {
-            currProj.setyMoveSpeed(0);
-            currProj.setxMoveSpeed(0);
-            currProj.explodePoolSpell();
-            if(cooldown.cooldown(150)){
-                player.setHp(player.getHp() - currProj.getDamage());
-//                player.getCooldown().setCurrentFrame(0);
-            }
-        }
-        else {
-            player.setHp(player.getHp() - currProj.getDamage());
-//            player.getCooldown().setCurrentFrame(0);
-            currProj.setHitPlayer(true);
-            if (currProj.getShotTag().contains("Fire")) {
-                fire.shootAttack(player);
-            }
-            if(currProj.getShotTag().contains("Inferno")){
-                fire.magicLongShoot(player);
-            }
-            currProj.setDraw(false);
-            projList.removeObject(currProj);
-        }
-    }
-
     public void drawHp(){
         double thing = (double) player.getHp() /  player.getInitalHp();
         double width = thing * 150;
@@ -134,7 +94,6 @@ public class PlayerHandler {
 
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
 //        shoot(projList);
-        gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;
         }
