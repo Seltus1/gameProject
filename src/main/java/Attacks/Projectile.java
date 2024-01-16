@@ -1,13 +1,10 @@
 package Attacks;
 import Handlers.*;
-import Creatures.*;
-import Elements.*;
 
 import Handlers.Vector2D;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class Projectile {
@@ -19,7 +16,7 @@ public class Projectile {
     private int finalX;
     private int finalY;
     private String shotTag;
-    private int cooldown;
+    private CooldownHandler cooldown;
 
     private boolean hitPlayer;
     private boolean draw = true;
@@ -47,9 +44,6 @@ public class Projectile {
         damage = 10;
         this.color = color;
         this.shotTag = shotTag;
-        if ((circle) && isDraw()){
-            DrawCircle(getPosX(), getPosY(), shotRad, color);
-        }
         this.maxRange = maxRange;
         this.circle = circle;
     }
@@ -63,51 +57,28 @@ public class Projectile {
         vector.setShotPosition(shotPosition);
         vector.setShootLine();
     }
-
-    public void doubleVectorCalc(String aboveOrBelow) {
-        double swap = vector.getxNormalizedMovement();
-        vector.setxNormalizedMovement(vector.getyNormalizedMovement());
-        vector.setyNormalizedMovement(swap);
-        if (aboveOrBelow.equals("above")){
-            finalX += (vector.getxNormalizedMovement() * -3);
-            finalY += (vector.getyNormalizedMovement() * 3);
-        }
-        else{
-            finalX -= (vector.getxNormalizedMovement() * -3);
-            finalY -= (vector.getyNormalizedMovement() * 3);
-        }
+    public void updateDoublePosition(){
+        shootLine();
+//        vector.updateWallDoubleVector();
     }
+
+    public void triangleShot(String aboveOrBelow){
+        shootLine();
+        int[] newFinals = vector.TriangleShotVectorCalc(aboveOrBelow,finalX,finalY);
+        finalX = newFinals[0];
+        finalY = newFinals[1];
+    }
+
+
+
 
     public void homingShot(double moveSpeed, Player player){
         vector.moveObject(player.getPosition(),"to",moveSpeed);
     }
 
-    public double[] updateDoubleVectorPosition() {
-        shootLine();
-        double[] array = new double[4];
-        double swap = vector.getxNormalizedMovement();
-        vector.setxNormalizedMovement(vector.getyNormalizedMovement());
-        vector.setyNormalizedMovement(swap);
-        array[0] = vector.getActualXPos() - (vector.getxNormalizedMovement() * -12);
-        array[1] = vector.getActualYPos() - (vector.getyNormalizedMovement() * 12);
-        array[2] = vector.getActualXPos() + (vector.getxNormalizedMovement() * -12);
-        array[3] = vector.getActualYPos() + (vector.getyNormalizedMovement() * 12);
-        wallXpoint1 = (int) array[0];
-        wallYPoint1 = (int) array[1];
-        wallXPoint2 = (int) array[2];
-        wallYPoint2 = (int) array[3];
-        return array;
-    }
 
-    public void drawWall() {
-        if (distanceTravelled <= maxRange) {
-            double[] array = updateDoubleVectorPosition();
-            DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
-        }
-        else{
-            DrawLine(wallXpoint1, wallYPoint1, wallXPoint2, wallYPoint2, BLACK);
-        }
-    }
+
+
 
     public void updateMove(){
         vector.updateShootLinePosition();

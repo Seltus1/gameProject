@@ -32,7 +32,7 @@ public class FireMagicEnemy extends MagicEnemy {
     public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
         longCooldown++;
 //        int rand = getRand().nextInt(2) + 1;
-        int rand = 0;
+        int rand = 1;
         if ((longCooldown + 1) % 91 == 0) {
             if (rand == 1){
                 castInferno(player, projList, color);

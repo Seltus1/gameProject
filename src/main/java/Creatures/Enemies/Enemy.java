@@ -29,6 +29,7 @@ public class Enemy implements Creature {
     private Ellipse2D.Double circle;
     private Vector2D vector;
     private Random rand;
+    private boolean shooting;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
         this.hp = hp;
@@ -50,8 +51,8 @@ public class Enemy implements Creature {
         for (int i = 0; i < projList.size(); i++) {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 enemyPos = vector.getPosition();
-            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Creatures.Player")) {
-                projList.removeIndex(i);
+            if (CheckCollisionCircles(enemyPos, size, currProj.getPosition(), currProj.getShotRad()) && currProj.getShotTag().equals("Player")) {
+                projList.removeObject(currProj);
                 hp -= currProj.getDamage();
                 if (hp <= 0) {
                     isAlive = false;
@@ -135,6 +136,21 @@ public class Enemy implements Creature {
     }
 
     @Override
+    public int getFireHexCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean isShooting() {
+        return false;
+    }
+
+    @Override
+    public boolean isFireHex() {
+        return false;
+    }
+
+    @Override
     public void setColor(Raylib.Color color) {
         this.color = color;
     }
@@ -146,6 +162,16 @@ public class Enemy implements Creature {
 
     @Override
     public void setOnFire(boolean onFire) {
+
+    }
+
+    @Override
+    public void setFireHexCount(int hex) {
+
+    }
+
+    @Override
+    public void setFireHex(boolean fireHex) {
 
     }
 
@@ -271,5 +297,9 @@ public class Enemy implements Creature {
 
     public void setRand(Random rand) {
         this.rand = rand;
+    }
+
+    public void setShooting(boolean shooting){
+        this.shooting = shooting;
     }
 }

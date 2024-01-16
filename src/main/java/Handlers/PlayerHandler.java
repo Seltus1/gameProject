@@ -1,5 +1,4 @@
 package Handlers;
-import Creatures.*;
 import Attacks.*;
 import Elements.*;
 import Creatures.Player;
@@ -18,18 +17,18 @@ public class PlayerHandler {
     private Player player;
     private boolean isAlive;
     private Fire fire;
-    private int cooldown;
-    private int cooldown2;
     private int thingy;
     private double xDir;
     private double yDir;
     private double cursorX;
     private double cursorY;
+    private CooldownHandler cooldown;
 
     public PlayerHandler(Player player){
         this.player = player;
         isAlive = true;
         fire = new Fire();
+        cooldown = new CooldownHandler();
 
     }
 
@@ -63,8 +62,7 @@ public class PlayerHandler {
             Projectile currProj = (Projectile) projList.get(i);
             Jaylib.Vector2 currPos = new Jaylib.Vector2(currProj.getPosX(), currProj.getPosY());
             if (CheckCollisionCircles(player.getPosition(), player.getSize(), currPos, currProj.getShotRad())) {
-                player.setTimeSinceHit(System.currentTimeMillis());
-                if (currProj.getShotTag().contains("Enemy")) {
+                if (currProj.getShotTag().toLowerCase().contains("enemy")) {
                     enemyShots(currProj, projList);
                 }
                 else{
@@ -74,56 +72,28 @@ public class PlayerHandler {
         }
     }
 
-    public void enemyShots(Projectile currProj, ProjectileHandler projList){
+    private void enemyShots(Projectile currProj, ProjectileHandler projList){
         if(currProj.getShotTag().contains("Pool")) {
             currProj.setyMoveSpeed(0);
             currProj.setxMoveSpeed(0);
-            updatePool(currProj,projList);
+            currProj.explodePoolSpell();
+            if(cooldown.cooldown(150)){
+                player.setHp(player.getHp() - currProj.getDamage());
+//                player.getCooldown().setCurrentFrame(0);
+            }
         }
         else {
             player.setHp(player.getHp() - currProj.getDamage());
+//            player.getCooldown().setCurrentFrame(0);
             currProj.setHitPlayer(true);
-            if (currProj.getShotTag().contains("Elements.Fire")) {
+            if (currProj.getShotTag().contains("Fire")) {
                 fire.shootAttack(player);
             }
             if(currProj.getShotTag().contains("Inferno")){
                 fire.magicLongShoot(player);
             }
+            currProj.setDraw(false);
             projList.removeObject(currProj);
-        }
-    }
-
-    public void shoot(ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
-            player.setShooting(true);
-            if (player.canShoot()) {
-                int mouseX = GetMouseX();
-                int mouseY = GetMouseY();
-                Projectile shot = new Projectile(13, player.getPosX(), player.getPosY(), 7, mouseX, mouseY, "Creatures.Player", player.getShotRange(), true, BLACK);
-                shot.setShotTag("Creatures.Player");
-                shot.shootLine();
-                projList.add(shot);
-                player.setCanShoot(false);
-                cooldown(player.getSHOT_COOLDOWN(), "shot");
-            }
-            else {
-                player.setShooting(false);
-            }
-        }
-    }
-    public void regen(){
-        if(System.currentTimeMillis() - player.getTimeSinceHit() > player.getRegenCooldown()){
-            cooldown2++;
-            if((cooldown2 + 1) % 15 == 0){
-                if(player.getHp() < player.getInitalHp()) {
-                    if(player.getHp() + 10 < player.getInitalHp()) {
-                        player.setHp(player.getHp() + 10);
-                    }
-                    else{
-                        player.setHp(player.getInitalHp());
-                    }
-                }
-            }
         }
     }
 
@@ -139,22 +109,22 @@ public class PlayerHandler {
     public void drawBurn(){
         double thing = (double) player.getBurnTicks() / player.getIntialBurn();
         double width = thing * 150;
-        DrawRectangle(50, 900, (int) width, 40, ORANGE);
-        DrawRectangleLines(50, 900, 150, 40, BLACK);
+        DrawRectangle(50, GetScreenHeight() - 200, (int) width, 40, ORANGE);
+        DrawRectangleLines(50, GetScreenHeight() - 200, 150, 40, BLACK);
         String s = String.format("BURN: %d", player.getBurnTicks());
-        DrawText(s, 50, 900, 20, BLACK);
+        DrawText(s, 50, GetScreenHeight() - 200, 20, BLACK);
     }
 
-    public void drawInferno(){
-        if(player.isInferno()) {
+    public void drawFireFex(){
+        if(player.isFireHex()) {
             player.setColor(ORANGE);
             if(!player.isOnFire()){
-                DrawCircle(50,920,25,BLACK);
-                DrawCircle(50,920,10,ORANGE);
+                DrawCircle(50,GetScreenHeight() - 180,25,BLACK);
+                DrawCircle(50,GetScreenHeight() - 180,10,ORANGE);
             }
             else{
-                DrawCircle(230,920,25,BLACK);
-                DrawCircle(230,920,10,ORANGE);
+                DrawCircle(230,GetScreenHeight() - 180,25,BLACK);
+                DrawCircle(230,GetScreenHeight() - 180,10,ORANGE);
             }
         }
         else{
@@ -162,24 +132,8 @@ public class PlayerHandler {
         }
     }
 
-
-    private void cooldown(int cooldown, String type){
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.submit(() -> {
-            try {
-                TimeUnit.MILLISECONDS.sleep(cooldown);
-            } catch (InterruptedException e) {
-                System.out.println("Woah, something went wrong! (check cooldown method)");
-            }
-            if(type.equals("shot")){
-                player.setCanShoot(true);
-            }
-            executor.shutdown();
-        });
-    }
-
     public void update(EnemyHandler enemy, ProjectileHandler projList) {
-        shoot(projList);
+//        shoot(projList);
         gotDamagedRanged(projList);
         if (player.getHp() <= 0){
             isAlive = false;
@@ -188,13 +142,7 @@ public class PlayerHandler {
         if(player.isOnFire()){
             drawBurn();
         }
-        drawInferno();
+        drawFireFex();
         drawRange();
-        regen();
-    }
-    public void updatePool(Projectile currProj, ProjectileHandler projList){
-        if(currProj.isDraw()) {
-            currProj.explodePoolSpell();
-        }
     }
 }

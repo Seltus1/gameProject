@@ -23,7 +23,7 @@ public class BrawlerEnemy extends Enemy {
     public void attack(Player player){
         int distance = calculateDistanceToPlayer(player);
         if(distance <= getRange()){
-            melee.attack(player, 31);
+            melee.attack(player, 500);
         }
     }
 }

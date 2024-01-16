@@ -16,24 +16,24 @@ public class SniperEnemy extends Enemy {
     private int shotTimer;
     private int shotCooldown;
     private int shootRange;
+    private CooldownHandler cooldown;
 
     public SniperEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color) {
         super(hp, dps, posX, posY, moveSpeed, size, range, color);
         this.shotSpeed = shotSpeed;
+        cooldown = new CooldownHandler();
     }
 
     public void shootPlayer(Player player, ProjectileHandler projList, String shotTag, Raylib.Color color){
         if (getRange() > calculateDistanceToPlayer(player)){
-            shotTimer++;
-            shotCooldown = rand.nextInt(30) + 30;
-            if((shotTimer + 1) % shotCooldown == 0) {
+            shotCooldown = rand.nextInt(500) + 500;
+            if(cooldown.cooldown(shotCooldown)){
                 int playerXPos = player.getPosX();
                 int playerYPos = player.getPosY();
                 Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, getRange(), true, color);
                 shot.shootLine();
                 projList.add(shot);
                 canShoot = false;
-                shotTimer = 0;
             }
         }
     }

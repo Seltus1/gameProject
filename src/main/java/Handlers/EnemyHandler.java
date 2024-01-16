@@ -28,7 +28,7 @@ public class EnemyHandler extends ListHandler {
     public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
 //            int randEnemy = rand.nextInt(7) + 1;
-            int randEnemy = 5;
+            int randEnemy = 4;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -60,7 +60,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 7){
-                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, 550, 850, 3, size,
+                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size,
                         800,500,20, ORANGE);
                 add(enemy);
             }
