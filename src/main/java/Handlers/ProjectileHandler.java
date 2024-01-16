@@ -34,7 +34,6 @@ public class ProjectileHandler extends ListHandler {
 //        if the projectile is off screen stop drawing it
         if (!(projectile.isInBounds())) {
             projectile.setDraw(false);
-            return;
         }
 //        if the projectile is on screen update the position and the total distance travelled
         projectile.updateMove();

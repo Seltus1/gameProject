@@ -1,4 +1,5 @@
 package Attacks;
+import Creatures.Player;
 import Handlers.*;
 
 import Handlers.Vector2D;
@@ -27,6 +28,7 @@ public class Projectile {
 
     private Vector2D vector;
     private boolean circle;
+    private Vector2D player;
 
     private int wallXpoint1;
     private int wallYPoint1;
@@ -40,6 +42,20 @@ public class Projectile {
         vector = new Vector2D(posX, posY, shotSpeed);
         this.finalX = finalX;
         this.finalY = finalY;
+        //Add this to constructor later when we have weapons
+        damage = 10;
+        this.color = color;
+        this.shotTag = shotTag;
+        this.maxRange = maxRange;
+        this.circle = circle;
+    }
+
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, Vector2D playerPOS, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
+        this.shotSpeed = shotSpeed;
+        this.shotRad = shotRad;
+        isInBounds = true;
+        vector = new Vector2D(posX, posY, shotSpeed);
+        player = playerPOS;
         //Add this to constructor later when we have weapons
         damage = 10;
         this.color = color;
@@ -82,11 +98,11 @@ public class Projectile {
     }
 //    ZENE ADD THIS LAATER
 
-//    public void homingShot(double moveSpeed, Player player){
+    public void homingShot(double moveSpeed, Player player){
 
-//        vector.moveObject(player.getPosition(),"to",moveSpeed);
+        vector.moveObject(player.getPosition(),"to",moveSpeed);
 
-//    }
+    }
 
     public void explodePoolSpell(){
         shotRad = 50;
