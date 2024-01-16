@@ -57,7 +57,7 @@ public class MagicEnemy extends Enemy {
 
     public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed){
         Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
-        spell.homingShot(moveSpeed,player);
+//        spell.homingShot(moveSpeed,player);
         projList.add(spell);
     }
 

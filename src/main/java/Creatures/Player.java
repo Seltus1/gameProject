@@ -78,7 +78,7 @@ public class Player implements Creature {
         burnCountDown = 0;
         intialBurn = 10;
         burnDamage = 1;
-        regenCooldown = 5000;
+        regenCooldownMilliseconds = 5000;
         fire = new Fire();
         vector = new Vector2D(posX, posY, moveSpeed);
         regenCooldown = new CooldownHandler();
@@ -121,7 +121,7 @@ public class Player implements Creature {
 
     public void shotCooldown(){
         if (!canShoot()){
-            if(cooldown.cooldown(250)){
+            if(shotCooldown.cooldown(250)){
                 canShoot = true;
             }
         }
@@ -166,9 +166,6 @@ public class Player implements Creature {
 
     public void fireHex() {
         fire.fireHex(this);
-    }
-    public int getBurnDamage() {
-        return burnDamage;
     }
 
     public void setBurnDamage(int burnDamage) {
@@ -382,11 +379,11 @@ public class Player implements Creature {
     }
 
     public int getRegenCooldown() {
-        return regenCooldown;
+        return regenCooldownMilliseconds;
     }
 
     public void setRegenCooldown(int regenCooldown) {
-        this.regenCooldown = regenCooldown;
+        this.regenCooldownMilliseconds = regenCooldown;
     }
 
     public int getInfernoCount() {
