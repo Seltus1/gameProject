@@ -17,6 +17,32 @@ public class ProjectileTest {
     int gameTicks = 300;
 
     @Test
-    void testShootLine() {
+    void testCheckProjIsOnScreen_PositiveCase() {
+        playerProjectile.checkProjIsOnScreen();
+        assertTrue(playerProjectile.isInBounds());
     }
+
+    @Test
+    void testCheckProjIsOnScreen_FalseCase() {
+        playerProjectile.setPosX(-10);
+        playerProjectile.setPosY(-10);
+        playerProjectile.checkProjIsOnScreen();
+        assertFalse(playerProjectile.isInBounds());
+    }
+
+    @Test
+    void testCheckProjIsOnScreen_True_to_False() {
+//        checking that from a start point on screen that the bounds is true and when moves to a point off the screen
+//        it becomes false
+        playerProjectile.setPosX(10);
+        playerProjectile.setPosY(10);
+        playerProjectile.shootLine();
+        for (int i = 0; i < gameTicks; i++) {
+            playerProjectile.updateMove();
+            playerProjectile.checkProjIsOnScreen();
+            assertTrue(playerProjectile.isInBounds());
+        }
+        assertFalse(playerProjectile.isInBounds());
+    }
+
 }
