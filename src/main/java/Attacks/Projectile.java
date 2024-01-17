@@ -99,16 +99,10 @@ public class Projectile {
 //    ZENE ADD THIS LAATER
 
     public void homingShot(double moveSpeed, Player player){
-
+        shootLine();
         vector.moveObject(player.getPosition(),"to",moveSpeed);
-
     }
 
-    public void explodePoolSpell(){
-        shotRad = 50;
-        setxMoveSpeed(0);
-        setyMoveSpeed(0);
-    }
 
     public boolean isInBounds() {
         return isInBounds;
