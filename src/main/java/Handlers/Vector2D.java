@@ -165,30 +165,7 @@ public class Vector2D {
         int[] finalArr = {finalX, finalY};
         return finalArr;
     }
-//    public double[] updateWallDoubleVector() {
-//        double[] array = new double[4];
-//        double swap = getxNormalizedMovement();
-//        setxNormalizedMovement(getyNormalizedMovement());
-//        setyNormalizedMovement(swap);
-//        array[0] = getActualXPos() - (getxNormalizedMovement() * -12);
-//        array[1] = getActualYPos() - (getyNormalizedMovement() * 12);
-//        array[2] = getActualXPos() + (getxNormalizedMovement() * -12);
-//        array[3] = getActualYPos() + (getyNormalizedMovement() * 12);
-//        wallXpoint1 = (int) array[0];
-//        wallYPoint1 = (int) array[1];
-//        wallXPoint2 = (int) array[2];
-//        wallYPoint2 = (int) array[3];
-//        return array;
-//    }
-//    public void drawWall() {
-//        if (distanceTravelled <= maxRange) {
-//            double[] array = updateWallDoubleVector();
-//            DrawLine((int) array[0], (int) array[1], (int) array[2],(int) array[3], BLACK);
-//        }
-//        else{
-//            DrawLine(wallXpoint1, wallYPoint1, wallXPoint2, wallYPoint2, BLACK);
-//        }
-//    }
+
     public int getPosX() {
         return posX;
     }
