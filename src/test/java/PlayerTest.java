@@ -1,3 +1,5 @@
+import Attacks.Projectile;
+import Creatures.Enemies.Enemy;
 import Creatures.Player;
 import Handlers.ProjectileHandler;
 import org.junit.jupiter.api.Test;
@@ -153,7 +155,6 @@ public class PlayerTest {
     @Test
     void check_regenCooldown_works_properly(){
         player.setHp(7);
-//        player.getCooldown().setCurrentFrame(0);
         for(int i = 0; i < gameTicks + 28; i++){
             player.regen();
         }

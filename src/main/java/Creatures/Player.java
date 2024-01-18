@@ -113,7 +113,7 @@ public class Player implements Creature {
             int mouseY = GetMouseY();
             Projectile shot = new Projectile(13, getPosX(), getPosY(), 7, mouseX, mouseY, "Player", getShotRange(), true, BLACK);
             shot.setShotTag("Player");
-            shot.shootLine();
+            shot.createShotLine();
             projList.add(shot);
         }
     }

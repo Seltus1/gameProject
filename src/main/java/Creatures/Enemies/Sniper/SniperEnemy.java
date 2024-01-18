@@ -31,7 +31,7 @@ public class SniperEnemy extends Enemy {
                 int playerXPos = player.getPosX();
                 int playerYPos = player.getPosY();
                 Projectile shot = new Projectile(shotSpeed, getPosX(), getPosY(), 7, playerXPos, playerYPos, shotTag, getRange(), true, color);
-                shot.shootLine();
+                shot.createShotLine();
                 projList.add(shot);
                 canShoot = false;
             }

@@ -71,7 +71,7 @@ public class Projectile {
         }
     }
 
-    public void shootLine(){
+    public void createShotLine(){
         Jaylib.Vector2 shotPosition = new Jaylib.Vector2(finalX, finalY);
         vector.setShotPosition(shotPosition);
         vector.setShootLine();
@@ -91,7 +91,7 @@ public class Projectile {
     }
 
     public void triangleShot(String aboveOrBelow){
-        shootLine();
+        createShotLine();
         int[] newFinals = vector.TriangleShotVectorCalc(aboveOrBelow,finalX,finalY);
         finalX = newFinals[0];
         finalY = newFinals[1];
@@ -99,7 +99,7 @@ public class Projectile {
 //    ZENE ADD THIS LAATER
 
     public void homingShot(double moveSpeed, Player player){
-        shootLine();
+        createShotLine();
         vector.moveObject(player.getPosition(),"to",moveSpeed);
     }
 

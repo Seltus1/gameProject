@@ -10,7 +10,6 @@ import static com.raylib.Jaylib.*;
 import Creatures.*;
 import Handlers.*;
 import Attacks.*;
-import Elements.*;
 
 public class StealthEnemy extends Enemy {
     private Raylib.Color initialColor;
@@ -81,7 +80,7 @@ public class StealthEnemy extends Enemy {
                     numShots++;
                     Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, BLACK);
                     projList.add(proj);
-                    proj.shootLine();
+                    proj.createShotLine();
                     if (numShots > 10) {
                         isReloading = true;
                         numShots = 0;

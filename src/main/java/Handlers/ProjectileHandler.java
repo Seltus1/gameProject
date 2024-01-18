@@ -28,7 +28,7 @@ public class ProjectileHandler extends ListHandler {
             projectileCollision(projectile, enemies, player);
             moveProjectilesOnScreen(projectile);
             if (projectile.getShotTag().equals("Enemy_Pool")) {
-                PoolShot pool = (PoolShot) projectile;
+                Pool pool = (Pool) projectile;
                 pool.update(player);
             }
 //            checking if the projectile should draw, if false removes it from the projlist
@@ -73,7 +73,7 @@ public class ProjectileHandler extends ListHandler {
         }
 //        reseting the regen cooldown to 0
         player.getRegenCooldown().setCurrentFrame(0);
-        if(!(projectile instanceof  PoolShot)) {
+        if(!(projectile instanceof  Pool)) {
             projectile.setDraw(false);
         }
     }
@@ -91,7 +91,7 @@ public class ProjectileHandler extends ListHandler {
     }
 
     private void poolShot(int xPos, int yPos) {
-        PoolShot pool = new PoolShot(xPos,yPos,50,BLACK,5,5000,"Enemy_Pool");
+        Pool pool = new Pool(xPos,yPos,50,BLACK,5,2500,"Enemy_Pool");
         add(pool);
     }
 
