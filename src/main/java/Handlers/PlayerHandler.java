@@ -57,34 +57,34 @@ public class PlayerHandler {
         DrawLineV(playerPos, endPoint, BLACK);
     }
 
-    public void drawHp(){
+    public void drawHp(Camera2D camera){
         double thing = (double) player.getHp() /  player.getInitalHp();
         double width = thing * 150;
-        DrawRectangle(50, GetScreenHeight() - 100, (int) width, 40, DARKGREEN);
-        DrawRectangleLines(50, GetScreenHeight() - 100, 150, 40, BLACK);
+        DrawRectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 100, (int) width, 40, DARKGREEN);
+        DrawRectangleLines(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 100, 150, 40, BLACK);
         String s = String.format("HP: %d", player.getHp());
-        DrawText(s, 50, GetScreenHeight() - 100, 20, BLACK);
+        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 100, 20, BLACK);
     }
 
     public void drawBurn(){
         double thing = (double) player.getBurnTicks() / player.getIntialBurn();
         double width = thing * 150;
-        DrawRectangle(50, GetScreenHeight() - 200, (int) width, 40, ORANGE);
-        DrawRectangleLines(50, GetScreenHeight() - 200, 150, 40, BLACK);
+        DrawRectangle(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 200, (int) width, 40, ORANGE);
+        DrawRectangleLines(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 200, 150, 40, BLACK);
         String s = String.format("BURN: %d", player.getBurnTicks());
-        DrawText(s, 50, GetScreenHeight() - 200, 20, BLACK);
+        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 200, 20, BLACK);
     }
 
     public void drawFireFex(){
         if(player.isFireHex()) {
             player.setColor(ORANGE);
             if(!player.isOnFire()){
-                DrawCircle(50,GetScreenHeight() - 180,25,BLACK);
-                DrawCircle(50,GetScreenHeight() - 180,10,ORANGE);
+                DrawCircle(player.getPosX() - (GetScreenWidth() / 2) + 50,player.getPosY() + (GetScreenHeight() / 2) - 180,25,BLACK);
+                DrawCircle(player.getPosX() - (GetScreenWidth() / 2) + 50,player.getPosY() + (GetScreenHeight() / 2) - 180,10,ORANGE);
             }
             else{
-                DrawCircle(230,GetScreenHeight() - 180,25,BLACK);
-                DrawCircle(230,GetScreenHeight() - 180,10,ORANGE);
+                DrawCircle(player.getPosX() - (GetScreenWidth() / 2) + 230,player.getPosY() + (GetScreenHeight() / 2) - 180,25,BLACK);
+                DrawCircle(player.getPosX() - (GetScreenWidth() / 2) + 230,player.getPosY() + (GetScreenHeight() / 2) - 180,10,ORANGE);
             }
         }
         else{
@@ -92,12 +92,12 @@ public class PlayerHandler {
         }
     }
 
-    public void update(EnemyHandler enemy, ProjectileHandler projList) {
+    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera) {
 //        shoot(projList);
         if (player.getHp() <= 0){
             isAlive = false;
         }
-        drawHp();
+        drawHp(camera);
         if(player.isOnFire()){
             drawBurn();
         }

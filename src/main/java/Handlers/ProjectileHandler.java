@@ -105,9 +105,9 @@ public class ProjectileHandler extends ListHandler {
     private void moveProjectilesOnScreen(Projectile projectile){
         projectile.checkProjIsOnScreen();
 //        if the projectile is off screen stop drawing it
-        if (!(projectile.isInBounds())) {
-            projectile.setDraw(false);
-        }
+//        if (!(projectile.isInBounds())) {
+//            projectile.setDraw(false);
+//        }
 //        if the projectile is on screen update the position and the total distance travelled
         projectile.updateMove();
         projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());

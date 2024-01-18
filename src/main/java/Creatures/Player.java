@@ -86,17 +86,19 @@ public class Player implements Creature {
         shotCooldown = new CooldownHandler();
     }
 
-    public void update(ProjectileHandler projList) {
-        move();
+    public void update(ProjectileHandler projList, Camera2D camera) {
+        move(camera);
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-            shoot(projList);
+            shoot(projList, camera);
         }
         fireHex();
         setShooting(false);
         shotCooldown();
         burn();
         regen();
-        DrawCircle(getPosX(), getPosY(), size, RED);
+        Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX() + 20f,(float)getPosY() + 20f);
+        camera.target(pos);
+        DrawCircle(getPosX(),getPosY(), size, RED);
     }
 
     public void burn() {
@@ -109,8 +111,39 @@ public class Player implements Creature {
         if (canShoot()) {
             setCanShoot(false);
             setShooting(true);
-            int mouseX = GetMouseX();
-            int mouseY = GetMouseY();
+            int mouseX, mouseY;
+//            if(getPosX() > 0){
+//                mouseX = getPosX() + GetMouseX();
+//            }
+//            else{
+//                mouseX = getPosX() - GetMouseY();
+//            }
+//            if(getPosY() > 0){
+//                mouseY = getPosY() + GetMouseY();
+//            }
+//            else{
+//                mouseY = getPosY() - GetMouseY();
+//            }
+            if(getPosX() >= 0){
+                mouseX = GetMouseX() - ((GetScreenWidth()/2) - getPosX());
+            }
+            else{
+                mouseX = GetMouseX() - (GetScreenWidth()/2) + getPosX();
+            }
+            if(getPosY() >= 0){
+                mouseY = GetMouseY() - (GetScreenHeight()/2) - getPosY();
+            }
+            else{
+                mouseY = GetMouseY() - (GetScreenHeight()/2) + getPosY();
+            }
+
+//            mouseX = GetMouseX();
+//            mouseY = GetMouseY();
+//
+//            GetScreenToWorld2D()
+
+//          SetMouseOffset(mouseX,mouseY);
+
             Projectile shot = new Projectile(13, getPosX(), getPosY(), 7, mouseX, mouseY, "Player", getShotRange(), true, BLACK);
             shot.setShotTag("Player");
             shot.createShotLine();
@@ -163,8 +196,8 @@ public class Player implements Creature {
         }
     }
 
-    public void move() {
-        vector.playerMove();
+    public void move(Camera2D camera) {
+        vector.playerMove(camera);
     }
 
     public void fireHex() {

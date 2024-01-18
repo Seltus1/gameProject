@@ -27,8 +27,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(7) + 1;
-            int randEnemy = 4;
+            int randEnemy = rand.nextInt(7) + 1;
+//            int randEnemy = 4;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -82,7 +82,7 @@ public class EnemyHandler extends ListHandler {
                 }
                 else {
                     SniperEnemy enemy = (SniperEnemy) get(i);
-                    enemy.shootPlayer(player, projList, "Creatures.Enemies.Enemy", BLACK);
+                    enemy.shootPlayer(player, projList, "Enemy", BLACK);
                 }
 
             }

@@ -2,6 +2,7 @@ package Handlers;
 
 import com.raylib.Jaylib;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class VectorHandler {
@@ -16,8 +17,6 @@ public class VectorHandler {
     private double xNormalizedMovement;
     private Jaylib.Vector2 shotPosition;
 
-    private Camera2D camera;
-
     public VectorHandler(int posX, int posY, int moveSpeed){
         this.posX = posX;
         actualXPos = posX;
@@ -25,30 +24,30 @@ public class VectorHandler {
         actualYPos = posY;
         this.moveSpeed = moveSpeed;
         position = new Jaylib.Vector2(posX, posY);
-        camera = new Camera2D();
     }
 
-    public void playerMove() {
+    public void playerMove(Camera2D camera) {
         int hCheck = playerHorizontalCheck();
         int vCheck = playerVerticalCheck();
         if (hCheck != 0 && vCheck != 0) {
-            posX += (hCheck * moveSpeed) * diagCheck;
+            posX += (hCheck * moveSpeed * diagCheck);
             posY += (vCheck * moveSpeed) * diagCheck;
         } else {
             posX += (hCheck * moveSpeed);
             posY += (vCheck * moveSpeed);
         }
-        updatePosition();
+        updatePosition(camera);
     }
 
-    private void updateCamera(Jaylib.Vector2 position){
+    public void updateCamera(Jaylib.Vector2 position, Camera2D camera){
         camera.target(position);
     }
 
-    private void updatePosition(){
+    private void updatePosition(Camera2D camera){
         Jaylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
         updateCamera(updatedPosition);
         setPosition(updatedPosition);
+        updateCamera(updatedPosition,camera);
     }
 
     public int playerHorizontalCheck() {
@@ -158,7 +157,7 @@ public class VectorHandler {
         posX = (int) actualXPos;
         actualYPos = actualYPos + yNormalizedMovement;
         posY = (int) actualYPos;
-        updatePosition();
+//        updatePosition();
     }
 
     public int[] TriangleShotVectorCalc(String aboveOrBelow, int finalX, int finalY) {
