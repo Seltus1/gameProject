@@ -131,7 +131,7 @@ public class Player implements Creature {
                 mouseX = GetMouseX() - (GetScreenWidth()/2) + getPosX();
             }
             if(getPosY() >= 0){
-                mouseY = GetMouseY() - (GetScreenHeight()/2) - getPosY();
+                mouseY = GetMouseY() - ((GetScreenHeight()/2) - getPosY());
             }
             else{
                 mouseY = GetMouseY() - (GetScreenHeight()/2) + getPosY();
