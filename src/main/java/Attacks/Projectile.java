@@ -2,7 +2,7 @@ package Attacks;
 import Creatures.Player;
 import Handlers.*;
 
-import Handlers.Vector2D;
+import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -26,9 +26,9 @@ public class Projectile {
     private int maxRange;
     private int distanceTravelled;
 
-    private Vector2D vector;
+    private VectorHandler vector;
     private boolean circle;
-    private Vector2D player;
+    private VectorHandler player;
 
     private int wallXpoint1;
     private int wallYPoint1;
@@ -39,7 +39,7 @@ public class Projectile {
         this.shotSpeed = shotSpeed;
         this.shotRad = shotRad;
         isInBounds = true;
-        vector = new Vector2D(posX, posY, shotSpeed);
+        vector = new VectorHandler(posX, posY, shotSpeed);
         this.finalX = finalX;
         this.finalY = finalY;
         //Add this to constructor later when we have weapons
@@ -50,11 +50,11 @@ public class Projectile {
         this.circle = circle;
     }
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, Vector2D playerPOS, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, VectorHandler playerPOS, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.shotRad = shotRad;
         isInBounds = true;
-        vector = new Vector2D(posX, posY, shotSpeed);
+        vector = new VectorHandler(posX, posY, shotSpeed);
         player = playerPOS;
         //Add this to constructor later when we have weapons
         damage = 10;
@@ -233,7 +233,7 @@ public class Projectile {
         return vector.getPosition();
     }
 
-    public Vector2D getVector() {
+    public VectorHandler getVector() {
         return vector;
     }
 }

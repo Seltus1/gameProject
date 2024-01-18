@@ -3,7 +3,7 @@ import Creatures.Enemies.Enemy;
 import Creatures.Player;
 import Handlers.EnemyHandler;
 import Handlers.ProjectileHandler;
-import Handlers.Vector2D;
+import Handlers.VectorHandler;
 import org.junit.jupiter.api.Test;
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProjectileHandlerTest {
 
 
-    Projectile playerProjectile = new Projectile(10,550,250,10, new Vector2D(550,250, 10)
+    Projectile playerProjectile = new Projectile(10,550,250,10, new VectorHandler(550,250, 10)
             ,"Player", 1000,true,BLACK);
     ProjectileHandler projList = new ProjectileHandler();
     EnemyHandler enemyHandler = new EnemyHandler();

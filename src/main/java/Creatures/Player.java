@@ -4,7 +4,7 @@ import Attacks.Projectile;
 import Handlers.CooldownHandler;
 import Handlers.ProjectileHandler;
 import Elements.Fire;
-import Handlers.Vector2D;
+import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -20,7 +20,7 @@ public class Player implements Creature {
     private int range;
 
 //    POS
-    private Vector2D vector;
+    private VectorHandler vector;
 //    Move
     private int moveSpeed;
 
@@ -80,14 +80,14 @@ public class Player implements Creature {
         burnDamage = 1;
         regenCooldownMilliseconds = 5000;
         fire = new Fire();
-        vector = new Vector2D(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed);
         regenCooldown = new CooldownHandler();
         applyRegenCooldown = new CooldownHandler();
         shotCooldown = new CooldownHandler();
     }
 
     public void update(ProjectileHandler projList) {
-        vector.playerMove();
+        move();
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
             shoot(projList);
         }
@@ -128,16 +128,14 @@ public class Player implements Creature {
     }
 
     public void regen() {
-        if (checkHPToInitalHP()) {
+        if (hpLessThanInitalHP()) {
 //        if the hp is less then initalHp start the regen counter
-            if (hp < initalHp) {
-                boolean regenCD = regenCooldown.cooldown(regenCooldownMilliseconds);
-                if (regenCD) {
-                    canRegen = true;
-                }
-                if (canRegen) {
-                    applyingRegen();
-                }
+            boolean regenCD = regenCooldown.cooldown(regenCooldownMilliseconds);
+            if (regenCD) {
+                canRegen = true;
+            }
+            if (canRegen) {
+                applyingRegen();
             }
             return;
         }
@@ -146,7 +144,8 @@ public class Player implements Creature {
         isRegening = false;
     }
 
-    private boolean checkHPToInitalHP(){
+    private boolean hpLessThanInitalHP(){
+//        checking if the player needs to regen health or not
         if (hp < initalHp) {
             return true;
         }
@@ -162,6 +161,10 @@ public class Player implements Creature {
                 setHp(getInitalHp());
             }
         }
+    }
+
+    public void move() {
+        vector.playerMove();
     }
 
     public void fireHex() {
@@ -404,11 +407,11 @@ public class Player implements Creature {
         return isFireHex;
     }
 
-    public Vector2D getVector() {
+    public VectorHandler getVector() {
         return vector;
     }
 
-    public void setVector(Vector2D vector) {
+    public void setVector(VectorHandler vector) {
         this.vector = vector;
     }
 

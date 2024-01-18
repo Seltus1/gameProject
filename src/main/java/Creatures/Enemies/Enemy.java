@@ -1,8 +1,6 @@
 package Creatures.Enemies;
 import Handlers.*;
 import Creatures.*;
-import Attacks.*;
-import Elements.*;
 
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -27,7 +25,7 @@ public class Enemy implements Creature {
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
     private Ellipse2D.Double circle;
-    private Vector2D vector;
+    private VectorHandler vector;
     private Random rand;
     private boolean shooting;
 
@@ -35,7 +33,7 @@ public class Enemy implements Creature {
         this.hp = hp;
         this.damage = damage;
         this.range = range;
-        vector = new Vector2D(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed);
         this.moveSpeed = moveSpeed;
         this.size = size;
         this.color = color;
@@ -269,11 +267,11 @@ public class Enemy implements Creature {
         this.shouldDraw = shouldDraw;
     }
 
-    public Vector2D getVector() {
+    public VectorHandler getVector() {
         return vector;
     }
 
-    public void setVector(Vector2D vector) {
+    public void setVector(VectorHandler vector) {
         this.vector = vector;
     }
 

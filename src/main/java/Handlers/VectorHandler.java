@@ -2,10 +2,9 @@ package Handlers;
 
 import com.raylib.Jaylib;
 
-import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
-public class Vector2D {
+public class VectorHandler {
     private final float diagCheck = (float) Math.sqrt(0.5);
     private int posX;
     private int posY;
@@ -17,7 +16,9 @@ public class Vector2D {
     private double xNormalizedMovement;
     private Jaylib.Vector2 shotPosition;
 
-    public Vector2D(int posX, int posY, int moveSpeed){
+    private Camera2D camera;
+
+    public VectorHandler(int posX, int posY, int moveSpeed){
         this.posX = posX;
         actualXPos = posX;
         this.posY = posY;
@@ -41,6 +42,7 @@ public class Vector2D {
 
     private void updatePosition(){
         Jaylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
+        updateCamera(updatedPosition);
         setPosition(updatedPosition);
     }
 
@@ -71,11 +73,12 @@ public class Vector2D {
     public int distanceToOtherObject(int otherX, int otherY){
         int y = otherY - posY;
         int x = otherX - posX;
-        int totalDist = Math.abs(x) + Math.abs(y);
-        return totalDist;
+//        returning the total distance
+        return Math.abs(x) + Math.abs(y);
     }
 
     public void moveObject(Jaylib.Vector2 otherPosition, String tag){
+//
         double[] positions = determinePositions(otherPosition, tag);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
@@ -85,6 +88,9 @@ public class Vector2D {
         updatePositions(xScaled, yScaled);
     }
 
+
+//    why is this function here
+//    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
     public void moveObject(Jaylib.Vector2 otherPosition, String tag, double moveSpeed){
         double[] positions = determinePositions(otherPosition, tag);
         double verticalValues = positions[0];
@@ -162,8 +168,7 @@ public class Vector2D {
             finalX -= (getxNormalizedMovement() * -3);
             finalY -= (getyNormalizedMovement() * 3);
        }
-        int[] finalArr = {finalX, finalY};
-        return finalArr;
+        return new int[]{finalX, finalY};
     }
 
     public int getPosX() {

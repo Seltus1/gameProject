@@ -1,5 +1,5 @@
 import Attacks.Projectile;
-import Handlers.Vector2D;
+import Handlers.VectorHandler;
 import org.junit.jupiter.api.Test;
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ProjectileTest {
 
-    Projectile playerProjectile = new Projectile(10,550,250,10, new Vector2D(550,250, 10)
+    Projectile playerProjectile = new Projectile(10,550,250,10, new VectorHandler(550,250, 10)
             ,"Player", 1000,true,BLACK);
 
 

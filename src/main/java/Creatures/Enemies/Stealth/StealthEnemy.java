@@ -13,7 +13,7 @@ import Attacks.*;
 
 public class StealthEnemy extends Enemy {
     private Raylib.Color initialColor;
-    private Vector2D vector;
+    private VectorHandler vector;
     private Jaylib.Vector2 pos;
     private int shotSpeed;
     private boolean isReloading;
@@ -28,7 +28,7 @@ public class StealthEnemy extends Enemy {
     public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color){
         super(hp,damage,posX,posY,moveSpeed,size,range,color);
         initialColor = color;
-        vector = new Vector2D(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed);
         this.shotSpeed = shotSpeed;
         pos = new Jaylib.Vector2();
         pos.x(posX);
@@ -121,11 +121,11 @@ public class StealthEnemy extends Enemy {
         this.initialColor = initialColor;
     }
 
-    public Vector2D getVector() {
+    public VectorHandler getVector() {
         return vector;
     }
 
-    public void setVector(Vector2D vector) {
+    public void setVector(VectorHandler vector) {
         this.vector = vector;
     }
 

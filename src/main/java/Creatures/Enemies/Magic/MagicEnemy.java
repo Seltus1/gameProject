@@ -99,9 +99,9 @@ public class MagicEnemy extends Enemy {
     }
 
     public void drawHat(){
-        Vector2D v1 = new Vector2D(getPosX(), getPosY() - 50, getMoveSpeed());
-        Vector2D v2 = new Vector2D(getPosX() - 20, getPosY() - 30, getMoveSpeed());
-        Vector2D v3 = new Vector2D(getPosX() + 20, getPosY() - 30, getMoveSpeed());
+        VectorHandler v1 = new VectorHandler(getPosX(), getPosY() - 50, getMoveSpeed());
+        VectorHandler v2 = new VectorHandler(getPosX() - 20, getPosY() - 30, getMoveSpeed());
+        VectorHandler v3 = new VectorHandler(getPosX() + 20, getPosY() - 30, getMoveSpeed());
         DrawTriangle(v1.getPosition(),v2.getPosition(),v3.getPosition(),BLACK);
     }
     public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
