@@ -25,6 +25,7 @@ public class VectorHandler {
         actualYPos = posY;
         this.moveSpeed = moveSpeed;
         position = new Jaylib.Vector2(posX, posY);
+        camera = new Camera2D();
     }
 
     public void playerMove() {
@@ -38,6 +39,10 @@ public class VectorHandler {
             posY += (vCheck * moveSpeed);
         }
         updatePosition();
+    }
+
+    private void updateCamera(Jaylib.Vector2 position){
+        camera.target(position);
     }
 
     private void updatePosition(){

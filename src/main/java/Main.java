@@ -27,6 +27,7 @@ public class Main {
         EnemyHandler enemies = new EnemyHandler();
         PlayerHandler player = new PlayerHandler(player1);
         GameHandler game = new GameHandler();
+        Camera2D camera = new Camera2D();
 
 
         // Generate a random number of enemies
@@ -38,6 +39,9 @@ public class Main {
         while (!WindowShouldClose()) {
             // Begin drawing on the window
             BeginDrawing();
+            BeginMode2D(camera);
+            int frameTime = (int) GetFrameTime();
+
             // Clear the window background with a color (RAYWHITE)
             ClearBackground(RAYWHITE);
 //            if(game.isIsinMenu()){
@@ -64,6 +68,7 @@ public class Main {
 
             // End drawing
             EndDrawing();
+            EndMode2D();
         }
 
         // Close the window when the loop exits (window closed or Esc pressed)
