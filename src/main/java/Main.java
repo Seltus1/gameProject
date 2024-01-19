@@ -59,7 +59,7 @@ public class Main {
 
             player.update(enemies, projectiles, camera);
             enemies.update(projectiles, player1);
-            projectiles.update(enemies,player1);
+            projectiles.update(enemies,player1, camera);
             if (enemies.size() == 0) {
                 enemies.addMultipleEnemies(1);
             }

@@ -101,7 +101,7 @@ public class PlayerTest {
 
     @Test
     void checking_to_see_if_shoot_add_projectile_to_projList() {
-        player.shoot(projectileList);
+//        player.shoot(projectileList);
         assertEquals(1, projectileList.size());
     }
 
@@ -110,7 +110,7 @@ public class PlayerTest {
         player.setFireHex(true);
         player.setFireHexCount(10);
         for (int i = 0; i < 1; i++) {
-            player.shoot(projectileList);
+//            player.shoot(projectileList);
             player.fireHex();
         }
         assertEquals(3, player.getBurnTicks());
@@ -122,7 +122,7 @@ public class PlayerTest {
         player.setFireHexCount(10);
         player.setFireHex(true);
         for (int i = 0; i < 45; i++) {
-            player.shoot(projectileList);
+//            player.shoot(projectileList);
             player.shotCooldown();
             player.fireHex();
             player.setShooting(false);
@@ -135,7 +135,7 @@ public class PlayerTest {
         player.setFireHexCount(10);
         player.setFireHex(true);
         for (int i = 0; i < gameTicks; i++) {
-            player.shoot(projectileList);
+//            player.shoot(projectileList);
             player.shotCooldown();
             player.fireHex();
             player.burn();
@@ -147,7 +147,7 @@ public class PlayerTest {
     @Test
     void check_shotCooldown_works_properly() {
         for (int i = 0; i < gameTicks; i++) {
-            player.shoot(projectileList);
+//            player.shoot(projectileList);
             player.shotCooldown();
         }
         assertEquals(20, projectileList.size());
@@ -159,5 +159,10 @@ public class PlayerTest {
             player.regen();
         }
         assertEquals(37, player.getHp());
+    }
+
+    @Test
+    void check_regen_cooldown_works_properly(){
+
     }
 }

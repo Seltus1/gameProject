@@ -107,44 +107,21 @@ public class Player implements Creature {
         }
     }
 
-    public void shoot(ProjectileHandler projList) {
+    public void shoot(ProjectileHandler projList, Camera2D camera) {
         if (canShoot()) {
             setCanShoot(false);
             setShooting(true);
             int mouseX, mouseY;
-//            if(getPosX() > 0){
-//                mouseX = getPosX() + GetMouseX();
-//            }
-//            else{
-//                mouseX = getPosX() - GetMouseY();
-//            }
-//            if(getPosY() > 0){
-//                mouseY = getPosY() + GetMouseY();
-//            }
-//            else{
-//                mouseY = getPosY() - GetMouseY();
-//            }
-            if(getPosX() >= 0){
-                mouseX = GetMouseX() - ((GetScreenWidth()/2) - getPosX());
-            }
-            else{
-                mouseX = GetMouseX() - (GetScreenWidth()/2) + getPosX();
-            }
-            if(getPosY() >= 0){
-                mouseY = GetMouseY() - ((GetScreenHeight()/2) - getPosY());
-            }
-            else{
-                mouseY = GetMouseY() - (GetScreenHeight()/2) + getPosY();
-            }
-
-//            mouseX = GetMouseX();
-//            mouseY = GetMouseY();
+//            int[] fixPositions = fixPosForCamera();
 //
-//            GetScreenToWorld2D()
+//            mouseX = GetMouseX() -  fixPositions[0];
+//            mouseY = GetMouseY() - fixPositions[1];
+            mouseX = GetMouseX();
+            mouseY = GetMouseY();
 
-//          SetMouseOffset(mouseX,mouseY);
-
-            Projectile shot = new Projectile(13, getPosX(), getPosY(), 7, mouseX, mouseY, "Player", getShotRange(), true, BLACK);
+            Jaylib.Vector2 vector2 = new Jaylib.Vector2(mouseX,mouseY);
+            Raylib.Vector2 fixedMouse = GetScreenToWorld2D(vector2,camera);
+            Projectile shot = new Projectile(13, (int) getPosX(), getPosY() , 7, (int)fixedMouse.x(), (int)fixedMouse.y(), "Player", getShotRange(), true, BLACK);
             shot.setShotTag("Player");
             shot.createShotLine();
             projList.add(shot);
@@ -195,7 +172,6 @@ public class Player implements Creature {
             }
         }
     }
-
     public void move(Camera2D camera) {
         vector.playerMove(camera);
     }

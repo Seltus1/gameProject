@@ -41,8 +41,8 @@ public class MagicEnemy extends Enemy {
     }
 
     public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
-        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", spellRange, true, color);
+        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
+        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
         closeSpell1.triangleShot("above");
         closeSpell2.triangleShot("below");
         projList.add(closeSpell1);

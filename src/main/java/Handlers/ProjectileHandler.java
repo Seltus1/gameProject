@@ -6,6 +6,7 @@ import Creatures.Enemies.Enemy;
 import Creatures.Player;
 import Elements.Fire;
 import com.raylib.Jaylib;
+import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
@@ -22,10 +23,10 @@ public class ProjectileHandler extends ListHandler {
         fire = new Fire();
     }
 
-    public void update(EnemyHandler enemies, Player player){
+    public void update(EnemyHandler enemies, Player player, Camera2D camera){
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
-            projectileCollision(projectile, enemies, player);
+            projectileCollision(projectile, enemies, player, camera);
             moveProjectilesOnScreen(projectile);
             if (projectile.getShotTag().equals("Enemy_Pool")) {
                 Pool pool = (Pool) projectile;
@@ -36,20 +37,24 @@ public class ProjectileHandler extends ListHandler {
         }
     }
 
-    private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player) {
+    private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player, Camera2D camera) {
 //        checking to see if the projectile was shot by an enemy or player
 //        (player can't hit players and enemies cant hit enemies)
+            Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
+        DrawText("X" + projectile.getPosX() + "Y" + projectile.getPosY(), 300,300,30,BLACK);
         if (projectile.getShotTag().contains("Player")){
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = (Enemy) enemies.get(i);
-                if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(), enemy.getPos(), enemy.getSize())){
+                Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);
+                if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(), fixedEnemy, enemy.getSize())){
 //                    updating enemies when collided
                     collidedWithEnemy(enemy, projectile);
                 }
             }
             return;
         }
-        if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(), player.getPosition(), player.getSize())) {
+                Raylib.Vector2 fixedPlayer = GetScreenToWorld2D(player.getPosition(), camera);
+        if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(),fixedPlayer, player.getSize())){
 //          updating players when collided
             colliededWithPlayer(player, projectile);
         }
