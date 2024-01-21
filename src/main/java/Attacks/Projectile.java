@@ -32,16 +32,11 @@ public class Projectile {
     private boolean circle;
     private VectorHandler player;
 
-    private int wallXpoint1;
-    private int wallYPoint1;
-    private int wallXPoint2;
-    private int wallYPoint2;
-
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Camera2D camera, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.shotRad = shotRad;
         isInBounds = true;
-        vector = new VectorHandler(posX, posY, shotSpeed);
+        vector = new VectorHandler(posX, posY, shotSpeed, camera);
         this.finalX = finalX;
         this.finalY = finalY;
         //Add this to constructor later when we have weapons
@@ -52,11 +47,11 @@ public class Projectile {
         this.circle = circle;
     }
 
-    public Projectile(int shotSpeed, int posX, int posY, int shotRad, VectorHandler playerPOS, String shotTag, int maxRange, boolean circle, Raylib.Color color) {
+    public Projectile(int shotSpeed, int posX, int posY, int shotRad, VectorHandler playerPOS, String shotTag, int maxRange, boolean circle, Camera2D camera, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
         this.shotRad = shotRad;
         isInBounds = true;
-        vector = new VectorHandler(posX, posY, shotSpeed);
+        vector = new VectorHandler(posX, posY, shotSpeed, camera);
         player = playerPOS;
         //Add this to constructor later when we have weapons
         damage = 10;
@@ -74,8 +69,7 @@ public class Projectile {
     }
 
     public void createShotLine(){
-        Jaylib.Vector2 shotPosition = new Jaylib.Vector2(finalX, finalY);
-        vector.setShotPosition(shotPosition);
+        vector.setShotPosition(new Jaylib.Vector2(finalX, finalY));
         vector.setShootLine();
     }
 

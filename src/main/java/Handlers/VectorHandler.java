@@ -1,5 +1,6 @@
 package Handlers;
 
+import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
 import static com.raylib.Jaylib.BLACK;
@@ -11,19 +12,19 @@ public class VectorHandler {
     private int posY;
     private double actualXPos;
     private double actualYPos;
-    private Jaylib.Vector2 position;
+    private Raylib.Vector2 position;
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
-    private Jaylib.Vector2 shotPosition;
+    private Raylib.Vector2 shotPosition;
 
-    public VectorHandler(int posX, int posY, int moveSpeed){
+    public VectorHandler(int posX, int posY, int moveSpeed, Camera2D camera){
         this.posX = posX;
         actualXPos = posX;
         this.posY = posY;
         actualYPos = posY;
         this.moveSpeed = moveSpeed;
-        position = new Jaylib.Vector2(posX, posY);
+        position = GetScreenToWorld2D(new Jaylib.Vector2(posX, posY), camera);
     }
 
     public void playerMove(Camera2D camera) {
@@ -39,13 +40,12 @@ public class VectorHandler {
         updatePosition(camera);
     }
 
-    public void updateCamera(Jaylib.Vector2 position, Camera2D camera){
+    public void updateCamera(Raylib.Vector2 position, Camera2D camera){
         camera.target(position);
     }
 
     private void updatePosition(Camera2D camera){
-        Jaylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
-        updateCamera(updatedPosition);
+        Raylib.Vector2 updatedPosition = GetScreenToWorld2D(new Jaylib.Vector2(posX, posY), camera);
         setPosition(updatedPosition);
         updateCamera(updatedPosition,camera);
     }
@@ -81,7 +81,7 @@ public class VectorHandler {
         return Math.abs(x) + Math.abs(y);
     }
 
-    public void moveObject(Jaylib.Vector2 otherPosition, String tag){
+    public void moveObject(Raylib.Vector2 otherPosition, String tag){
 //
         double[] positions = determinePositions(otherPosition, tag);
         double verticalValues = positions[0];
@@ -95,7 +95,7 @@ public class VectorHandler {
 
 //    why is this function here
 //    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
-    public void moveObject(Jaylib.Vector2 otherPosition, String tag, double moveSpeed){
+    public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed){
         double[] positions = determinePositions(otherPosition, tag);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
@@ -107,7 +107,7 @@ public class VectorHandler {
 
 
 
-    public double[] determinePositions(Jaylib.Vector2 position, String tag) {
+    public double[] determinePositions(Raylib.Vector2 position, String tag) {
         double otherX, otherY, myXPos, myYPos;
 //        This is moving the object towards the other pos
         if (tag.equals("to")) {
@@ -141,7 +141,8 @@ public class VectorHandler {
         posY = (int) Math.round(updateY);
         xNormalizedMovement = xScaled;
         yNormalizedMovement = yScaled;
-        setPosition(new Jaylib.Vector2(posX, posY));
+
+        setPosition(new Raylib.Vector2(posX, posY));
     }
 
     public void setShootLine() {
@@ -191,11 +192,11 @@ public class VectorHandler {
         this.posY = posY;
     }
 
-    public Jaylib.Vector2 getPosition() {
+    public Raylib.Vector2 getPosition() {
         return position;
     }
 
-    public void setPosition(Jaylib.Vector2 position) {
+    public void setPosition(Raylib.Vector2 position) {
         this.position = position;
     }
 
@@ -239,10 +240,10 @@ public class VectorHandler {
         this.xNormalizedMovement = xNormalizedMovement;
     }
 
-    public Jaylib.Vector2 getShotPosition() {
+    public Raylib.Vector2 getShotPosition() {
         return shotPosition;
     }
-    public void setShotPosition(Jaylib.Vector2 shotPosition) {
+    public void setShotPosition(Raylib.Vector2 shotPosition) {
         this.shotPosition = shotPosition;
     }
 }

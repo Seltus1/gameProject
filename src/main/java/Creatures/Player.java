@@ -60,8 +60,9 @@ public class Player implements Creature {
     private final Fire fire;
     private int fireHexCount;
     private int shotFrameCount;
+    private Camera2D camera;
 
-    public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Raylib.Color color) {
+    public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Camera2D camera, Raylib.Color color) {
         this.hp = hp;
         initalHp = hp;
         this.damage = damage;
@@ -80,10 +81,11 @@ public class Player implements Creature {
         burnDamage = 1;
         regenCooldownMilliseconds = 5000;
         fire = new Fire();
-        vector = new VectorHandler(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
         applyRegenCooldown = new CooldownHandler();
         shotCooldown = new CooldownHandler();
+        this.camera = camera;
     }
 
     public void update(ProjectileHandler projList, Camera2D camera) {
@@ -112,16 +114,10 @@ public class Player implements Creature {
             setCanShoot(false);
             setShooting(true);
             int mouseX, mouseY;
-//            int[] fixPositions = fixPosForCamera();
-//
-//            mouseX = GetMouseX() -  fixPositions[0];
-//            mouseY = GetMouseY() - fixPositions[1];
             mouseX = GetMouseX();
             mouseY = GetMouseY();
-
-            Jaylib.Vector2 vector2 = new Jaylib.Vector2(mouseX,mouseY);
-            Raylib.Vector2 fixedMouse = GetScreenToWorld2D(vector2,camera);
-            Projectile shot = new Projectile(13, (int) getPosX(), getPosY() , 7, (int)fixedMouse.x(), (int)fixedMouse.y(), "Player", getShotRange(), true, BLACK);
+            Raylib.Vector2 vector2 = GetScreenToWorld2D(new Jaylib.Vector2(mouseX,mouseY), camera);
+            Projectile shot = new Projectile(13, (int) getPosX(), getPosY() , 7, (int) vector2.x(), (int) vector2.y(), "Player", getShotRange(), true, camera, BLACK);
             shot.setShotTag("Player");
             shot.createShotLine();
             projList.add(shot);
@@ -248,7 +244,7 @@ public class Player implements Creature {
         vector.setPosY(posY);
     }
 
-    public Jaylib.Vector2 getPosition() {
+    public Raylib.Vector2 getPosition() {
         return vector.getPosition();
     }
 

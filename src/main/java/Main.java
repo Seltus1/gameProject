@@ -23,21 +23,20 @@ public class Main {
         SetTargetFPS(60);
 
         // Create instances of necessary game objects
-        Random rand = new Random();
-        ProjectileHandler projectiles = new ProjectileHandler();
-        Creatures.Player player1 = new Creatures.Player(100, 12, 15, 0, 0, 5, 20, 700, RED);
-        EnemyHandler enemies = new EnemyHandler();
-        PlayerHandler player = new PlayerHandler(player1);
-        GameHandler game = new GameHandler();
         Camera2D camera = new Camera2D();
-        VectorHandler vectorHandler = new VectorHandler(0,0,0);
         camera.offset(new Jaylib.Vector2(GetScreenWidth()/ 2f, GetScreenHeight()/ 2f));
         camera.rotation(0f);
         camera.zoom(1f);
+        Random rand = new Random();
+        ProjectileHandler projectiles = new ProjectileHandler();
+        Creatures.Player player1 = new Creatures.Player(100, 12, 15, 0, 0, 5, 20, 700, camera, RED);
+        EnemyHandler enemies = new EnemyHandler();
+        PlayerHandler player = new PlayerHandler(player1);
+        GameHandler game = new GameHandler();
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(amountOfEnemy);
+        enemies.addMultipleEnemies(0);
 
         // Main game loop
         while (!WindowShouldClose()) {
@@ -61,7 +60,7 @@ public class Main {
             enemies.update(projectiles, player1, camera);
             projectiles.update(enemies,player1, camera);
             if (enemies.size() == 0) {
-                enemies.addMultipleEnemies(1);
+                enemies.addMultipleEnemies(0);
             }
             player1.update(projectiles, camera);
 //            camera.target(player1.getPosition());
