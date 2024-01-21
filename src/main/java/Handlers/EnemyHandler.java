@@ -27,8 +27,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(7) + 1;
-            int randEnemy = 4;
+            int randEnemy = rand.nextInt(7) + 1;
+//            int randEnemy = 4;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -71,7 +71,7 @@ public class EnemyHandler extends ListHandler {
         return getList();
     }
 
-    public void update(ProjectileHandler projList, Player player) {
+    public void update(ProjectileHandler projList, Player player, Camera2D camera) {
         int counter = 0;
         int falseCounter = 0;
         for (int i = 0; i < size(); i++) {

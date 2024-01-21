@@ -16,6 +16,8 @@ public class Projectile {
     private int damage;
     private int finalX;
     private int finalY;
+    private Vector2 fixedPos;
+    private Vector2 fixedFinalPos;
     private String shotTag;
     private CooldownHandler cooldown;
 

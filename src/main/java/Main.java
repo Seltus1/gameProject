@@ -37,7 +37,7 @@ public class Main {
         // Generate a random number of enemies
         SetMouseCursor(3);
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(1);
+        enemies.addMultipleEnemies(amountOfEnemy);
 
         // Main game loop
         while (!WindowShouldClose()) {
@@ -58,7 +58,7 @@ public class Main {
 //            vectorHandler.updateCamera(cameraTarget, camera);
 
             player.update(enemies, projectiles, camera);
-            enemies.update(projectiles, player1);
+            enemies.update(projectiles, player1, camera);
             projectiles.update(enemies,player1, camera);
             if (enemies.size() == 0) {
                 enemies.addMultipleEnemies(1);

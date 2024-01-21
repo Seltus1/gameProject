@@ -24,6 +24,7 @@ public class Enemy implements Creature {
     private boolean shouldDraw;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
+    private Jaylib.Vector2 fixedPos;
     private Ellipse2D.Double circle;
     private VectorHandler vector;
     private Random rand;

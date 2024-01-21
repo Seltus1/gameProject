@@ -172,6 +172,12 @@ public class Player implements Creature {
             }
         }
     }
+    private void renderPlayer(Camera2D camera) {
+        Jaylib.Vector2 pos = new Jaylib.Vector2(getPosX() + 20f, getPosY() + 20f);
+        Raylib.Vector2 worldPos = GetScreenToWorld2D(pos, camera);
+        camera.target(worldPos);
+        DrawCircle((int)worldPos.x(), (int)worldPos.y(), size, RED);
+    }
     public void move(Camera2D camera) {
         vector.playerMove(camera);
     }

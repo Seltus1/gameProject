@@ -40,13 +40,14 @@ public class ProjectileHandler extends ListHandler {
     private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player, Camera2D camera) {
 //        checking to see if the projectile was shot by an enemy or player
 //        (player can't hit players and enemies cant hit enemies)
-            Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
-        DrawText("X" + projectile.getPosX() + "Y" + projectile.getPosY(), 300,300,30,BLACK);
         if (projectile.getShotTag().contains("Player")){
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = (Enemy) enemies.get(i);
                 Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);
-                if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(), fixedEnemy, enemy.getSize())){
+                Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
+                DrawText("X " + fixedEnemy.x() + "    Y " + fixedEnemy.y(),400,400,30,BLACK);
+                DrawText("pojX " + fixedProj.x() + "    Y " + fixedProj.y(),500,500,30,BLACK);
+                if (CheckCollisionCircles(fixedProj, projectile.getShotRad(), fixedEnemy, enemy.getSize())){
 //                    updating enemies when collided
                     collidedWithEnemy(enemy, projectile);
                 }
@@ -54,7 +55,9 @@ public class ProjectileHandler extends ListHandler {
             return;
         }
                 Raylib.Vector2 fixedPlayer = GetScreenToWorld2D(player.getPosition(), camera);
-        if (CheckCollisionCircles(projectile.getPosition(), projectile.getShotRad(),fixedPlayer, player.getSize())){
+        Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
+
+        if (CheckCollisionCircles(fixedProj, projectile.getShotRad(),fixedPlayer, player.getSize())){
 //          updating players when collided
             colliededWithPlayer(player, projectile);
         }

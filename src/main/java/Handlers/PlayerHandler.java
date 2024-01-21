@@ -29,19 +29,15 @@ public class PlayerHandler {
         isAlive = true;
         fire = new Fire();
         cooldown = new CooldownHandler();
-
     }
 
-    public void drawRange() {
-        Raylib.Vector2 mousePos = GetMousePosition();
+    public void drawRange(Camera2D camera) {
+        Raylib.Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
         Raylib.Vector2 playerPos = player.getPosition();
         float shotRange = player.getShotRange();
 
         // Calculate the direction vector from player to mouse
-        Raylib.Vector2 direction = new Raylib.Vector2();
-        direction.x(mousePos.x() - playerPos.x());
-        direction.y(mousePos.y() - playerPos.y());
-
+        Raylib.Vector2 direction = new Jaylib.Vector2(mousePos.x() - playerPos.x(), mousePos.y() - playerPos.y());
 
         // Normalize the direction vector
         float length = (float) Math.sqrt(direction.x() * direction.x() + direction.y() * direction.y());
@@ -49,13 +45,12 @@ public class PlayerHandler {
         direction.y(direction.y() / length);
 
         // Calculate the endpoint of the line based on player's position and direction
-        Raylib.Vector2 endPoint = new Raylib.Vector2();
-        endPoint.x(playerPos.x() + direction.x() * shotRange);
-        endPoint.y(playerPos.y() + direction.y() * shotRange);
+        Raylib.Vector2 endPoint = new Jaylib.Vector2(playerPos.x() + direction.x() * shotRange, playerPos.y() + direction.y() * shotRange);
 
         // Draw the line from playerPos to endPoint
         DrawLineV(playerPos, endPoint, BLACK);
     }
+
 
     public void drawHp(Camera2D camera){
         double thing = (double) player.getHp() /  player.getInitalHp();
@@ -102,6 +97,6 @@ public class PlayerHandler {
             drawBurn();
         }
         drawFireFex();
-        drawRange();
+        drawRange(camera);
     }
 }
