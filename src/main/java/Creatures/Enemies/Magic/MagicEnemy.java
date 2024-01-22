@@ -24,8 +24,8 @@ public class MagicEnemy extends Enemy {
 
     private Random random;
 
-    public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color) {
-        super(hp, damage, posX, posY, moveSpeed, size, moveRange, color);
+    public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color, Camera2D camera) {
+        super(hp, damage, posX, posY, moveSpeed, size, moveRange, color, camera);
         this.shotSpeed = shotSpeed;
         this.spellRange = spellRange;
         random = new Random();
@@ -35,81 +35,81 @@ public class MagicEnemy extends Enemy {
         cooldown3 = new CooldownHandler();
     }
 
-    public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag) {
-        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, color);
-        spell.createShotLine();
+    public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, Camera2D camera) {
+        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), tag, spellRange, true, camera, color);
+        spell.createShotLine(camera);
         projList.add(spell);
     }
 
-    public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
-        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, color);
-        closeSpell1.triangleShot("above");
-        closeSpell2.triangleShot("below");
+    public void castCloseSpell(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera) {
+        Projectile closeSpell1 = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true,camera, color);
+        Projectile closeSpell2= new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getPosX(), player.getPosY(), "Enemy", spellRange, true, camera, color);
+        closeSpell1.triangleShot("above", camera);
+        closeSpell2.triangleShot("below", camera);
         projList.add(closeSpell1);
         projList.add(closeSpell2);
     }
 
-    public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color) {
-        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool_Shot", spellRange, true, color);
-        poolShot.createShotLine();
+    public void castPoolSpell(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera) {
+        Projectile poolShot = new Projectile(shotSpeed, getPosX(), getPosY(), 5, player.getPosX(),player.getPosY(), "Enemy_Pool_Shot", spellRange, true, camera, color);
+        poolShot.createShotLine(camera);
         projList.add(poolShot);
 
     }
 
-    public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed){
-        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getVector(), tag, spellRange, true, color);
-        spell.homingShot(moveSpeed,player);
-        projList.add(spell);
-    }
+//    public void castHomingSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, double moveSpeed, Camera2D camera){
+//        Projectile spell = new Projectile(shotSpeed, getPosX(), getPosY(), 12, player.getVector(), tag, spellRange, true, camera, color);
+//        spell.homingShot(moveSpeed,player);
+//        projList.add(spell);
+//    }
 
-    public void shoot(Player player, ProjectileHandler projList, Raylib.Color color){
+    public void shoot(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera){
         int rand = random.nextInt(2) + 1;
         if (getRange() > calculateDistanceToPlayer(player)) {
             if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
                 if (cooldown.cooldown(1500)){
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Enemy");
-                        castHomingSpell(player,projList,color,"homing",3);
+                        castLongSpell(player, projList, color, "Enemy", camera);
+//                        castHomingSpell(player,projList,color,"homing",3);
                     } else {
-                        castPoolSpell(player, projList, PoolColor);
+                        castPoolSpell(player, projList, PoolColor, camera);
                     }
                 }
             } else if (calculateDistanceToPlayer(player) < getRange() / 2) {
                 if (cooldown2.cooldown(1500)){
-                    castCloseSpell(player, projList, color);
+                    castCloseSpell(player, projList, color, camera);
                 }
             } else {
                 if (cooldown3.cooldown(1500)){
                     if (rand == 1) {
-                        castLongSpell(player, projList, color, "Enemy");
+                        castLongSpell(player, projList, color, "Enemy", camera);
                     } else {
-                        castPoolSpell(player, projList, PoolColor);
+                        castPoolSpell(player, projList, PoolColor, camera);
                     }
                 }
             }
         }
     }
-    public void move(Player player){
+    public void move(Player player, Camera2D camera){
         if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
-            followPlayer(player, "to");
+            followPlayer(player, "to", camera);
         }
         else if (calculateDistanceToPlayer(player) < getRange() / 2) {
-            followPlayer(player, "away");
+            followPlayer(player, "away", camera);
         }
     }
 
-    public void drawHat(){
-        VectorHandler v1 = new VectorHandler(getPosX(), getPosY() - 50, getMoveSpeed());
-        VectorHandler v2 = new VectorHandler(getPosX() - 20, getPosY() - 30, getMoveSpeed());
-        VectorHandler v3 = new VectorHandler(getPosX() + 20, getPosY() - 30, getMoveSpeed());
+    public void drawHat(Camera2D camera){
+        VectorHandler v1 = new VectorHandler(getPosX(), getPosY() - 50, getMoveSpeed(), camera);
+        VectorHandler v2 = new VectorHandler(getPosX() - 20, getPosY() - 30, getMoveSpeed(), camera);
+        VectorHandler v3 = new VectorHandler(getPosX() + 20, getPosY() - 30, getMoveSpeed(), camera);
         DrawTriangle(v1.getPosition(),v2.getPosition(),v3.getPosition(),BLACK);
     }
-    public void update(Player player, ProjectileHandler projList, Raylib.Color color) {
+    public void update(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera) {
         DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), color);
-        shoot(player,projList, color);
-        move(player);
-        drawHat();
+        shoot(player,projList, color, camera);
+        move(player, camera);
+        drawHat(camera);
     }
 
     public int getSpellCoolDown() {

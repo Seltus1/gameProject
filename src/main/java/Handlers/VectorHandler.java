@@ -24,7 +24,7 @@ public class VectorHandler {
         this.posY = posY;
         actualYPos = posY;
         this.moveSpeed = moveSpeed;
-        position = GetScreenToWorld2D(new Jaylib.Vector2(posX, posY), camera);
+        position = new Jaylib.Vector2(posX, posY);
     }
 
     public void playerMove(Camera2D camera) {
@@ -37,15 +37,16 @@ public class VectorHandler {
             posX += (hCheck * moveSpeed);
             posY += (vCheck * moveSpeed);
         }
+        screenToWorld(position,camera);
         updatePosition(camera);
     }
 
-    public void updateCamera(Raylib.Vector2 position, Camera2D camera){
+    private void updateCamera(Raylib.Vector2 position, Camera2D camera){
         camera.target(position);
     }
 
     private void updatePosition(Camera2D camera){
-        Raylib.Vector2 updatedPosition = GetScreenToWorld2D(new Jaylib.Vector2(posX, posY), camera);
+        Raylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
         setPosition(updatedPosition);
         updateCamera(updatedPosition,camera);
     }
@@ -81,46 +82,51 @@ public class VectorHandler {
         return Math.abs(x) + Math.abs(y);
     }
 
-    public void moveObject(Raylib.Vector2 otherPosition, String tag){
+    public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
 //
-        double[] positions = determinePositions(otherPosition, tag);
+        double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled);
+        updatePositions(xScaled, yScaled, camera);
     }
 
 
 //    why is this function here
 //    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
-    public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed){
-        double[] positions = determinePositions(otherPosition, tag);
+    public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed, Camera2D camera){
+        double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled);
+        updatePositions(xScaled, yScaled, camera);
     }
 
 
 
-    public double[] determinePositions(Raylib.Vector2 position, String tag) {
+    public double[] determinePositions(Raylib.Vector2 position, String tag, Camera2D camera) {
         double otherX, otherY, myXPos, myYPos;
+        Raylib.Vector2 otherPos,myPos;
 //        This is moving the object towards the other pos
         if (tag.equals("to")) {
             otherX = position.x();
             otherY = position.y();
             myXPos = actualXPos;
             myYPos = actualYPos;
+            otherPos = new Jaylib.Vector2((float)otherX,(float)otherY);
+            myPos = new Jaylib.Vector2((float)myXPos,(float)myYPos);
 //        This is moving the object away from the other pos
         } else {
             otherX = actualXPos;
             otherY = actualYPos;
             myXPos = position.x();
             myYPos = position.y();
+            otherPos = new Jaylib.Vector2((float)otherX,(float)otherY);
+            myPos = new Jaylib.Vector2((float)myXPos,(float)myYPos);
         }
         return new double[]{otherY - myYPos, otherX - myXPos};
     }
@@ -132,7 +138,7 @@ public class VectorHandler {
         return new double[]{xNormalized, yNormalized};
     }
 
-    private void updatePositions(double xScaled, double yScaled) {
+    private void updatePositions(double xScaled, double yScaled, Camera2D camera) {
         double updateX = actualXPos + xScaled;
         double updateY = actualYPos + yScaled;
         actualXPos = updateX;
@@ -142,16 +148,18 @@ public class VectorHandler {
         xNormalizedMovement = xScaled;
         yNormalizedMovement = yScaled;
 
-        setPosition(new Raylib.Vector2(posX, posY));
+        setPosition(new Jaylib.Vector2(posX, posY));
     }
 
-    public void setShootLine() {
-        double[] positions = determinePositions(getShotPosition(), "to");
+    public void setShootLine(Camera2D camera) {
+        screenToWorld(getShotPosition(), camera);
+        double[] positions = determinePositions(getShotPosition(), "to", camera);
         double[] normalizedValues = normalizeValues(positions[0], positions[1]);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
         setxNormalizedMovement(xScaled);
         setyNormalizedMovement(yScaled);
+
     }
     public void updateShootLinePosition(){
         actualXPos = actualXPos + xNormalizedMovement;
@@ -174,6 +182,10 @@ public class VectorHandler {
             finalY -= (getyNormalizedMovement() * 3);
        }
         return new int[]{finalX, finalY};
+    }
+
+    public Raylib.Vector2 screenToWorld(Raylib.Vector2 vector, Camera2D camera){
+        return GetScreenToWorld2D(vector, camera);
     }
 
     public int getPosX() {

@@ -11,8 +11,8 @@ public class FireBrawlerEnemy extends BrawlerEnemy {
     private Fire fire;
     private int burnCountDown;
 
-    public FireBrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color){
-        super(hp, damage, posX, posY, moveSpeed, size, range, color);
+    public FireBrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera){
+        super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
         fire = new Fire();
     }
 

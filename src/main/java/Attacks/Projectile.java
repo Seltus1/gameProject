@@ -68,9 +68,9 @@ public class Projectile {
         }
     }
 
-    public void createShotLine(){
+    public void createShotLine(Camera2D camera){
         vector.setShotPosition(new Jaylib.Vector2(finalX, finalY));
-        vector.setShootLine();
+        vector.setShootLine(camera);
     }
 
     public void checkProjIsOnScreen(){
@@ -86,18 +86,18 @@ public class Projectile {
         return distanceTravelled >= maxRange;
     }
 
-    public void triangleShot(String aboveOrBelow){
-        createShotLine();
+    public void triangleShot(String aboveOrBelow, Camera2D camera){
+        createShotLine(camera);
         int[] newFinals = vector.TriangleShotVectorCalc(aboveOrBelow,finalX,finalY);
         finalX = newFinals[0];
         finalY = newFinals[1];
     }
 //    ZENE ADD THIS LAATER
 
-    public void homingShot(double moveSpeed, Player player){
-        createShotLine();
-        vector.moveObject(player.getPosition(),"to",moveSpeed);
-    }
+//    public void homingShot(double moveSpeed, Player player){
+//        createShotLine();
+//        vector.moveObject(player.getPosition(),"to",moveSpeed, ca);
+//    }
 
 
     public boolean isInBounds() {
@@ -225,7 +225,7 @@ public class Projectile {
         this.draw = draw;
     }
 
-    public Jaylib.Vector2 getPosition(){
+    public Raylib.Vector2 getPosition(){
         return vector.getPosition();
     }
 

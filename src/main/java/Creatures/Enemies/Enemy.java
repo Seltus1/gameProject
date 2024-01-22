@@ -30,11 +30,11 @@ public class Enemy implements Creature {
     private Random rand;
     private boolean shooting;
 
-    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color) {
+    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera) {
         this.hp = hp;
         this.damage = damage;
         this.range = range;
-        vector = new VectorHandler(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed, camera);
         this.moveSpeed = moveSpeed;
         this.size = size;
         this.color = color;
@@ -50,8 +50,8 @@ public class Enemy implements Creature {
         int totalDistance = vector.distanceToOtherObject(player.getPosX(), player.getPosY());
         return totalDistance;
     }
-    public void followPlayer(Player player, String tag) {
-        vector.moveObject(player.getPosition(), tag);
+    public void followPlayer(Player player, String tag, Raylib.Camera2D camera) {
+        vector.moveObject(player.getPosition(), tag, camera);
 //        updateObjectPositions();
         if(isShouldDraw()) {
             DrawCircle(getPosX(), getPosY(), getSize(), getColor());
@@ -288,7 +288,7 @@ public class Enemy implements Creature {
         this.shooting = shooting;
     }
 
-    public Jaylib.Vector2 getPos(){
+    public Raylib.Vector2 getPos(){
         return vector.getPosition();
     }
 }

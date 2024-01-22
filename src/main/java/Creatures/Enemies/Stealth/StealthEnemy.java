@@ -25,10 +25,10 @@ public class StealthEnemy extends Enemy {
     private Footstep footstep;
     private Random rand;
 
-    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color){
-        super(hp,damage,posX,posY,moveSpeed,size,range,color);
+    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Camera2D camera){
+        super(hp,damage,posX,posY,moveSpeed,size,range,color, camera);
         initialColor = color;
-        vector = new VectorHandler(posX, posY, moveSpeed);
+        vector = new VectorHandler(posX, posY, moveSpeed, camera);
         this.shotSpeed = shotSpeed;
         pos = new Jaylib.Vector2();
         pos.x(posX);
@@ -50,26 +50,26 @@ public class StealthEnemy extends Enemy {
         }
     }
 
-    public void move(Player player){
+    public void move(Player player, Camera2D camera){
         if(!isReloading) {
             if (getRange() / 1.5 < calculateDistanceToPlayer(player)) {
-                followPlayer(player, "to");
+                followPlayer(player, "to", camera);
             }
             if (getRange() / 2 > calculateDistanceToPlayer(player)) {
-                followPlayer(player, "away");
+                followPlayer(player, "away", camera);
             }
         }
         else{
             if (getRange() * 1.5 < calculateDistanceToPlayer(player)) {
-                followPlayer(player, "to");
+                followPlayer(player, "to", camera);
             }
             if (getRange() * 2 > calculateDistanceToPlayer(player)) {
-                followPlayer(player, "away");
+                followPlayer(player, "away", camera);
             }
         }
     }
 
-    public void shoot(Player player, ProjectileHandler projList) {
+    public void shoot(Player player, ProjectileHandler projList, Camera2D camera) {
         if (!isReloading) {
             if (calculateDistanceToPlayer(player) <= getRange()) {
                 if (cooldown.cooldown(500)) {
@@ -78,9 +78,9 @@ public class StealthEnemy extends Enemy {
                 if (canShoot) {
                     canShoot = false;
                     numShots++;
-                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, BLACK);
+                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, camera, BLACK);
                     projList.add(proj);
-                    proj.createShotLine();
+                    proj.createShotLine(camera);
                     if (numShots > 10) {
                         isReloading = true;
                         numShots = 0;
@@ -105,10 +105,10 @@ public class StealthEnemy extends Enemy {
         }
     }
 
-    public void update(Player player, ProjectileHandler projList){
-        move(player);
+    public void update(Player player, ProjectileHandler projList, Camera2D camera){
+        move(player, camera);
         cloak(player);
-        shoot(player, projList);
+        shoot(player, projList, camera);
         footsteps();
         footstep.draw();
     }

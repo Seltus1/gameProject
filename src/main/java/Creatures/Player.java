@@ -11,20 +11,20 @@ import com.raylib.Raylib;
 import static com.raylib.Jaylib.*;
 
 public class Player implements Creature {
-//    HP
+    //    HP
     private int hp;
     private int initalHp;
 
-//    DMG
+    //    DMG
     private int damage;
     private int range;
 
-//    POS
+    //    POS
     private VectorHandler vector;
-//    Move
+    //    Move
     private int moveSpeed;
 
-//    size/color
+    //    size/color
     private int size;
     private Raylib.Color color;
 
@@ -38,7 +38,7 @@ public class Player implements Creature {
     private boolean isShooting;
     private boolean isRegening;
 
-//    cooldowns
+    //    cooldowns
     private boolean canShoot;
     private boolean canMelee;
     private boolean canRegen;
@@ -119,7 +119,7 @@ public class Player implements Creature {
             Raylib.Vector2 vector2 = GetScreenToWorld2D(new Jaylib.Vector2(mouseX,mouseY), camera);
             Projectile shot = new Projectile(13, (int) getPosX(), getPosY() , 7, (int) vector2.x(), (int) vector2.y(), "Player", getShotRange(), true, camera, BLACK);
             shot.setShotTag("Player");
-            shot.createShotLine();
+            shot.createShotLine(camera);
             projList.add(shot);
         }
     }
@@ -167,12 +167,6 @@ public class Player implements Creature {
                 setHp(getInitalHp());
             }
         }
-    }
-    private void renderPlayer(Camera2D camera) {
-        Jaylib.Vector2 pos = new Jaylib.Vector2(getPosX() + 20f, getPosY() + 20f);
-        Raylib.Vector2 worldPos = GetScreenToWorld2D(pos, camera);
-        camera.target(worldPos);
-        DrawCircle((int)worldPos.x(), (int)worldPos.y(), size, RED);
     }
     public void move(Camera2D camera) {
         vector.playerMove(camera);

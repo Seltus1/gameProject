@@ -14,8 +14,8 @@ public class Pool extends Projectile{
     private CooldownHandler drawingDuration;
     private CooldownHandler damageCooldown;
 
-    public Pool(int posX, int posY, int size, Raylib.Color color, int damage, int duration, String shotTag) {
-        super(0, posX, posY, size, 0, 0, shotTag, 1000, true, color);
+    public Pool(int posX, int posY, int size, Raylib.Color color, int damage, int duration, String shotTag, Camera2D camera) {
+        super(0, posX, posY, size, 0, 0, shotTag, 1000, true, camera, color);
         this.damage = damage;
         this.duration = duration;
         drawingDuration = new CooldownHandler();

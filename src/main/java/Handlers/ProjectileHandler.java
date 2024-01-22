@@ -33,7 +33,7 @@ public class ProjectileHandler extends ListHandler {
                 pool.update(player);
             }
 //            checking if the projectile should draw, if false removes it from the projlist
-            removeProjectiles(projectile);
+            removeProjectiles(projectile, camera);
         }
     }
 
@@ -54,12 +54,12 @@ public class ProjectileHandler extends ListHandler {
             }
             return;
         }
-                Raylib.Vector2 fixedPlayer = GetScreenToWorld2D(player.getPosition(), camera);
+        Raylib.Vector2 fixedPlayer = GetScreenToWorld2D(player.getPosition(), camera);
         Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
 
         if (CheckCollisionCircles(fixedProj, projectile.getShotRad(),fixedPlayer, player.getSize())){
 //          updating players when collided
-            colliededWithPlayer(player, projectile);
+            colliededWithPlayer(player, projectile, camera);
         }
     }
 
@@ -71,11 +71,11 @@ public class ProjectileHandler extends ListHandler {
         projectile.setDraw(false);
     }
 
-    private void colliededWithPlayer(Player player, Projectile projectile){
+    private void colliededWithPlayer(Player player, Projectile projectile, Camera2D camera){
         if(!projectile.getShotTag().equals("Enemy_Pool")) {
             player.setHp(player.getHp() - projectile.getDamage());
         }
-        applySpecialShot(projectile,player);
+        applySpecialShot(projectile,player, camera);
         if (player.getHp() <= 0) {
             player.setAlive(false);
         }
@@ -86,9 +86,9 @@ public class ProjectileHandler extends ListHandler {
         }
     }
 
-    private void applySpecialShot(Projectile currProj, Player player) {
+    private void applySpecialShot(Projectile currProj, Player player, Camera2D camera) {
         if(currProj.getShotTag().equals("Enemy_Pool_Shot")) {
-            poolShot(currProj.getPosX(),currProj.getPosY());
+            poolShot(currProj.getPosX(),currProj.getPosY(), camera);
         }
         else if (currProj.getShotTag().contains("Fire")) {
             burn(player);
@@ -98,8 +98,8 @@ public class ProjectileHandler extends ListHandler {
         }
     }
 
-    private void poolShot(int xPos, int yPos) {
-        Pool pool = new Pool(xPos,yPos,50,BLACK,5,2500,"Enemy_Pool");
+    private void poolShot(int xPos, int yPos, Camera2D camera) {
+        Pool pool = new Pool(xPos,yPos,50,BLACK,5,2500,"Enemy_Pool", camera);
         add(pool);
     }
 
@@ -121,14 +121,14 @@ public class ProjectileHandler extends ListHandler {
         projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());
     }
 
-    private void removeProjectiles(Projectile projectile) {
+    private void removeProjectiles(Projectile projectile, Camera2D camera) {
 //        checks if the porjectile has it its max distance
         if(projectile.pastMaxDistanceTravelled()){
             if(projectile.getShotTag().equals("Enemy_Pool_Shot")){
                 int xPos = projectile.getPosX();
                 int yPos = projectile.getPosY();
                 removeObject(projectile);
-                poolShot(xPos,yPos);
+                poolShot(xPos,yPos, camera);
                 return;
             }
             projectile.setDraw(false);
