@@ -27,7 +27,7 @@ public class ProjectileHandler extends ListHandler {
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
             projectileCollision(projectile, enemies, player, camera);
-            moveProjectilesOnScreen(projectile);
+            moveProjectilesOnScreen(projectile, camera);
             if (projectile.getShotTag().equals("Enemy_Pool")) {
                 Pool pool = (Pool) projectile;
                 pool.update(player);
@@ -45,8 +45,8 @@ public class ProjectileHandler extends ListHandler {
                 Enemy enemy = (Enemy) enemies.get(i);
                 Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);
                 Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
-                DrawText("X " + fixedEnemy.x() + "    Y " + fixedEnemy.y(),400,400,30,BLACK);
-                DrawText("pojX " + fixedProj.x() + "    Y " + fixedProj.y(),500,500,30,BLACK);
+                DrawText("X " + enemy.getPosX() + "    Y " + enemy.getPosY(),400,400,30,BLACK);
+                DrawText("pojX " + projectile.getPosition().x() + "    Y " + projectile.getPosition().y(),500,500,30,BLACK);
                 if (CheckCollisionCircles(fixedProj, projectile.getShotRad(), fixedEnemy, enemy.getSize())){
 //                    updating enemies when collided
                     collidedWithEnemy(enemy, projectile);
@@ -110,14 +110,14 @@ public class ProjectileHandler extends ListHandler {
     public void inferno(Player player) {
         fire.castInferno(player);
     }
-    private void moveProjectilesOnScreen(Projectile projectile){
+    private void moveProjectilesOnScreen(Projectile projectile, Camera2D camera){
         projectile.checkProjIsOnScreen();
 //        if the projectile is off screen stop drawing it
 //        if (!(projectile.isInBounds())) {
 //            projectile.setDraw(false);
 //        }
 //        if the projectile is on screen update the position and the total distance travelled
-        projectile.updateMove();
+        projectile.updateMove(camera);
         projectile.setDistanceTravelled(projectile.getDistanceTravelled() + projectile.getShotSpeed());
     }
 

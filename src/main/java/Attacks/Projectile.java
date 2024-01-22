@@ -61,8 +61,8 @@ public class Projectile {
         this.circle = circle;
     }
 
-    public void updateMove(){
-        vector.updateShootLinePosition();
+    public void updateMove(Camera2D camera){
+        vector.updateShootLinePosition(camera);
         if(isDraw()) {
             DrawCircle(getPosX(), getPosY(), shotRad, color);
         }

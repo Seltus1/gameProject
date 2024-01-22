@@ -90,7 +90,7 @@ public class VectorHandler {
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled, camera);
+        updatePositions(xScaled, yScaled);
     }
 
 
@@ -103,7 +103,7 @@ public class VectorHandler {
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled, camera);
+        updatePositions(xScaled, yScaled);
     }
 
 
@@ -138,7 +138,7 @@ public class VectorHandler {
         return new double[]{xNormalized, yNormalized};
     }
 
-    private void updatePositions(double xScaled, double yScaled, Camera2D camera) {
+    private void updatePositions(double xScaled, double yScaled) {
         double updateX = actualXPos + xScaled;
         double updateY = actualYPos + yScaled;
         actualXPos = updateX;
@@ -161,12 +161,12 @@ public class VectorHandler {
         setyNormalizedMovement(yScaled);
 
     }
-    public void updateShootLinePosition(){
+    public void updateShootLinePosition(Camera2D camera){
         actualXPos = actualXPos + xNormalizedMovement;
         posX = (int) actualXPos;
         actualYPos = actualYPos + yNormalizedMovement;
         posY = (int) actualYPos;
-//        updatePosition();
+        updatePosition(camera);
     }
 
     public int[] TriangleShotVectorCalc(String aboveOrBelow, int finalX, int finalY) {
