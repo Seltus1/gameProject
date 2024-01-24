@@ -100,8 +100,8 @@ public class Player implements Creature {
         regen();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
-        DrawCircle(getPosX(),getPosY(), size, RED);
-        DrawCircle(0,0,10,BLACK);
+        DrawCircle(getPosX(),getPosY(), size, color);
+
     }
 
     public void burn() {

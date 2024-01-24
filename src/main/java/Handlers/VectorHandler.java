@@ -3,6 +3,7 @@ package Handlers;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
+import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class VectorHandler {
@@ -27,6 +28,7 @@ public class VectorHandler {
     }
 
     public void playerMove(Camera2D camera) {
+        DrawText("X" + posX + "Y" + posY, 400,400, 30, BLACK);
         int hCheck = playerHorizontalCheck();
         int vCheck = playerVerticalCheck();
         if (hCheck != 0 && vCheck != 0) {
@@ -83,6 +85,19 @@ public class VectorHandler {
 
     public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
 //
+        double[] positions = determinePositions(otherPosition, tag, camera);
+        double verticalValues = positions[0];
+        double horizontalValues = positions[1];
+        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
+        double xScaled = normalizedValues[0] * moveSpeed;
+        double yScaled = normalizedValues[1] * moveSpeed;
+        updateObjectPositions(xScaled, yScaled);
+    }
+
+
+//    why is this function here
+//    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
+    public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed, Camera2D camera){
         double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
