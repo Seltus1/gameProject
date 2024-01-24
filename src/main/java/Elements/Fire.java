@@ -35,8 +35,13 @@ public class Fire {
         if (creature.getBurnTicks() != 0) {
             if (cooldown.cooldown(250)) {
                 dealDamage(burnDamage, creature);
+
                 if (creature.isOnFire()) {
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
+                }
+                if(creature instanceof Player){
+                    Player player = (Player) creature;
+                    player.getRegenCooldown().setCurrentFrame(0);
                 }
             }
             return;
