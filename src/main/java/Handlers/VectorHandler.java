@@ -3,7 +3,6 @@ package Handlers;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
-import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
 
 public class VectorHandler {
@@ -38,14 +37,14 @@ public class VectorHandler {
             posY += (vCheck * moveSpeed);
         }
         screenToWorld(position,camera);
-        updatePosition(camera);
+        updateActualPositions(camera);
     }
 
     private void updateCamera(Raylib.Vector2 position, Camera2D camera){
         camera.target(position);
     }
 
-    private void updatePosition(Camera2D camera){
+    private void updateActualPositions(Camera2D camera){
         Raylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
         setPosition(updatedPosition);
         updateCamera(updatedPosition,camera);
@@ -90,7 +89,7 @@ public class VectorHandler {
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled);
+        updateObjectPositions(xScaled, yScaled);
     }
 
 
@@ -103,30 +102,25 @@ public class VectorHandler {
         double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
-        updatePositions(xScaled, yScaled);
+        updateObjectPositions(xScaled, yScaled);
     }
 
 
 
     public double[] determinePositions(Raylib.Vector2 position, String tag, Camera2D camera) {
         double otherX, otherY, myXPos, myYPos;
-        Raylib.Vector2 otherPos,myPos;
 //        This is moving the object towards the other pos
         if (tag.equals("to")) {
             otherX = position.x();
             otherY = position.y();
             myXPos = actualXPos;
             myYPos = actualYPos;
-            otherPos = new Jaylib.Vector2((float)otherX,(float)otherY);
-            myPos = new Jaylib.Vector2((float)myXPos,(float)myYPos);
 //        This is moving the object away from the other pos
         } else {
             otherX = actualXPos;
             otherY = actualYPos;
             myXPos = position.x();
             myYPos = position.y();
-            otherPos = new Jaylib.Vector2((float)otherX,(float)otherY);
-            myPos = new Jaylib.Vector2((float)myXPos,(float)myYPos);
         }
         return new double[]{otherY - myYPos, otherX - myXPos};
     }
@@ -138,7 +132,7 @@ public class VectorHandler {
         return new double[]{xNormalized, yNormalized};
     }
 
-    private void updatePositions(double xScaled, double yScaled) {
+    private void updateObjectPositions(double xScaled, double yScaled) {
         double updateX = actualXPos + xScaled;
         double updateY = actualYPos + yScaled;
         actualXPos = updateX;
@@ -147,7 +141,6 @@ public class VectorHandler {
         posY = (int) Math.round(updateY);
         xNormalizedMovement = xScaled;
         yNormalizedMovement = yScaled;
-
         setPosition(new Jaylib.Vector2(posX, posY));
     }
 
@@ -166,7 +159,7 @@ public class VectorHandler {
         posX = (int) actualXPos;
         actualYPos = actualYPos + yNormalizedMovement;
         posY = (int) actualYPos;
-        updatePosition(camera);
+        updateActualPositions(camera);
     }
 
     public int[] TriangleShotVectorCalc(String aboveOrBelow, int finalX, int finalY) {

@@ -31,8 +31,7 @@ public class PlayerHandler {
         cooldown = new CooldownHandler();
     }
 
-    public void drawRange(Camera2D camera) {
-        Raylib.Vector2 mousePos = GetScreenToWorld2D(GetMousePosition(), camera);
+    public void drawRange(Camera2D camera, Raylib.Vector2 mousePos) {
         Raylib.Vector2 playerPos = player.getPosition();
         float shotRange = player.getShotRange();
 
@@ -89,7 +88,7 @@ public class PlayerHandler {
         }
     }
 
-    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera) {
+    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
 //        shoot(projList);
         if (player.getHp() <= 0){
             isAlive = false;
@@ -99,6 +98,6 @@ public class PlayerHandler {
             drawBurn();
         }
         drawFireFex();
-        drawRange(camera);
+        drawRange(camera, mousePos);
     }
 }

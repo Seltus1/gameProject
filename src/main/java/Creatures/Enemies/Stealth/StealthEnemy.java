@@ -88,7 +88,7 @@ public class StealthEnemy extends Enemy {
                 }
             }
         } else {
-            if (cooldown.cooldown(8333)) {
+            if (cooldown.cooldown(1000)) {
                 isReloading = false;
             }
         }

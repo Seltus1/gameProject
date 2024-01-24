@@ -88,19 +88,20 @@ public class Player implements Creature {
         this.camera = camera;
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
         move(camera);
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-            shoot(projList, camera);
+            shoot(projList, camera, mousePos);
         }
         fireHex();
         setShooting(false);
         shotCooldown();
         burn();
         regen();
-        Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX() + 20f,(float)getPosY() + 20f);
+        Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
         DrawCircle(getPosX(),getPosY(), size, RED);
+        DrawCircle(0,0,10,BLACK);
     }
 
     public void burn() {
@@ -109,15 +110,14 @@ public class Player implements Creature {
         }
     }
 
-    public void shoot(ProjectileHandler projList, Camera2D camera) {
+    public void shoot(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
         if (canShoot()) {
+            int mouseX, mouseY;
+            mouseX = (int)mousePos.x();
+            mouseY = (int) mousePos.y();
             setCanShoot(false);
             setShooting(true);
-            int mouseX, mouseY;
-            mouseX = GetMouseX();
-            mouseY = GetMouseY();
-            Raylib.Vector2 vector2 = GetScreenToWorld2D(new Jaylib.Vector2(mouseX,mouseY), camera);
-            Projectile shot = new Projectile(13, (int) getPosX(), getPosY() , 7, (int) vector2.x(), (int) vector2.y(), "Player", getShotRange(), true, camera, BLACK);
+            Projectile shot = new Projectile(13, getPosX(), getPosY() , 7,  mouseX, mouseY, "Player", getShotRange(), true, camera, BLACK);
             shot.setShotTag("Player");
             shot.createShotLine(camera);
             projList.add(shot);

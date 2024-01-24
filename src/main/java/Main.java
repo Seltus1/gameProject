@@ -34,16 +34,16 @@ public class Main {
         PlayerHandler player = new PlayerHandler(player1);
         GameHandler game = new GameHandler();
         // Generate a random number of enemies
-        SetMouseCursor(3);
+        HideCursor();
         int amountOfEnemy = rand.nextInt(15) + 3;
-        enemies.addMultipleEnemies(0,camera);
+        enemies.addMultipleEnemies(amountOfEnemy,camera);
 
         // Main game loop
         while (!WindowShouldClose()) {
             // Begin drawing on the window
             BeginDrawing();
             BeginMode2D(camera);
-
+            Raylib.Vector2 mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()),camera);
             int frameTime = (int) GetFrameTime();
 
             // Clear the window background with a color (RAYWHITE)
@@ -56,13 +56,14 @@ public class Main {
             // Update the player and enemies
 //            vectorHandler.updateCamera(cameraTarget, camera);
 
-            player.update(enemies, projectiles, camera);
+
+            player.update(enemies, projectiles, camera, mousePos);
             enemies.update(projectiles, player1, camera);
             projectiles.update(enemies,player1, camera);
             if (enemies.size() == 0) {
-                enemies.addMultipleEnemies(1, camera);
+                enemies.addMultipleEnemies(amountOfEnemy, camera);
             }
-            player1.update(projectiles, camera);
+            player1.update(projectiles, camera, mousePos);
 //            camera.target(player1.getPosition());
 
             // Display the current frames per second (FPS)
@@ -71,10 +72,11 @@ public class Main {
 //           else{
 //               game.update(player1, enemies);
 //           }
-
+//            DrawRectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 100, (int) width, 40, DARKGREEN);
             DrawFPS(player1.getPosX() - (GetScreenWidth() / 2) + 100, player1.getPosY() - (GetScreenHeight() / 2) + 100);
 
             // End drawing
+            DrawCircle((int) mousePos.x(),(int) mousePos.y(), 5, PURPLE);
             EndDrawing();
             EndMode2D();
         }

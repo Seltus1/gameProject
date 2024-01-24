@@ -45,8 +45,6 @@ public class ProjectileHandler extends ListHandler {
                 Enemy enemy = (Enemy) enemies.get(i);
                 Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);
                 Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
-                DrawText("X " + enemy.getPosX() + "    Y " + enemy.getPosY(),400,400,30,BLACK);
-                DrawText("pojX " + projectile.getPosition().x() + "    Y " + projectile.getPosition().y(),500,500,30,BLACK);
                 if (CheckCollisionCircles(fixedProj, projectile.getShotRad(), fixedEnemy, enemy.getSize())){
 //                    updating enemies when collided
                     collidedWithEnemy(enemy, projectile);
