@@ -14,6 +14,7 @@ public class Player implements Creature {
     //    HP
     private int hp;
     private int initalHp;
+    private int regenAmt;
 
     //    DMG
     private int damage;
@@ -79,13 +80,14 @@ public class Player implements Creature {
         burnCountDown = 0;
         intialBurn = 10;
         burnDamage = 1;
-        regenCooldownMilliseconds = 5000;
+        regenCooldownMilliseconds = 10000;
         fire = new Fire();
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
         applyRegenCooldown = new CooldownHandler();
         shotCooldown = new CooldownHandler();
         this.camera = camera;
+        regenAmt = 10;
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
@@ -101,7 +103,7 @@ public class Player implements Creature {
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
         DrawCircle(getPosX(),getPosY(), size, color);
-
+//        DrawCircle(getPosX() / GetScreenWidth() /2, getPosY() / GetScreenHeight() / 2, size, color);
     }
 
     public void burn() {
@@ -161,8 +163,8 @@ public class Player implements Creature {
     private void applyingRegen() {
         boolean canRegenCooldown = applyRegenCooldown.cooldown(150);
         if (canRegenCooldown) {
-            if (getHp() + 10 < getInitalHp()) {
-                setHp(getHp() + 10);
+            if (getHp() + regenAmt < getInitalHp()) {
+                setHp(getHp() + regenAmt);
             } else {
                 setHp(getInitalHp());
             }

@@ -27,7 +27,7 @@ public class ProjectileHandler extends ListHandler {
         for (int i = 0; i < size(); i++) {
             Projectile projectile = (Projectile) get(i);
             projectileCollision(projectile, enemies, player, camera);
-            moveProjectilesOnScreen(projectile, camera);
+            moveProjectilesOnScreen(projectile, camera, player);
             if (projectile.getShotTag().equals("Enemy_Pool")) {
                 Pool pool = (Pool) projectile;
                 pool.update(player);
@@ -108,7 +108,7 @@ public class ProjectileHandler extends ListHandler {
     public void inferno(Player player) {
         fire.castInferno(player);
     }
-    private void moveProjectilesOnScreen(Projectile projectile, Camera2D camera){
+    private void moveProjectilesOnScreen(Projectile projectile, Camera2D camera, Player player){
         projectile.checkProjIsOnScreen();
 //        if the projectile is off screen stop drawing it
 //        if (!(projectile.isInBounds())) {

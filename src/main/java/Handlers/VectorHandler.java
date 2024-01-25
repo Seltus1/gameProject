@@ -95,7 +95,7 @@ public class VectorHandler {
     }
 
 
-//    why is this function here
+    //    why is this function here
 //    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
     public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed, Camera2D camera){
         double[] positions = determinePositions(otherPosition, tag, camera);
@@ -108,17 +108,8 @@ public class VectorHandler {
     }
 
 
-//    why is this function here
+    //    why is this function here
 //    you can use a setter to change the move speed in projectile and you why are you changing the move speed?
-    public void moveObject(Raylib.Vector2 otherPosition, String tag, double moveSpeed, Camera2D camera){
-        double[] positions = determinePositions(otherPosition, tag, camera);
-        double verticalValues = positions[0];
-        double horizontalValues = positions[1];
-        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
-        double xScaled = normalizedValues[0] * moveSpeed;
-        double yScaled = normalizedValues[1] * moveSpeed;
-        updateObjectPositions(xScaled, yScaled);
-    }
 
 
 
@@ -188,7 +179,7 @@ public class VectorHandler {
         else{
             finalX -= (getxNormalizedMovement() * -3);
             finalY -= (getyNormalizedMovement() * 3);
-       }
+        }
         return new int[]{finalX, finalY};
     }
 

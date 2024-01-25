@@ -1,5 +1,7 @@
 package Elements;
 import Creatures.*;
+import Creatures.Enemies.Brawler.BrawlerEnemy;
+import Creatures.Enemies.Brawler.FireBrawlerEnemy;
 import Handlers.CooldownHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -22,7 +24,6 @@ public class Fire {
     private CooldownHandler cooldown;
 
     public Fire() {
-        currency = "Flame";
         numCoins = 10;
         burnDamage = 1;
         burnTime = 10;
@@ -35,8 +36,7 @@ public class Fire {
         if (creature.getBurnTicks() != 0) {
             if (cooldown.cooldown(250)) {
                 dealDamage(burnDamage, creature);
-
-                if (creature.isOnFire()) {
+                if (creature.isOnFire() && !creature.isFireHex()){
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
                 }
                 if(creature instanceof Player){
@@ -53,7 +53,7 @@ public class Fire {
         // checking if the fireHex is on
         if (creature.getFireHexCount() != 0) {
 //            setting a cd that the fireHex last X amount of time
-            if (cooldown.cooldown(500)) {
+            if (cooldown.cooldown(150)) {
                 creature.setFireHexCount(creature.getFireHexCount() - 1);
             }
 
