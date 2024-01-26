@@ -50,7 +50,7 @@ public class Main {
 
             mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
             player.update(enemies, projectiles, camera, mousePos);
-            enemies.update(projectiles, player1, camera, player1.getFire());
+            enemies.update(projectiles, player1, camera, player1.getFire(), player1.getPoison());
             projectiles.update(enemies, player1, camera);
             player1.update(projectiles, camera, mousePos);
 
@@ -78,7 +78,7 @@ public class Main {
         }
         public static void addEnemies () {
             amountOfEnemy = rand.nextInt(15) + 3;
-            enemies.addMultipleEnemies(amountOfEnemy, camera);
+            enemies.addMultipleEnemies(1, camera);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));

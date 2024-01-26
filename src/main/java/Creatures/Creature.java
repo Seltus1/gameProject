@@ -19,6 +19,9 @@ public interface Creature {
     boolean isShooting();
     boolean isFireHex();
     boolean isFireInRange();
+    boolean isPoisoned();
+    int getPoisonTicks();
+    int getShotcooldown();
 
 
 
@@ -39,5 +42,7 @@ public interface Creature {
 
     void setShooting(boolean b);
     void setFireInRange(boolean isFireInRange);
-
+    void setPoisoned(boolean poisoned);
+    void setPoisonTicks(int poisonCount);
+    void setShotCooldown(int shotCooldown);
 }

@@ -8,6 +8,7 @@ import Creatures.Enemies.Sniper.FireSniperEnemy;
 import Creatures.Enemies.Sniper.SniperEnemy;
 import Creatures.Enemies.Stealth.StealthEnemy;
 import Creatures.Player;
+import Debuffs.Poison;
 import Elements.Fire;
 
 import java.util.*;
@@ -28,8 +29,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount, Camera2D camera){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(7) + 1;
-//            int randEnemy = 4;
+//            int randEnemy = rand.nextInt(7) + 1;
+            int randEnemy = 6;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -72,7 +73,7 @@ public class EnemyHandler extends ListHandler {
         return getList();
     }
 
-    public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire) {
+    public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire, Poison poison) {
         int counter = 0;
         int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
@@ -122,7 +123,7 @@ public class EnemyHandler extends ListHandler {
             }
             if( get(i) instanceof  StealthEnemy){
                 StealthEnemy enemy = (StealthEnemy) get(i);
-                enemy.update(player, projList, camera);
+                enemy.update(player, projList, camera, poison);
             }
             Enemy enemy = (Enemy) get(i);
 //            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);

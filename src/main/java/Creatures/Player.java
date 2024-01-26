@@ -1,6 +1,7 @@
 package Creatures;
 
 import Attacks.Projectile;
+import Debuffs.Poison;
 import Handlers.CooldownHandler;
 import Handlers.ProjectileHandler;
 import Elements.Fire;
@@ -24,6 +25,7 @@ public class Player implements Creature {
     private VectorHandler vector;
     //    Move
     private int moveSpeed;
+    private int initialMoveSpeed;
 
     //    size/color
     private int size;
@@ -38,17 +40,22 @@ public class Player implements Creature {
     private int intialBurn;
     private boolean isShooting;
     private boolean isRegening;
+    private boolean isPoisoned;
+    private int poisonTicks;
+    private Poison poison = new Poison(5,.3f,1.3f,2500);
 
     //    cooldowns
     private boolean canShoot;
     private boolean canMelee;
     private boolean canRegen;
-    private final int SHOT_COOLDOWN = 250;
+    private int shotCD;
+    private int initialShotCD;
     private long timeSinceHit;
     private int regenCooldownMilliseconds;
     private CooldownHandler regenCooldown;
-    private CooldownHandler shotCooldown;
+    private CooldownHandler shotCooldownHandler;
     private CooldownHandler applyRegenCooldown;
+    private CooldownHandler poisonCooldown;
 
     private int infernoCooldown;
 
@@ -85,9 +92,14 @@ public class Player implements Creature {
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
         applyRegenCooldown = new CooldownHandler();
-        shotCooldown = new CooldownHandler();
+        shotCooldownHandler = new CooldownHandler();
+        poisonCooldown = new CooldownHandler();
         this.camera = camera;
         regenAmt = 10;
+        shotCD = 250;
+        initialShotCD = shotCD;
+        initialMoveSpeed = moveSpeed;
+
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
@@ -100,9 +112,11 @@ public class Player implements Creature {
         shotCooldown();
         burn();
         regen();
+        poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
         DrawCircle((int)getPosition().x(),(int)getPosition().y(), size, color);
+        DrawText("moveSpeed " + moveSpeed,100,400,30,BLACK);
 //        DrawCircle(getPosX() / GetScreenWidth() /2, getPosY() / GetScreenHeight() / 2, size, color);
     }
 
@@ -129,7 +143,7 @@ public class Player implements Creature {
 
     public void shotCooldown(){
         if (!canShoot()){
-            if(shotCooldown.cooldown(250)){
+            if(shotCooldownHandler.cooldown(shotCD)){
                 canShoot = true;
             }
         }
@@ -171,7 +185,17 @@ public class Player implements Creature {
         }
     }
     public void move(Camera2D camera) {
+        vector.setMoveSpeed(getMoveSpeed());
         vector.playerMove(camera);
+    }
+    public void poisoned(){
+        if(isPoisoned){
+            if(poisonCooldown.cooldown(poison.getLifetime())){
+                moveSpeed = initialMoveSpeed;
+                shotCD = initialShotCD;
+                setPoisoned(false);
+            }
+        }
     }
 
     public void fireHex() {
@@ -308,10 +332,6 @@ public class Player implements Creature {
         this.canMelee = canMelee;
     }
 
-    public int getSHOT_COOLDOWN() {
-        return SHOT_COOLDOWN;
-    }
-
     public boolean isOnFire() {
         return isOnFire;
     }
@@ -444,12 +464,12 @@ public class Player implements Creature {
         this.regenCooldownMilliseconds = regenCooldownMilliseconds;
     }
 
-    public CooldownHandler getShotCooldown() {
-        return shotCooldown;
+    public CooldownHandler getShotCooldownHandler() {
+        return shotCooldownHandler;
     }
 
-    public void setShotCooldown(CooldownHandler shotCooldown) {
-        this.shotCooldown = shotCooldown;
+    public void setShotCooldownHandler(CooldownHandler shotCooldownHandler) {
+        this.shotCooldownHandler = shotCooldownHandler;
     }
 
     public CooldownHandler getApplyRegenCooldown() {
@@ -486,5 +506,50 @@ public class Player implements Creature {
 
     public void setShooting(boolean shooting) {
         isShooting = shooting;
+    }
+
+    @Override
+    public void setPoisoned(boolean poisoned){
+        isPoisoned = poisoned;
+    }
+
+    @Override
+    public void setPoisonTicks(int poisonTicks){
+        this.poisonTicks = poisonTicks;
+    }
+    @Override
+    public boolean isPoisoned(){
+        return isPoisoned;
+    }
+
+    @Override
+    public int getPoisonTicks(){
+        return poisonTicks;
+    }
+
+    @Override
+    public int getShotcooldown() {
+        return shotCD;
+    }
+
+    @Override
+    public void setShotCooldown(int shotCooldown){
+        this.shotCD = shotCooldown;
+    }
+
+    public int getInitialMoveSpeed() {
+        return initialMoveSpeed;
+    }
+
+    public void setInitialMoveSpeed(int initialMoveSpeed) {
+        this.initialMoveSpeed = initialMoveSpeed;
+    }
+
+    public Poison getPoison() {
+        return poison;
+    }
+
+    public void setPoison(Poison poison) {
+        this.poison = poison;
     }
 }

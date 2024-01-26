@@ -4,6 +4,7 @@ import Attacks.*;
 import Creatures.Creature;
 import Creatures.Enemies.Enemy;
 import Creatures.Player;
+import Debuffs.Poison;
 import Elements.Fire;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -16,11 +17,13 @@ import static com.raylib.Raylib.CheckCollisionCircles;
 public class ProjectileHandler extends ListHandler {
     private CooldownHandler cooldown;
     private Fire fire;
+    private Poison poison;
 
     public ProjectileHandler(){
         super();
         cooldown = new CooldownHandler();
         fire = new Fire();
+        poison = new Poison(1,.2f,1.2f,200);
     }
 
     public void update(EnemyHandler enemies, Player player, Camera2D camera){
@@ -94,6 +97,9 @@ public class ProjectileHandler extends ListHandler {
         else if (currProj.getShotTag().contains("Inferno")) {
             inferno(player);
         }
+        else if(currProj.getShotTag().contains("Poison")){
+            poison(player);
+        }
     }
 
     private void poolShot(int xPos, int yPos, Camera2D camera) {
@@ -107,6 +113,9 @@ public class ProjectileHandler extends ListHandler {
 
     public void inferno(Player player) {
         fire.castInferno(player);
+    }
+    public void poison(Player player){
+        poison.applyDebuffs(player);
     }
     private void moveProjectilesOnScreen(Projectile projectile, Camera2D camera, Player player){
         projectile.checkProjIsOnScreen();

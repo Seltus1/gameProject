@@ -1,6 +1,7 @@
 package Creatures.Enemies.Stealth;
 
 import Creatures.Enemies.Enemy;
+import Debuffs.Poison;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -24,6 +25,7 @@ public class StealthEnemy extends Enemy {
     private int numShots;
     private Footstep footstep;
     private Random rand;
+    private int maxShots;
 
     public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Camera2D camera){
         super(hp,damage,posX,posY,moveSpeed,size,range,color, camera);
@@ -37,6 +39,7 @@ public class StealthEnemy extends Enemy {
         footstep = new Footstep(posX,posY,0);
         rand = new Random();
         cooldown = new CooldownHandler();
+        maxShots = 5;
     }
 
     public void cloak(Player player){
@@ -69,7 +72,7 @@ public class StealthEnemy extends Enemy {
         }
     }
 
-    public void shoot(Player player, ProjectileHandler projList, Camera2D camera) {
+    public void shoot(Player player, ProjectileHandler projList, Camera2D camera, Poison poison) {
         if (!isReloading) {
             if (calculateDistanceToPlayer(player) <= getRange()) {
                 if (cooldown.cooldown(500)) {
@@ -78,10 +81,13 @@ public class StealthEnemy extends Enemy {
                 if (canShoot) {
                     canShoot = false;
                     numShots++;
-                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Creatures.Enemies.Enemy", getRange(), true, camera, BLACK);
-                    projList.add(proj);
-                    proj.createShotLine(camera);
-                    if (numShots > 10) {
+                        Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, camera, BLACK);
+                        projList.add(proj);
+                        proj.createShotLine(camera);
+
+                    if(numShots == maxShots){
+                       proj.setShotTag("Enemy_Poison");
+                       proj.setColor(poison.getColor());
                         isReloading = true;
                         numShots = 0;
                     }
@@ -97,7 +103,7 @@ public class StealthEnemy extends Enemy {
         if(isCloaked){
             footstepCooldown++;
             if((footstepCooldown + 1) % 61 == 0){
-                footstep.setLifeTime(200);
+                footstep.setLifeTime(400);
                 footstep.setPosX(getPosX() + rand.nextInt(200) - 100);
                 footstep.setPosY(getPosY()+ rand.nextInt(200) - 100);
                 footstep.setTimeFirstDrawn(System.currentTimeMillis());
@@ -105,10 +111,10 @@ public class StealthEnemy extends Enemy {
         }
     }
 
-    public void update(Player player, ProjectileHandler projList, Camera2D camera){
+    public void update(Player player, ProjectileHandler projList, Camera2D camera, Poison poison){
         move(player, camera);
         cloak(player);
-        shoot(player, projList, camera);
+        shoot(player, projList, camera, poison);
         footsteps();
         footstep.draw();
     }

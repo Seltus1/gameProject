@@ -257,4 +257,5 @@ public class VectorHandler {
     public void setShotPosition(Raylib.Vector2 shotPosition) {
         this.shotPosition = shotPosition;
     }
+
 }

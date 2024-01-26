@@ -23,6 +23,8 @@ public class Enemy implements Creature {
     private boolean isAlive;
     private boolean shouldDraw;
     private boolean isFireInRange;
+    private boolean isPoisoned;
+    private int poisonTicks;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
     private Jaylib.Vector2 fixedPos;
@@ -299,5 +301,33 @@ public class Enemy implements Creature {
 
     public Raylib.Vector2 getPos(){
         return vector.getPosition();
+    }
+    @Override
+    public void setPoisoned(boolean poisoned){
+        isPoisoned = poisoned;
+    }
+
+    @Override
+    public void setPoisonTicks(int poisonTicks){
+        this.poisonTicks = poisonTicks;
+    }
+    @Override
+    public boolean isPoisoned(){
+        return isPoisoned;
+    }
+
+    @Override
+    public int getPoisonTicks(){
+        return poisonTicks;
+    }
+
+    @Override
+    public int getShotcooldown() {
+        return getShotcooldown();
+    }
+
+    @Override
+    public void setShotCooldown(int shotCooldown){
+        setShotCooldown(shotCooldown);
     }
 }
