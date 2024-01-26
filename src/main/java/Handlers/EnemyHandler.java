@@ -8,6 +8,7 @@ import Creatures.Enemies.Sniper.FireSniperEnemy;
 import Creatures.Enemies.Sniper.SniperEnemy;
 import Creatures.Enemies.Stealth.StealthEnemy;
 import Creatures.Player;
+import Elements.Fire;
 
 import java.util.*;
 import java.util.Random;
@@ -55,7 +56,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if (randEnemy == 6){
-                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, size / 2, 400,
+                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400,
                         20, GRAY, camera);
                 add(enemy);
             }
@@ -71,7 +72,7 @@ public class EnemyHandler extends ListHandler {
         return getList();
     }
 
-    public void update(ProjectileHandler projList, Player player, Camera2D camera) {
+    public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire) {
         int counter = 0;
         int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
@@ -90,7 +91,7 @@ public class EnemyHandler extends ListHandler {
                 if (get(i) instanceof  FireBrawlerEnemy) {
                     counter++;
                     FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
-                    enemy.attack(player);
+                    enemy.attack(player, fire);
                     if (enemy.calculateDistanceToPlayer(player) >= enemy.getRange()){
                         falseCounter++;
                     }

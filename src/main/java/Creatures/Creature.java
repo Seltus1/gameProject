@@ -18,6 +18,9 @@ public interface Creature {
     int getFireHexCount();
     boolean isShooting();
     boolean isFireHex();
+    boolean isFireInRange();
+
+
 
 
     void setHp(int hp);
@@ -35,5 +38,6 @@ public interface Creature {
     void setFireHex(boolean fireHex);
 
     void setShooting(boolean b);
+    void setFireInRange(boolean isFireInRange);
 
 }

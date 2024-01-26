@@ -102,7 +102,7 @@ public class Player implements Creature {
         regen();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
-        DrawCircle(getPosX(),getPosY(), size, color);
+        DrawCircle((int)getPosition().x(),(int)getPosition().y(), size, color);
 //        DrawCircle(getPosX() / GetScreenWidth() /2, getPosY() / GetScreenHeight() / 2, size, color);
     }
 
@@ -335,6 +335,11 @@ public class Player implements Creature {
         isFireHex = fireHex;
     }
 
+    @Override
+    public void setFireInRange(boolean isFireInRange){
+        isFireInRange = isFireInRange;
+    }
+
     public int getBurnTicks() {
         return burnTicks;
     }
@@ -360,14 +365,7 @@ public class Player implements Creature {
         this.burnCountDown = burnCountDown;
     }
 
-    public boolean isInFireRange() {
-        return isFireInRange;
-    }
-
-    public void setFireInRange(boolean fireInRange) {
-        isFireInRange = fireInRange;
-    }
-
+    @Override
     public boolean isFireInRange() {
         return isFireInRange;
     }

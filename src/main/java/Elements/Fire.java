@@ -18,6 +18,7 @@ public class Fire {
     private int burnCounter;
     private boolean isInRange;
     private boolean isPushFireCalled;
+    private boolean isGettingMeleed;
     private int range;
     private int burnFPSCount;
     private int fireHexFPSCount;
@@ -33,10 +34,12 @@ public class Fire {
     }
 
     public void burn(Creature creature) {
+        DrawText("" +isGettingMeleed,500,500,30,BLACK);
         if (creature.getBurnTicks() != 0) {
             if (cooldown.cooldown(250)) {
                 dealDamage(burnDamage, creature);
-                if (creature.isOnFire() && !creature.isFireHex()){
+
+                if (creature.isOnFire() && !creature.isFireHex() && !isGettingMeleed){
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
                 }
                 if(creature instanceof Player){
@@ -185,5 +188,13 @@ public class Fire {
     }
     public int getBurnFPSCount(){
         return burnFPSCount;
+    }
+
+    public boolean isGettingMeleed() {
+        return isGettingMeleed;
+    }
+
+    public void setGettingMeleed(boolean gettingMeleed) {
+        isGettingMeleed = gettingMeleed;
     }
 }

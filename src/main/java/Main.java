@@ -20,6 +20,7 @@ public class Main {
     static GameHandler game;
     static PlayerHandler player;
     static int amountOfEnemy;
+    static Raylib.Vector2 mousePos;
     static boolean isInit = false;
     public static void main(String[] args) {
         init();
@@ -30,8 +31,7 @@ public class Main {
         SetTargetFPS(60);
         // Create instances of necessary game objects
         createInstances();
-        cameraSet();
-        HideCursor();
+
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");
         isInit = true;
     }
@@ -40,6 +40,7 @@ public class Main {
         // Begin drawing on the window
         while (!WindowShouldClose() && isInit) {
             cameraSet();
+            HideCursor();
             BeginDrawing();
             BeginMode2D(camera);
             ClearBackground(RAYWHITE);
@@ -47,15 +48,13 @@ public class Main {
 
 
 
-            Raylib.Vector2 mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
-            DrawCircle((int) mousePos.x(), (int) mousePos.y(), 5, PURPLE);
-
-
+            mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
             player.update(enemies, projectiles, camera, mousePos);
-            enemies.update(projectiles, player1, camera);
+            enemies.update(projectiles, player1, camera, player1.getFire());
             projectiles.update(enemies, player1, camera);
             player1.update(projectiles, camera, mousePos);
 
+            drawMouse();
 
             if (enemies.size() == 0) {
                 addEnemies();
@@ -85,5 +84,8 @@ public class Main {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));
             camera.rotation(0f);
             camera.zoom(1f);
+        }
+        public static void drawMouse(){
+            DrawCircle((int) mousePos.x(), (int) mousePos.y(), 5, PURPLE);
         }
 }

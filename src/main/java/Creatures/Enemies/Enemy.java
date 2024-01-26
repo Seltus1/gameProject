@@ -22,6 +22,7 @@ public class Enemy implements Creature {
     private boolean canRange;
     private boolean isAlive;
     private boolean shouldDraw;
+    private boolean isFireInRange;
     private Raylib.Color color;
     private Jaylib.Vector2 pos;
     private Jaylib.Vector2 fixedPos;
@@ -227,6 +228,14 @@ public class Enemy implements Creature {
     @Override
     public void setSize(int size) {
         this.size = size;
+    }
+    @Override
+    public void setFireInRange(boolean isFireInRange){
+        isFireInRange = isFireInRange;
+    }
+    @Override
+    public boolean isFireInRange() {
+        return isFireInRange;
     }
     public boolean isAlive() {
         return isAlive;
