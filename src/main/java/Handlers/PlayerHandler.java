@@ -88,6 +88,12 @@ public class PlayerHandler {
         }
     }
 
+    public void drawPoison(){
+        if(player.isPoisoned()){
+            DrawCircle(player.getPosX(), player.getPosY() - 50, 8,GREEN);
+        }
+    }
+
     public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
 //        shoot(projList);
         if (player.getHp() <= 0){
@@ -99,5 +105,6 @@ public class PlayerHandler {
         }
         drawFireFex();
         drawRange(camera, mousePos);
+        drawPoison();
     }
 }
