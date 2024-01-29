@@ -115,9 +115,6 @@ public class Player implements Creature {
         poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
         camera.target(pos);
-        DrawCircle((int)getPosition().x(),(int)getPosition().y(), size, color);
-        DrawText("moveSpeed " + moveSpeed,100,400,30,BLACK);
-//        DrawCircle(getPosX() / GetScreenWidth() /2, getPosY() / GetScreenHeight() / 2, size, color);
     }
 
     public void burn() {

@@ -31,8 +31,9 @@ public class PlayerHandler {
         cooldown = new CooldownHandler();
     }
 
-    public void drawRange(Camera2D camera, Raylib.Vector2 mousePos) {
+    public void drawRange(Raylib.Vector2 mousePos) {
         Raylib.Vector2 playerPos = player.getPosition();
+
         float shotRange = player.getShotRange();
 
         // Calculate the direction vector from player to mouse
@@ -50,6 +51,9 @@ public class PlayerHandler {
         DrawLineV(playerPos, endPoint, BLACK);
     }
 
+    public void drawPlayer(){
+        DrawCircle((int)player.getPosition().x(),(int)player.getPosition().y(),player.getSize(),player.getColor());
+    }
 
 
 
@@ -104,7 +108,8 @@ public class PlayerHandler {
             drawBurn();
         }
         drawFireFex();
-        drawRange(camera, mousePos);
+        drawRange(mousePos);
         drawPoison();
+        drawPlayer();
     }
 }
