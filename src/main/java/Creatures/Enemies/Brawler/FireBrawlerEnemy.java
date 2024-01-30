@@ -16,7 +16,7 @@ public class FireBrawlerEnemy extends BrawlerEnemy {
 
     public void attack(Player player, Fire fire){
         super.attack(player);
-        if (calculateDistanceToPlayer(player) < fire.getRange()){
+        if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < fire.getRange()){
             fire.meleeAttack(player);
             player.setFireInRange(true);
             player.setOnFire(true);

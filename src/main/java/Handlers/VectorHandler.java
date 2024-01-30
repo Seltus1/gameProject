@@ -1,5 +1,6 @@
 package Handlers;
 
+import Creatures.Player;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
@@ -16,6 +17,7 @@ public class VectorHandler {
     private int moveSpeed;
     private double yNormalizedMovement;
     private double xNormalizedMovement;
+    private double angularPosition = 0.0;
     private Raylib.Vector2 shotPosition;
 
     public VectorHandler(int posX, int posY, int moveSpeed, Camera2D camera){
@@ -77,10 +79,10 @@ public class VectorHandler {
     }
 
     public int distanceToOtherObject(int otherX, int otherY){
-        int y = otherY - posY;
-        int x = otherX - posX;
+        double y = Math.pow((otherY - posY), 2);
+        double x = Math.pow((otherX - posX), 2);
 //        returning the total distance
-        return Math.abs(x) + Math.abs(y);
+        return (int)(Math.sqrt(x+y));
     }
 
     public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
@@ -182,6 +184,25 @@ public class VectorHandler {
         }
         return new int[]{finalX, finalY};
     }
+
+
+
+    public void circlePlayer(Player player, float radius) {
+        float angularSpeed = 0.01f;
+        angularPosition += angularSpeed;
+
+        double newX = player.getPosX() + radius * Math.cos(angularPosition);
+        double newY = player.getPosY() + radius * Math.sin(angularPosition);
+
+        setActualXPos(newX);
+        setActualYPos(newY);
+        setPosX((int) Math.round(newX));
+        setPosY((int) Math.round(newY));
+        setPosition(new Jaylib.Vector2(getPosX(), getPosY()));
+    }
+
+
+
 
     public Raylib.Vector2 screenToWorld(Raylib.Vector2 vector, Camera2D camera){
         return GetScreenToWorld2D(vector, camera);

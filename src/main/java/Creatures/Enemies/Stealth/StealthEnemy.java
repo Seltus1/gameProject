@@ -27,8 +27,8 @@ public class StealthEnemy extends Enemy {
     private Random rand;
     private int maxShots;
 
-    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Camera2D camera){
-        super(hp,damage,posX,posY,moveSpeed,size,range,color, camera);
+    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Camera2D camera) {
+        super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
         initialColor = color;
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         this.shotSpeed = shotSpeed;
@@ -36,58 +36,62 @@ public class StealthEnemy extends Enemy {
         pos.x(posX);
         pos.y(posY);
         isReloading = false;
-        footstep = new Footstep(posX,posY,0);
+        footstep = new Footstep(posX, posY, 0);
         rand = new Random();
         cooldown = new CooldownHandler();
         maxShots = 5;
     }
 
-    public void cloak(Player player){
-        if(calculateDistanceToPlayer(player) <= getRange()) {
+    public void cloak(Player player) {
+        if (getVector().distanceToOtherObject(player.getPosX(), player.getPosY()) <= getRange()) {
             setShouldDraw(true);
             isCloaked = false;
-        }
-        else{
+        } else {
             setShouldDraw(false);
             isCloaked = true;
         }
     }
 
-    public void move(Player player, Camera2D camera){
-        if(!isReloading) {
-            if (getRange() / 1.5 < calculateDistanceToPlayer(player)) {
-                followPlayer(player, "to", camera);
+    public void move(Player player, Camera2D camera) {
+        if (!isReloading) {
+            if (!isGotinRange()) {
+                if (getRange() / 1.5 < getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+                    getVector().moveObject(player.getPosition(), "to", camera);
+                } else {
+                    getVector().moveObject(player.getPosition(), "away", camera);
+                    setGotinRange(true);
+                }
+            } else {
+                getVector().circlePlayer(player, getRange());
             }
-            if (getRange() / 2 > calculateDistanceToPlayer(player)) {
-                followPlayer(player, "away", camera);
-            }
-        }
-        else{
-            if (getRange() * 1.5 < calculateDistanceToPlayer(player)) {
-                followPlayer(player, "to", camera);
-            }
-            if (getRange() * 2 > calculateDistanceToPlayer(player)) {
-                followPlayer(player, "away", camera);
+        } else {
+            if (getRange() * 1.5 < getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+                getVector().moveObject(player.getPosition(), "to", camera);
+            } else if (getRange() * 2 > getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+                getVector().moveObject(player.getPosition(), "away", camera);
+                setGotinRange(true);
+            } else {
+                getVector().circlePlayer(player, getRange() + 200);
             }
         }
     }
 
     public void shoot(Player player, ProjectileHandler projList, Camera2D camera, Poison poison) {
         if (!isReloading) {
-            if (calculateDistanceToPlayer(player) <= getRange()) {
+            if (getVector().distanceToOtherObject(player.getPosX(), player.getPosY()) <= getRange()) {
                 if (cooldown.cooldown(500)) {
                     canShoot = true;
                 }
                 if (canShoot) {
                     canShoot = false;
                     numShots++;
-                        Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, camera, BLACK);
-                        projList.add(proj);
-                        proj.createShotLine(camera);
+                    Projectile proj = new Projectile(shotSpeed, getPosX(), getPosY(), 7, player.getPosX(), player.getPosY(), "Enemy", getRange(), true, camera, BLACK);
+                    projList.add(proj);
+                    proj.createShotLine(camera);
 
-                    if(numShots == maxShots){
-                       proj.setShotTag("Enemy_Poison");
-                       proj.setColor(poison.getColor());
+                    if (numShots == maxShots) {
+                        proj.setShotTag("Enemy_Poison");
+                        proj.setColor(poison.getColor());
                         isReloading = true;
                         numShots = 0;
                     }
@@ -99,87 +103,25 @@ public class StealthEnemy extends Enemy {
             }
         }
     }
-    public void footsteps(){
-        if(isCloaked){
+
+    public void footsteps() {
+        if (isCloaked) {
             footstepCooldown++;
-            if((footstepCooldown + 1) % 61 == 0){
+            if ((footstepCooldown + 1) % 61 == 0) {
                 footstep.setLifeTime(400);
                 footstep.setPosX(getPosX() + rand.nextInt(200) - 100);
-                footstep.setPosY(getPosY()+ rand.nextInt(200) - 100);
+                footstep.setPosY(getPosY() + rand.nextInt(200) - 100);
                 footstep.setTimeFirstDrawn(System.currentTimeMillis());
             }
         }
     }
 
-    public void update(Player player, ProjectileHandler projList, Camera2D camera, Poison poison){
+    public void update(Player player, ProjectileHandler projList, Camera2D camera, Poison poison) {
         move(player, camera);
         cloak(player);
         shoot(player, projList, camera, poison);
         footsteps();
         footstep.draw();
     }
-
-    public Raylib.Color getInitialColor() {
-        return initialColor;
-    }
-
-    public void setInitialColor(Raylib.Color initialColor) {
-        this.initialColor = initialColor;
-    }
-
-    public VectorHandler getVector() {
-        return vector;
-    }
-
-    public void setVector(VectorHandler vector) {
-        this.vector = vector;
-    }
-
-
-    public int getShotSpeed() {
-        return shotSpeed;
-    }
-
-    public void setShotSpeed(int shotSpeed) {
-        this.shotSpeed = shotSpeed;
-    }
-
-    public boolean isReloading() {
-        return isReloading;
-    }
-
-    public void setReloading(boolean reloading) {
-        isReloading = reloading;
-    }
-
-    public boolean isCanShoot() {
-        return canShoot;
-    }
-
-    public void setCanShoot(boolean canShoot) {
-        this.canShoot = canShoot;
-    }
-
-    public boolean isCloaked() {
-        return isCloaked;
-    }
-
-    public void setCloaked(boolean cloaked) {
-        isCloaked = cloaked;
-    }
-    public int getFootstepCooldown() {
-        return footstepCooldown;
-    }
-
-    public void setFootstepCooldown(int footstepCooldown) {
-        this.footstepCooldown = footstepCooldown;
-    }
-
-    public int getNumShots() {
-        return numShots;
-    }
-
-    public void setNumShots(int numShots) {
-        this.numShots = numShots;
-    }
 }
+

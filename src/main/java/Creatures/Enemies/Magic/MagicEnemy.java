@@ -65,8 +65,8 @@ public class MagicEnemy extends Enemy {
 
     public void shoot(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera){
         int rand = random.nextInt(2) + 1;
-        if (getRange() > calculateDistanceToPlayer(player)) {
-            if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
+        if (getRange() > getVector().distanceToOtherObject(player.getPosX(),player.getPosY())) {
+            if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 1.5) {
                 if (cooldown.cooldown(1500)){
                     if (rand == 1) {
                         castLongSpell(player, projList, color, "Enemy", camera);
@@ -75,7 +75,7 @@ public class MagicEnemy extends Enemy {
                         castPoolSpell(player, projList, PoolColor, camera);
                     }
                 }
-            } else if (calculateDistanceToPlayer(player) < getRange() / 2) {
+            } else if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < getRange() / 2) {
                 if (cooldown2.cooldown(1500)){
                     castCloseSpell(player, projList, color, camera);
                 }
@@ -91,11 +91,18 @@ public class MagicEnemy extends Enemy {
         }
     }
     public void move(Player player, Camera2D camera){
-        if (calculateDistanceToPlayer(player) > getRange() / 1.5) {
-            followPlayer(player, "to", camera);
+        if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 1.5) {
+            getVector().moveObject(player.getPosition(), "to", camera);
         }
-        else if (calculateDistanceToPlayer(player) < getRange() / 2) {
-            followPlayer(player, "away", camera);
+        else if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < getRange() / 2) {
+            getVector().moveObject(player.getPosition(), "away", camera);
+            setGotinRange(true);
+        }
+        else{
+            setGotinRange(true);
+        }
+        if(isGotinRange()){
+            getVector().circlePlayer(player,getRange() - 250);
         }
     }
 

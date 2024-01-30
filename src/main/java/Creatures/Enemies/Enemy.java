@@ -9,8 +9,8 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.raylib.Raylib.CheckCollisionCircles;
-import static com.raylib.Raylib.DrawCircle;
+import static com.raylib.Jaylib.BLACK;
+import static com.raylib.Raylib.*;
 
 public class Enemy implements Creature {
     private int hp;
@@ -32,6 +32,7 @@ public class Enemy implements Creature {
     private VectorHandler vector;
     private Random rand;
     private boolean shooting;
+    private boolean gotinRange;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera) {
         this.hp = hp;
@@ -49,64 +50,33 @@ public class Enemy implements Creature {
         rand = new Random();
     }
 
-    public int calculateDistanceToPlayer(Player player){
-        int totalDistance = vector.distanceToOtherObject(player.getPosX(), player.getPosY());
-        return totalDistance;
-    }
-    public void followPlayer(Player player, String tag, Raylib.Camera2D camera) {
-        vector.moveObject(player.getPosition(), tag, camera);
-//        updateObjectPositions();
-        if(isShouldDraw()) {
-            DrawCircle(getPosX(), getPosY(), getSize(), getColor());
-        }
-    }
 
 
-    public boolean collisionWIthOtherEnemy(ArrayList<Enemy> enemyList, Player player, String tag){
-        double[] positions = determinePositions(player, tag);
-        double verticalValues = positions[0];
-        double horizontalValues = positions[1];
-        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
-        double xScaled = normalizedValues[0] * getMoveSpeed();
-        double yScaled = normalizedValues[1] * getMoveSpeed();
-        double updateX = vector.getPosX() + xScaled;
-        double updateY = vector.getPosY() + yScaled;
-        Jaylib.Vector2 projectedVector = new Jaylib.Vector2((float) updateX,(float) updateY);
-        for (int i = 0; i < enemyList.size(); i++) {
-            Enemy otherEnemy = enemyList.get(i);
-            if (otherEnemy.equals(this)){
-                continue;
-            }
-            double otherPosX = otherEnemy.getPosX();
-            double otherPosY = otherEnemy.getPosY();
-            Jaylib.Vector2 enemyPos = new Jaylib.Vector2((float) otherPosX,(float) otherPosY);
-            if (CheckCollisionCircles(projectedVector,getSize(),enemyPos,otherEnemy.getSize())){
-                return true;
-            }
-        }
-        return false;
-    }
-    private double[] determinePositions(Player player, String tag) {
-        double playerXPos, playerYPos, myXPos, myYPos;
-        if (tag.equals("to")) {
-            playerXPos = player.getPosX();
-            playerYPos = player.getPosY();
-            myXPos = vector.getPosX();
-            myYPos = vector.getPosY();
-        } else {
-            playerXPos = vector.getActualXPos();
-            playerYPos = vector.getActualYPos();
-            myXPos = player.getPosX();
-            myYPos = player.getPosY();
-        }
-        return new double[]{playerYPos - myYPos, playerXPos - myXPos};
-    }
-    private double[] normalizeValues(double verticalValues, double horizontalValues) {
-        double magnitude = Math.sqrt(Math.pow(verticalValues, 2) + Math.pow(horizontalValues, 2));
-        double yNormalized = verticalValues / magnitude;
-        double xNormalized = horizontalValues / magnitude;
-        return new double[]{xNormalized, yNormalized};
-    }
+//    public boolean collisionWIthOtherEnemy(ArrayList<Enemy> enemyList, Player player, String tag){
+//        double[] positions = determinePositions(player, tag);
+//        double verticalValues = positions[0];
+//        double horizontalValues = positions[1];
+//        double[] normalizedValues = normalizeValues(verticalValues, horizontalValues);
+//        double xScaled = normalizedValues[0] * getMoveSpeed();
+//        double yScaled = normalizedValues[1] * getMoveSpeed();
+//        double updateX = vector.getPosX() + xScaled;
+//        double updateY = vector.getPosY() + yScaled;
+//        Jaylib.Vector2 projectedVector = new Jaylib.Vector2((float) updateX,(float) updateY);
+//        for (int i = 0; i < enemyList.size(); i++) {
+//            Enemy otherEnemy = enemyList.get(i);
+//            if (otherEnemy.equals(this)){
+//                continue;
+//            }
+//            double otherPosX = otherEnemy.getPosX();
+//            double otherPosY = otherEnemy.getPosY();
+//            Jaylib.Vector2 enemyPos = new Jaylib.Vector2((float) otherPosX,(float) otherPosY);
+//            if (CheckCollisionCircles(projectedVector,getSize(),enemyPos,otherEnemy.getSize())){
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
 
     @Override
     public Raylib.Color getColor() {
@@ -329,5 +299,13 @@ public class Enemy implements Creature {
     @Override
     public void setShotCooldown(int shotCooldown){
         setShotCooldown(shotCooldown);
+    }
+
+    public boolean isGotinRange() {
+        return gotinRange;
+    }
+
+    public void setGotinRange(boolean gotinRange) {
+        this.gotinRange = gotinRange;
     }
 }

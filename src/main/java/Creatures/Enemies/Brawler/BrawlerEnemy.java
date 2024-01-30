@@ -7,6 +7,8 @@ import Creatures.*;
 import Handlers.*;
 import Attacks.*;
 
+import static com.raylib.Raylib.DrawCircle;
+
 public class BrawlerEnemy extends Enemy {
 
     private int xMul;
@@ -22,9 +24,21 @@ public class BrawlerEnemy extends Enemy {
     }
 
     public void attack(Player player){
-        int distance = calculateDistanceToPlayer(player);
+        int distance = getVector().distanceToOtherObject(player.getPosX(),player.getPosY());
         if(distance <= getRange()){
             melee.attack(player, 500);
+        }
+    }
+    public void move(Player player, Raylib.Camera2D camera){
+        if (getRange() < getVector().distanceToOtherObject(getPosX(),player.getPosY())){
+            getVector().moveObject(player.getPosition(),"to", camera);
+            DrawCircle(getPosX(), getPosY(), getSize(), getColor());
+        }
+        else{
+            setGotinRange(true);
+        }
+        if(isGotinRange()){
+            getVector().circlePlayer(player,getRange());
         }
     }
 }

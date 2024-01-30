@@ -29,8 +29,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount, Camera2D camera){
         for (int i = 0; i < amount; i++) {
-//            int randEnemy = rand.nextInt(7) + 1;
-            int randEnemy = 6;
+            int randEnemy = rand.nextInt(7) + 1;
+//            int randEnemy = 6;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -93,20 +93,12 @@ public class EnemyHandler extends ListHandler {
                     counter++;
                     FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
                     enemy.attack(player, fire);
-                    if (enemy.calculateDistanceToPlayer(player) >= enemy.getRange()){
+                    if (enemy.getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) >= enemy.getRange()){
                         falseCounter++;
                     }
                 }
                 BrawlerEnemy enemy = (BrawlerEnemy) get(i);
-                if (enemy.getRange() < enemy.calculateDistanceToPlayer(player)){
-                    if (!enemy.collisionWIthOtherEnemy(getEnemyList(),player,"to")){
-                        enemy.followPlayer(player,"to", camera);
-                        enemy.attack(player);
-                    }
-                    else {
-                        DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
-                    }
-                }
+                enemy.move(player,camera);
                 enemy.attack(player);
             }
             if (get(i) instanceof MagicEnemy){
