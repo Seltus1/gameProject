@@ -102,7 +102,7 @@ public class MagicEnemy extends Enemy {
             setGotinRange(true);
         }
         if(isGotinRange()){
-            getVector().circlePlayer(player,getRange() - 250);
+            getVector().randMoveInAttackRange(player,this,camera);
         }
     }
 

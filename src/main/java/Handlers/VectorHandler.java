@@ -1,8 +1,11 @@
 package Handlers;
 
+import Creatures.Enemies.Enemy;
 import Creatures.Player;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
+
+import java.util.Random;
 
 import static com.raylib.Jaylib.BLACK;
 import static com.raylib.Raylib.*;
@@ -19,6 +22,8 @@ public class VectorHandler {
     private double xNormalizedMovement;
     private double angularPosition = 0.0;
     private Raylib.Vector2 shotPosition;
+    private CooldownHandler circleCooldown;
+    private Random rand;
 
     public VectorHandler(int posX, int posY, int moveSpeed, Camera2D camera){
         this.posX = posX;
@@ -199,6 +204,62 @@ public class VectorHandler {
         setPosX((int) Math.round(newX));
         setPosY((int) Math.round(newY));
         setPosition(new Jaylib.Vector2(getPosX(), getPosY()));
+    }
+
+    public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2){
+//        getting the 1st circle
+        float a =  circle1.x();
+        float b =  circle1.y();
+        float r =  r1;
+
+//        getting the 2nd circle
+        float p =  circle2.x();
+        float q =  circle2.y();
+        float d =  r2;
+
+//        making mx + c
+        float m = (p - a) / (b - q);
+        float c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
+
+//        making quadratic formula
+        float A = 1 + (m * m);
+        float B = 2 * (m * (c - b) - a);
+        float C = (a * a) + ((c - b) * (c - b)) - (r * r);
+
+//        getting the x intersections
+        float a1 = (B * B) - (4 * A * C);
+        double x1 = (-B + Math.sqrt(a1) / (2 * A));
+        double x2 = (-B - Math.sqrt(a1) / (2 * A));
+
+//        getting the y intersections
+        double y1 = (m * x1) + c;
+        double y2 = (m * x2) + c;
+
+        double[] returnIntersections = {x1, y1, x2, y2};
+        return returnIntersections;
+    }
+
+    public void randMoveInAttackRange(Player player, Enemy enemy, Camera2D camera){
+        double[] moveRange = findIntersectingPoints(player.getPosition(), enemy.getPos(), enemy.getRange(), enemy.getRange());
+        int x1 = (int) moveRange[0];
+        int x2 = (int) moveRange[2];
+        int y1 = (int) moveRange[1];
+        int y2 = (int) moveRange[3];
+        int randX,randY;
+        if(x1 > x2){
+            randX = rand.nextInt(x1) + x2;
+        }
+        else{
+            randX = rand.nextInt(x2) + x1;
+        }
+        if(y1 > y2){
+            randY = rand.nextInt(y1) + y2;
+        }
+        else{
+            randY = rand.nextInt(y2) + y1;
+        }
+        Raylib.Vector2 newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
+        moveObject(newPos,"to", camera);
     }
 
 
