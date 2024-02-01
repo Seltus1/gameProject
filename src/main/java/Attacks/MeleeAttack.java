@@ -32,7 +32,6 @@ public class MeleeAttack {
             player.setHp(player.getHp() - damage);
             player.setTimeSinceHit(System.currentTimeMillis());
         }
-        update();
     }
     public void setPosX(int posX){
         this.posX = posX;
@@ -42,8 +41,5 @@ public class MeleeAttack {
     }
 
     public void update(){
-        if(draw) {
-            DrawRectangle(this.posX, this.posY, 10, 100, BLACK);
-        }
     }
 }

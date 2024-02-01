@@ -16,6 +16,7 @@ public class MagicEnemy extends Enemy {
     private int shotSpeed;
     private float drawRadious;
     private int spellRange;
+    private int moveSpeedWhileRand;
     private Raylib.Color PoolColor;
     private CooldownHandler cooldown;
     private CooldownHandler cooldown2;
@@ -39,6 +40,7 @@ public class MagicEnemy extends Enemy {
         randMoveCooldown = new CooldownHandler();
         rand = new Random();
         newPos = new Raylib.Vector2();
+        moveSpeedWhileRand = getMoveSpeed() - 1;
     }
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, Camera2D camera) {
@@ -98,11 +100,13 @@ public class MagicEnemy extends Enemy {
         }
     }
     public void move(Player player, Camera2D camera){
-        int randX,randY;
         if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 2 &&!isRandMoving()) {
-                getVector().moveObject(player.getPosition(), "to", camera);
+            setMoveSpeed(getInitialMoveSpeed());
+            getVector().setMoveSpeed(getMoveSpeed());
+            getVector().moveObject(player.getPosition(), "to", camera);
         }
         else{
+            getVector().setMoveSpeed(moveSpeedWhileRand);
             getVector().randEnemyMove(player,this,450, camera);
         }
     }

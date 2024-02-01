@@ -286,10 +286,10 @@ public class VectorHandler {
                 randX = rand.nextInt(rad) + getPosX();
             }
             if(player.getPosition().y() - enemy.getPosY() < 0) {
-                randY = -rand.nextInt(rad) + getPosX();
+                randY = -rand.nextInt(rad) + getPosY();
             }
             else{
-                randY = rand.nextInt(rad)  + getPosX();
+                randY = rand.nextInt(rad)  + getPosY();
             }
             newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
         }

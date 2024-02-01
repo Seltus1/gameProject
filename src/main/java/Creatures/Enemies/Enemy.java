@@ -17,6 +17,7 @@ public class Enemy implements Creature {
     private int damage;
     private int range;
     private int moveSpeed;
+    private int initialMoveSpeed;
     private int size;
     private boolean canMelee;
     private boolean canRange;
@@ -49,6 +50,7 @@ public class Enemy implements Creature {
         circle = new Ellipse2D.Double(posX,posY,size,size);
         shouldDraw = true;
         rand = new Random();
+        initialMoveSpeed = moveSpeed;
     }
 
 
@@ -316,5 +318,13 @@ public class Enemy implements Creature {
 
     public void setRandMoving(boolean randMoving) {
         isRandMoving = randMoving;
+    }
+
+    public int getInitialMoveSpeed() {
+        return initialMoveSpeed;
+    }
+
+    public void setInitialMoveSpeed(int initialMoveSpeed) {
+        this.initialMoveSpeed = initialMoveSpeed;
     }
 }

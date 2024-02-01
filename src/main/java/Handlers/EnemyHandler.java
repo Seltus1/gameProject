@@ -31,38 +31,38 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < amount; i++) {
             int randEnemy = rand.nextInt(7) + 1;
 //            int randEnemy = 2;
-            int Xpos = rand.nextInt(GetScreenWidth());
-            int Ypos = rand.nextInt(GetScreenHeight());
+            int posX = rand.nextInt(GetScreenWidth());
+            int posY = rand.nextInt(GetScreenHeight());
             int size = 25;
             if(randEnemy == 1){
-                SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN, camera);
+                SniperEnemy enemy = new SniperEnemy(1, 0, posX, posY, 0, size, 1300, 35, GREEN, camera);
                 add(enemy);
             }
             else if(randEnemy == 2){
-                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 150, BLUE, camera);
+                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, posX, posY, 3, size, 150, BLUE, camera);
                 add(enemy);
             }
             else if(randEnemy == 3){
-                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 75, ORANGE, camera);
+                FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, posX, posY,3, size, 75, ORANGE, camera);
                 add(enemy);
             }
             else if (randEnemy == 4){
-                MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550,
+                MagicEnemy enemy = new MagicEnemy(1, 4, posX, posY, 3, size, 800, 550,
                         15, PURPLE, camera);
                 add(enemy);
             }
             else if(randEnemy == 5){
-                FireSniperEnemy enemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300,
+                FireSniperEnemy enemy = new FireSniperEnemy(1, 10, posX, posY, 0, size, 1300,
                         35, ColorFromHSV(29,1,1),camera);
                 add(enemy);
             }
             else if (randEnemy == 6){
-                StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400,
+                StealthEnemy enemy = new StealthEnemy(1, 2, posX, posY, 10, (int) (size / 1.5), 400,
                         20, GRAY, camera);
                 add(enemy);
             }
             else if (randEnemy == 7){
-                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size,
+                FireMagicEnemy enemy = new FireMagicEnemy(1, 2, posX, posY, 3, size,
                         800,500,20, ORANGE, camera);
                 add(enemy);
             }
