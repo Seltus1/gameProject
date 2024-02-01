@@ -32,6 +32,7 @@ public class Enemy implements Creature {
     private VectorHandler vector;
     private Random rand;
     private boolean shooting;
+    private boolean isRandMoving;
     private boolean gotinRange;
 
     public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera) {
@@ -307,5 +308,13 @@ public class Enemy implements Creature {
 
     public void setGotinRange(boolean gotinRange) {
         this.gotinRange = gotinRange;
+    }
+
+    public boolean isRandMoving() {
+        return isRandMoving;
+    }
+
+    public void setRandMoving(boolean randMoving) {
+        isRandMoving = randMoving;
     }
 }

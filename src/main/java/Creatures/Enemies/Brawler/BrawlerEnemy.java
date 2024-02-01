@@ -30,15 +30,11 @@ public class BrawlerEnemy extends Enemy {
         }
     }
     public void move(Player player, Raylib.Camera2D camera){
-        if (getRange() < getVector().distanceToOtherObject(getPosX(),player.getPosY())){
+        if (50 < getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) &&!isRandMoving()){
             getVector().moveObject(player.getPosition(),"to", camera);
-            DrawCircle(getPosX(), getPosY(), getSize(), getColor());
         }
         else{
-            setGotinRange(true);
-        }
-        if(isGotinRange()){
-            getVector().circlePlayer(player,getRange());
+            getVector().randEnemyMove(player,this,50, camera);
         }
     }
 }

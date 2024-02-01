@@ -47,20 +47,16 @@ public class Main {
             DrawFPS(player1.getPosX() - (GetScreenWidth() / 2) + 100, player1.getPosY() - (GetScreenHeight() / 2) + 100);
 
 
-
             mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
-            player.update(enemies, projectiles, camera, mousePos);
             enemies.update(projectiles, player1, camera, player1.getFire(), player1.getPoison());
             projectiles.update(enemies, player1, camera);
+            player.update(enemies, projectiles, camera, mousePos);
             player1.update(projectiles, camera, mousePos);
 
             drawMouse();
-
             if (enemies.size() == 0) {
                 addEnemies();
             }
-
-
             EndDrawing();
             EndMode2D();
         }

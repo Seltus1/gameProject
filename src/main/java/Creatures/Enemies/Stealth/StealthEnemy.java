@@ -54,25 +54,18 @@ public class StealthEnemy extends Enemy {
 
     public void move(Player player, Camera2D camera) {
         if (!isReloading) {
-            if (!isGotinRange()) {
-                if (getRange() / 1.5 < getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
-                    getVector().moveObject(player.getPosition(), "to", camera);
-                } else {
-                    getVector().moveObject(player.getPosition(), "away", camera);
-                    setGotinRange(true);
-                }
-            } else {
-                getVector().circlePlayer(player, getRange());
-            }
-        } else {
-            if (getRange() * 1.5 < getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+            if (getRange() < getVector().distanceToOtherObject(player.getPosX(), player.getPosY()) && !isRandMoving()) {
                 getVector().moveObject(player.getPosition(), "to", camera);
-            } else if (getRange() * 2 > getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
-                getVector().moveObject(player.getPosition(), "away", camera);
-                setGotinRange(true);
             } else {
-                getVector().circlePlayer(player, getRange() + 200);
+                getVector().randEnemyMove(player,this,300,camera);
             }
+            return;
+        }
+        if (getRange() * 1.5 < getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+            getVector().moveObject(player.getPosition(), "to", camera);
+        }
+        else if (getRange() * 2 > getVector().distanceToOtherObject(player.getPosX(), player.getPosY())) {
+            getVector().moveObject(player.getPosition(), "away", camera);
         }
     }
 

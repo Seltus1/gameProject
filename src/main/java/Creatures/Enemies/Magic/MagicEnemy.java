@@ -20,6 +20,9 @@ public class MagicEnemy extends Enemy {
     private CooldownHandler cooldown;
     private CooldownHandler cooldown2;
     private CooldownHandler cooldown3;
+    private  CooldownHandler randMoveCooldown;
+    private Random rand;
+    Raylib.Vector2 newPos;
 
 
     private Random random;
@@ -33,6 +36,9 @@ public class MagicEnemy extends Enemy {
         cooldown = new CooldownHandler();
         cooldown2 = new CooldownHandler();
         cooldown3 = new CooldownHandler();
+        randMoveCooldown = new CooldownHandler();
+        rand = new Random();
+        newPos = new Raylib.Vector2();
     }
 
     public void castLongSpell(Player player, ProjectileHandler projList, Raylib.Color color, String tag, Camera2D camera) {
@@ -77,7 +83,8 @@ public class MagicEnemy extends Enemy {
                 }
             } else if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < getRange() / 2) {
                 if (cooldown2.cooldown(1500)){
-                    castCloseSpell(player, projList, color, camera);
+//                    castCloseSpell(player, projList, color, camera);
+                    castLongSpell(player,projList,color,"Enemy", camera);
                 }
             } else {
                 if (cooldown3.cooldown(1500)){
@@ -91,20 +98,16 @@ public class MagicEnemy extends Enemy {
         }
     }
     public void move(Player player, Camera2D camera){
-        if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 1.5) {
-            getVector().moveObject(player.getPosition(), "to", camera);
-        }
-        else if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < getRange() / 2) {
-            getVector().moveObject(player.getPosition(), "away", camera);
-            setGotinRange(true);
+        int randX,randY;
+        if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 2 &&!isRandMoving()) {
+                getVector().moveObject(player.getPosition(), "to", camera);
         }
         else{
-            setGotinRange(true);
-        }
-        if(isGotinRange()){
-            getVector().randMoveInAttackRange(player,this,camera);
+            getVector().randEnemyMove(player,this,450, camera);
         }
     }
+
+
 
     public void drawHat(Camera2D camera){
         VectorHandler v1 = new VectorHandler(getPosX(), getPosY() - 50, getMoveSpeed(), camera);

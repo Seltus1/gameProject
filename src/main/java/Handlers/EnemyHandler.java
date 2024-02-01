@@ -30,7 +30,7 @@ public class EnemyHandler extends ListHandler {
     public void addMultipleEnemies(int amount, Camera2D camera){
         for (int i = 0; i < amount; i++) {
             int randEnemy = rand.nextInt(7) + 1;
-//            int randEnemy = 6;
+//            int randEnemy = 2;
             int Xpos = rand.nextInt(GetScreenWidth());
             int Ypos = rand.nextInt(GetScreenHeight());
             int size = 25;
@@ -39,7 +39,7 @@ public class EnemyHandler extends ListHandler {
                 add(enemy);
             }
             else if(randEnemy == 2){
-                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 50, BLUE, camera);
+                BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 150, BLUE, camera);
                 add(enemy);
             }
             else if(randEnemy == 3){
