@@ -98,16 +98,13 @@ public class MagicEnemy extends Enemy {
         }
     }
     public void move(Player player, Camera2D camera){
-        int randX,randY;
         if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 2 &&!isRandMoving()) {
-                getVector().moveObject(player.getPosition(), "to", camera);
+            getVector().moveObject(player.getPosition(), "to", camera);
         }
         else{
             getVector().randEnemyMove(player,this,450, camera);
         }
     }
-
-
 
     public void drawHat(Camera2D camera){
         VectorHandler v1 = new VectorHandler(getPosX(), getPosY() - 50, getMoveSpeed(), camera);

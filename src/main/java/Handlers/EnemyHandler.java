@@ -22,17 +22,20 @@ import static com.raylib.Jaylib.*;
 public class EnemyHandler extends ListHandler {
 
     private Random rand = new Random();
+    private int funcCounter;
+    private int counter;
+    private int falseCounter;
 
     public EnemyHandler() {
         super();
     }
 
-    public void addMultipleEnemies(int amount, Camera2D camera){
+    public void addMultipleEnemies(int amount, Camera2D camera, Player player){
         for (int i = 0; i < amount; i++) {
             int randEnemy = rand.nextInt(7) + 1;
 //            int randEnemy = 2;
-            int Xpos = rand.nextInt(GetScreenWidth());
-            int Ypos = rand.nextInt(GetScreenHeight());
+            int Xpos = rand.nextInt(player.getPosX() + GetScreenWidth());
+            int Ypos = rand.nextInt(player.getPosY() + GetScreenHeight());
             int size = 25;
             if(randEnemy == 1){
                 SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN, camera);
@@ -74,39 +77,19 @@ public class EnemyHandler extends ListHandler {
     }
 
     public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire, Poison poison) {
-        int counter = 0;
-        int falseCounter = 0;
         for (int i = 0; i < size(); i++) {
-            if (get(i) instanceof SniperEnemy){
-                if(get(i) instanceof  FireSniperEnemy){
-                    FireSniperEnemy enemy = (FireSniperEnemy) get(i);
-                    enemy.shoot(player,projList, camera);
-                }
-                else {
-                    SniperEnemy enemy = (SniperEnemy) get(i);
-                    enemy.shootPlayer(player, projList, "Enemy", BLACK, camera);
-                }
+            sniperUpdates(player, projList,get(i),camera);
+            if(funcCounter != 0){
+                brawlerUpdates(player,projList, get(i), fire, camera);
+            }
+            if(funcCounter != 0){
 
             }
-            else if (get(i) instanceof BrawlerEnemy){
-                if (get(i) instanceof  FireBrawlerEnemy) {
-                    counter++;
-                    FireBrawlerEnemy enemy = (FireBrawlerEnemy) get(i);
-                    enemy.attack(player, fire);
-                    if (enemy.getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) >= enemy.getRange()){
-                        falseCounter++;
-                    }
-                }
-                BrawlerEnemy enemy = (BrawlerEnemy) get(i);
-                enemy.move(player,camera);
-                enemy.attack(player);
-            }
+
             if (get(i) instanceof MagicEnemy){
                 if(get(i) instanceof FireMagicEnemy){
                     FireMagicEnemy enemy = (FireMagicEnemy) get(i);
                     enemy.update(player,projList,BLACK, camera);
-                    enemy.move(player, camera);
-                    enemy.drawHat(camera);
                 }
                 else {
                     MagicEnemy enemy = (MagicEnemy) get(i);
@@ -133,4 +116,35 @@ public class EnemyHandler extends ListHandler {
             }
         }
     }
+        private void sniperUpdates(Player player, ProjectileHandler projList, Object enemy, Camera2D camera){
+            if (enemy instanceof SniperEnemy){
+                funcCounter++;
+                if(enemy instanceof  FireSniperEnemy){
+                    FireSniperEnemy sniperEnemy = (FireSniperEnemy) enemy;
+                    sniperEnemy.shoot(player,projList, camera);
+                }
+                else {
+                    SniperEnemy sniperEnemy = (SniperEnemy) enemy;
+                    sniperEnemy.update(player, projList, "Enemy", BLACK, camera);
+                }
+            }
+        }
+        private void brawlerUpdates(Player player, ProjectileHandler projList, Object enemy, Fire fire, Camera2D camera){
+            if (enemy instanceof BrawlerEnemy){
+                funcCounter++;
+                if (enemy instanceof  FireBrawlerEnemy) {
+                    counter++;
+                    FireBrawlerEnemy fireBrawlerEnemy = (FireBrawlerEnemy) enemy;
+                    fireBrawlerEnemy.attack(player, fire);
+                    if (fireBrawlerEnemy.getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) >= fireBrawlerEnemy.getRange()){
+                        falseCounter++;
+                    }
+                }
+                BrawlerEnemy brawlerEnemy = (BrawlerEnemy) enemy;
+                brawlerEnemy.update(player,camera);
+            }
+        }
+        private void magicUpdates(){
+
+        }
 }

@@ -26,6 +26,7 @@ public class VectorHandler {
     private Random rand;
     private Raylib.Vector2 newPos;
     private int counter;
+    private boolean hasAlrdyBooleanMoved;
 
     public VectorHandler(int posX, int posY, int moveSpeed, Camera2D camera){
         this.posX = posX;
@@ -269,8 +270,10 @@ public class VectorHandler {
 //        }
 //    }
     public void randEnemyMove(Player player, Enemy enemy, int rad, Camera2D camera){
-        if(counter == 0){
+        if(!hasAlrdyBooleanMoved){
             newPos = (new Jaylib.Vector2(enemy.getPosX(), enemy.getPosY()));
+            setHasAlrdyBooleanMoved(true);
+            return;
         }
         enemy.setRandMoving(false);
         int randX,randY;
@@ -293,7 +296,6 @@ public class VectorHandler {
             }
             newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
         }
-        counter = 1;
     }
 
     public Raylib.Vector2 screenToWorld(Raylib.Vector2 vector, Camera2D camera){
@@ -371,4 +373,11 @@ public class VectorHandler {
         this.shotPosition = shotPosition;
     }
 
+    public boolean isHasAlrdyBooleanMoved() {
+        return hasAlrdyBooleanMoved;
+    }
+
+    public void setHasAlrdyBooleanMoved(boolean hasAlrdyBooleanMoved) {
+        this.hasAlrdyBooleanMoved = hasAlrdyBooleanMoved;
+    }
 }

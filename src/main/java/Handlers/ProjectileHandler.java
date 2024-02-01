@@ -82,7 +82,7 @@ public class ProjectileHandler extends ListHandler {
         }
 //        reseting the regen cooldown to 0
         player.getRegenCooldown().setCurrentFrame(0);
-        if(!(projectile instanceof  Pool)) {
+        if(!(projectile instanceof Pool)) {
             projectile.setDraw(false);
         }
     }

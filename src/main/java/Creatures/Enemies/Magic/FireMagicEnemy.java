@@ -9,10 +9,13 @@ import Elements.*;
 public class FireMagicEnemy extends MagicEnemy {
     private Fire fire;
     private int longCooldown;
+    private CooldownHandler cooldown;
 
     public FireMagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color, Raylib.Camera2D camera) {
         super(hp, damage, posX, posY, moveSpeed, size, moveRange, spellRange, shotSpeed, color, camera);
         fire = new Fire();
+        cooldown = new CooldownHandler();
+        longCooldown = 1500;
     }
 
     public void castInferno(Player player, ProjectileHandler projList, Raylib.Color color, Raylib.Camera2D camera) {
@@ -29,18 +32,21 @@ public class FireMagicEnemy extends MagicEnemy {
         Projectile wall = new Projectile(4, getPosX(), getPosY(), 5, player.getPosX(), player.getPosY(), "Enemy_Fire_Wall", getSpellRange(), true, camera, color);
         projList.add(wall);
     }
-    public void update(Player player, ProjectileHandler projList, Raylib.Color color, Raylib.Camera2D camera) {
-        longCooldown++;
-//        int rand = getRand().nextInt(2) + 1;
+    public void attack(Player player, ProjectileHandler projList, Raylib.Color color, Raylib.Camera2D camera){
+        //        int rand = getRand().nextInt(2) + 1;
         int rand = 1;
-        if ((longCooldown + 1) % 91 == 0) {
+        if (cooldown.cooldown(longCooldown)) {
             if (rand == 1){
                 castInferno(player, projList, color, camera);
             }
             else{
                 castFireWall(player, projList, color, camera);
             }
-            longCooldown = 0;
         }
+    }
+    public void update(Player player, ProjectileHandler projList, Raylib.Color color, Raylib.Camera2D camera) {
+        attack(player,projList,color,camera);
+        move(player,camera);
+        drawHat(camera);
     }
 }
