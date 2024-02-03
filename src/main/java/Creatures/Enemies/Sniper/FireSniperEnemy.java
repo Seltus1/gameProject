@@ -17,6 +17,10 @@ public class FireSniperEnemy extends SniperEnemy {
         fire = new Fire();
     }
 
+    public void update(Player player, ProjectileHandler projList, Camera2D camera){
+        shoot(player, projList, camera);
+    }
+
     public void shoot(Player player, ProjectileHandler projList, Camera2D camera) {
         super.shootPlayer(player, projList, "Fire_Enemy", RED, camera);
     }

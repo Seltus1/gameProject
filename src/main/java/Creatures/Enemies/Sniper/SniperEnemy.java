@@ -37,8 +37,9 @@ public class SniperEnemy extends Enemy {
             }
         }
     }
+
     public void update(Player player, ProjectileHandler projList, String tag, Raylib.Color color, Raylib.Camera2D camera){
-        shootPlayer(player, projList,tag,color, camera);
+        shootPlayer(player, projList, tag, color, camera);
     }
 
     public String getShotTag() {

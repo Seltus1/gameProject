@@ -17,9 +17,7 @@ public class MagicEnemy extends Enemy {
     private float drawRadious;
     private int spellRange;
     private Raylib.Color PoolColor;
-    private CooldownHandler cooldown;
-    private CooldownHandler cooldown2;
-    private CooldownHandler cooldown3;
+    private CooldownHandler shotCooldown;
     private  CooldownHandler randMoveCooldown;
     private Random rand;
     Raylib.Vector2 newPos;
@@ -33,9 +31,7 @@ public class MagicEnemy extends Enemy {
         this.spellRange = spellRange;
         random = new Random();
         PoolColor = ColorFromHSV(278,.93f,.26f);
-        cooldown = new CooldownHandler();
-        cooldown2 = new CooldownHandler();
-        cooldown3 = new CooldownHandler();
+        shotCooldown = new CooldownHandler();
         randMoveCooldown = new CooldownHandler();
         rand = new Random();
         newPos = new Raylib.Vector2();
@@ -71,21 +67,26 @@ public class MagicEnemy extends Enemy {
 
     public void shoot(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera){
         int rand = random.nextInt(2) + 1;
+//        far away chooses between a long shot or pool shot
         if (getRange() > getVector().distanceToOtherObject(player.getPosX(),player.getPosY())) {
+            if (shotCooldown.cooldown(1500)) {
+
+            }
             if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 1.5) {
-                if (cooldown.cooldown(1500)){
-                    if (rand == 1) {
-                        castLongSpell(player, projList, color, "Enemy", camera);
+                if (rand == 1) {
+                    castLongSpell(player, projList, color, "Enemy", camera);
 //                        castHomingSpell(player,projList,color,"homing",3);
-                    } else {
-                        castPoolSpell(player, projList, PoolColor, camera);
-                    }
                 }
+                else {
+                    castPoolSpell(player, projList, PoolColor, camera);
+                }
+//                double shot when hes close
             } else if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < getRange() / 2) {
                 if (cooldown2.cooldown(1500)){
 //                    castCloseSpell(player, projList, color, camera);
                     castLongSpell(player,projList,color,"Enemy", camera);
                 }
+//
             } else {
                 if (cooldown3.cooldown(1500)){
                     if (rand == 1) {
@@ -97,6 +98,19 @@ public class MagicEnemy extends Enemy {
             }
         }
     }
+
+    private void shotFromDistance(Player player, ProjectileHandler projList, int rand, Color color, Camera2D camera) {
+        if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 1.5) {
+            if (rand == 1) {
+                castLongSpell(player, projList, color, "Enemy", camera);
+//                        castHomingSpell(player,projList,color,"homing",3);
+            }
+            else {
+                castPoolSpell(player, projList, PoolColor, camera);
+            }
+    }
+
+
     public void move(Player player, Camera2D camera){
         if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) > getRange() / 2 &&!isRandMoving()) {
             getVector().moveObject(player.getPosition(), "to", camera);
@@ -112,6 +126,7 @@ public class MagicEnemy extends Enemy {
         VectorHandler v3 = new VectorHandler(getPosX() + 20, getPosY() - 30, getMoveSpeed(), camera);
         DrawTriangle(v1.getPosition(),v2.getPosition(),v3.getPosition(),BLACK);
     }
+
     public void update(Player player, ProjectileHandler projList, Raylib.Color color, Camera2D camera) {
         DrawCircle(getPosX(), getPosY() - 50, (float) (spellCoolDown / 7.5), color);
         shoot(player,projList, color, camera);
