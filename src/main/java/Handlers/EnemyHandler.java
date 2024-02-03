@@ -79,41 +79,17 @@ public class EnemyHandler extends ListHandler {
     public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire, Poison poison) {
         for (int i = 0; i < size(); i++) {
             sniperUpdates(player, projList,get(i),camera);
-            if(funcCounter != 0){
+            if(funcCounter != 1){
                 brawlerUpdates(player,projList, get(i), fire, camera);
             }
-            if(funcCounter != 0){
-
+            if(funcCounter != 1){
+                magicUpdates(player,projList,get(i), camera);
             }
-
-            if (get(i) instanceof MagicEnemy){
-                if(get(i) instanceof FireMagicEnemy){
-                    FireMagicEnemy enemy = (FireMagicEnemy) get(i);
-                    enemy.update(player,projList,BLACK, camera);
-                }
-                else {
-                    MagicEnemy enemy = (MagicEnemy) get(i);
-                    enemy.update(player, projList, DARKPURPLE, camera);
-                }
+            if(funcCounter != 1) {
+                stealthUpdates(player,projList,get(i),camera,poison);
             }
-            if( get(i) instanceof  StealthEnemy){
-                StealthEnemy enemy = (StealthEnemy) get(i);
-                enemy.update(player, projList, camera, poison);
-            }
-            Enemy enemy = (Enemy) get(i);
-//            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);
-            if (!enemy.isAlive()){
-                removeIndex(i);
-            }
-            else if(enemy.isShouldDraw()){
-                DrawCircle(enemy.getPosX(), enemy.getPosY(), enemy.getSize(), enemy.getColor());
-            }
-            if (falseCounter == counter){
-                player.setFireInRange(false);
-            }
-            else {
-                player.setFireInRange(true);
-            }
+            generalEnemyUpdates(player,get(i));
+            funcCounter = 0;
         }
     }
         private void sniperUpdates(Player player, ProjectileHandler projList, Object enemy, Camera2D camera){
@@ -144,7 +120,40 @@ public class EnemyHandler extends ListHandler {
                 brawlerEnemy.update(player,camera);
             }
         }
-        private void magicUpdates(){
-
+        private void magicUpdates(Player player, ProjectileHandler projList, Object enemy, Camera2D camera){
+            if (enemy instanceof MagicEnemy){
+                funcCounter++;
+                if(enemy instanceof FireMagicEnemy){
+                    FireMagicEnemy fireMagicenemy = (FireMagicEnemy) enemy;
+                    fireMagicenemy.update(player,projList,BLACK, camera);
+                }
+                else {
+                    MagicEnemy magicEnemy = (MagicEnemy) enemy;
+                    magicEnemy.update(player, projList, DARKPURPLE, camera);
+                }
+            }
         }
-}
+    private void stealthUpdates(Player player, ProjectileHandler projList, Object enemy, Camera2D camera, Poison poison) {
+        if (enemy instanceof StealthEnemy) {
+            funcCounter++;
+            StealthEnemy stealthEnemy = (StealthEnemy) enemy;
+            stealthEnemy.update(player, projList, camera, poison);
+        }
+    }
+    private void generalEnemyUpdates(Player player, Object enemy){
+        Enemy enemy1 = (Enemy) enemy;
+//            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);
+        if (!enemy1.isAlive()){
+            removeObject(enemy1);
+        }
+        else if(enemy1.isShouldDraw()){
+            DrawCircle(enemy1.getPosX(), enemy1.getPosY(), enemy1.getSize(), enemy1.getColor());
+        }
+        if (falseCounter == counter){
+            player.setFireInRange(false);
+        }
+        else {
+            player.setFireInRange(true);
+        }
+    }
+    }
