@@ -292,8 +292,10 @@ public class VectorHandler {
         float slope = (float) ((linePoint2.y() - linePoint1.y()) / (linePoint2.x() - linePoint1.x()));
         float b = (float) (linePoint2.y() - (slope * linePoint2.x()));
         int maxY = (int) Math.max(linePoint2.y(), linePoint1.y());
-        int iterations = (int) (maxY - Math.min(linePoint2.y(), linePoint1.y()));
-        if (iterations != 0){
+        int maxX = (int) Math.max(linePoint2.x(), linePoint1.x());
+        int yIterations = (int) (maxY - Math.min(linePoint2.y(), linePoint1.y()));
+        int xIterations = (int) (maxX - Math.min(linePoint2.x(), linePoint1.x()));
+        if (xIterations <= yIterations){
             return iterationForY(linePoint1, linePoint2, circle, circleRad, slope, b);
         }
         return iterationsForX(linePoint1, linePoint2, circle, circleRad, slope, b);
