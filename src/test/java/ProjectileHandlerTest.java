@@ -1,6 +1,6 @@
 import Attacks.Projectile;
 import Creatures.Enemies.Enemy;
-import Creatures.Player;
+import Creatures.Players.Player;
 import Handlers.EnemyHandler;
 import Handlers.ProjectileHandler;
 import Handlers.VectorHandler;
@@ -13,7 +13,7 @@ public class ProjectileHandlerTest {
 
 
     Projectile playerProjectile = new Projectile(10,550,250,10, new VectorHandler(550,250, 10)
-            ,"Player", 1000,true,BLACK);
+            , "Creatures/Players", 1000,true,BLACK);
     ProjectileHandler projList = new ProjectileHandler();
     EnemyHandler enemyHandler = new EnemyHandler();
     Player player = new Player(100, 12, 15, 550, 250, 5, 20, 700, RED);

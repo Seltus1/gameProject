@@ -41,7 +41,7 @@ public class ProjectileHandler extends ListHandler {
     private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player, Camera2D camera) {
 //        checking to see if the projectile was shot by an enemy or player
 //        (player can't hit players and enemies cant hit enemies)
-        if (projectile.getShotTag().contains("Creatures/Players")){
+        if (projectile.getShotTag().contains("Player")){
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = (Enemy) enemies.get(i);
                 Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);

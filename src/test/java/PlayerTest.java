@@ -1,9 +1,7 @@
-import Attacks.Projectile;
-import Creatures.Enemies.Enemy;
-import Creatures.Player;
+import Creatures.Players.Player;
 import Handlers.ProjectileHandler;
 import org.junit.jupiter.api.Test;
-import static com.raylib.Raylib.*;
+
 import static com.raylib.Jaylib.*;
 import static org.junit.jupiter.api.Assertions.*;
 

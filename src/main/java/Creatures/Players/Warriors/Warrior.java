@@ -1,4 +1,5 @@
 package Creatures.Players.Warriors;
+import Attacks.Shield;
 import Attacks.Sword;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
@@ -12,17 +13,20 @@ import static com.raylib.Jaylib.*;
 public class Warrior extends Player {
 
     private Sword sword;
+    private Shield shield;
     private boolean canAttack;
     private CooldownHandler attackCooldown;
     public Warrior(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, Raylib.Camera2D camera, Raylib.Color color) {
         super(hp, damage, meleeRange, posX, posY, moveSpeed, size, camera, color);
         sword = new Sword(damage, camera);
+        shield = new Shield(camera);
         attackCooldown = new CooldownHandler();
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies){
         attack(enemies, mousePos);
-//        this needs to update last so that the camera doesnt jiggle
+        shield.update(this, mousePos, projList);
+//        this needs to update last so that the camera doesn't jiggle
         super.update(projList, camera, mousePos, enemies);
     }
 

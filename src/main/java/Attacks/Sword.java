@@ -28,7 +28,6 @@ public class Sword {
         vector = new VectorHandler(0,0,0, camera);
     }
 
-
     public void attack(Creature creature, Player player) {
         creature.setHp(creature.getHp() - damage);
         if (creature instanceof Player){

@@ -32,8 +32,8 @@ public class EnemyHandler extends ListHandler {
 
     public void addMultipleEnemies(int amount, Camera2D camera, Player player){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(7) + 1;
-//            int randEnemy = 4;
+//            int randEnemy = rand.nextInt(7) + 1;
+            int randEnemy = 4;
             int size = 25;
             int[] enemyPos = enemySpawnPosition(player);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);

@@ -1,15 +1,10 @@
 package Creatures.Enemies.Brawler;
 
 import Creatures.Enemies.Enemy;
-import com.raylib.Jaylib;
+import Creatures.Players.Player;
 import com.raylib.Raylib;
-import Creatures.*;
 import Handlers.*;
 import Attacks.*;
-
-import java.awt.*;
-
-import static com.raylib.Raylib.DrawCircle;
 
 public class BrawlerEnemy extends Enemy {
     private MeleeAttack melee;

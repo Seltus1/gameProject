@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ProjectileTest {
 
     Projectile playerProjectile = new Projectile(10,550,250,10, new VectorHandler(550,250, 10)
-            ,"Player", 1000,true,BLACK);
+            , "Creatures/Players", 1000,true,BLACK);
 
 
     int gameTicks = 300;
