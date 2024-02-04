@@ -195,8 +195,6 @@ public class VectorHandler {
         return new int[]{finalX, finalY};
     }
 
-
-
     public void circlePlayer(Player player, float radius) {
         float angularSpeed = 0.01f;
         angularPosition += angularSpeed;
@@ -209,8 +207,6 @@ public class VectorHandler {
         setPosX((int) Math.round(newX));
         setPosY((int) Math.round(newY));
     }
-
-
 
     public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2){
 //        getting the 1st circle
@@ -290,6 +286,45 @@ public class VectorHandler {
         // Calculate the endpoint of the line based on player's position and direction
         Raylib.Vector2 endPoint = new Raylib.Vector2(new Jaylib.Vector2(pos1.x() + direction.x() * rad, pos1.y() + direction.y() * rad));
         return endPoint;
+    }
+
+    public boolean CheckCollisionBetweenLineAndCircle(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad){
+        float slope = (float) ((linePoint2.y() - linePoint1.y()) / (linePoint2.x() - linePoint1.x()));
+        float b = (float) (linePoint2.y() - (slope * linePoint2.x()));
+        int maxY = (int) Math.max(linePoint2.y(), linePoint1.y());
+        int iterations = (int) (maxY - Math.min(linePoint2.y(), linePoint1.y()));
+        if (iterations != 0){
+            return iterationForY(linePoint1, linePoint2, circle, circleRad, slope, b);
+        }
+        return iterationsForX(linePoint1, linePoint2, circle, circleRad, slope, b);
+    }
+
+    private boolean iterationForY(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad, float slope, float b){
+        int maxY = (int) Math.max(linePoint2.y(), linePoint1.y());
+        int iterations = (int) (maxY - Math.min(linePoint2.y(), linePoint1.y()));
+        for (int i = 0; i <= iterations; i++) {
+            float newY = maxY - i;
+            float newX = (newY - b) / slope;
+            Raylib.Vector2 pos = new Raylib.Vector2(new Jaylib.Vector2(newX, newY));
+            if (CheckCollisionPointCircle(pos, circle, circleRad)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean iterationsForX(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad, float slope, float b){
+        int maxX = (int) Math.max(linePoint2.x(), linePoint1.x());
+        int iterations = (int) (maxX - Math.min(linePoint2.x(), linePoint1.x()));
+        for (int i = 0; i <= iterations; i++) {
+            float newX = maxX - i;
+            float newY = (slope * newX) + b;
+            Raylib.Vector2 pos = new Raylib.Vector2(new Jaylib.Vector2(newX, newY));
+            if (CheckCollisionPointCircle(pos, circle, circleRad)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Raylib.Vector2 screenToWorld(Raylib.Vector2 vector, Camera2D camera){
