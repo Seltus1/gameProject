@@ -1,6 +1,6 @@
-import Creatures.*;
+import Creatures.Players.Player;
+import Creatures.Players.Warriors.Warrior;
 import Handlers.*;
-import Creatures.Player;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -16,7 +16,7 @@ public class Main {
     static EnemyHandler enemies;
     static Random rand;
     static Camera2D camera;
-    static Creatures.Player player1;
+    static Player player1;
     static GameHandler game;
     static PlayerHandler player;
     static int amountOfEnemy;
@@ -51,7 +51,7 @@ public class Main {
             enemies.update(projectiles, player1, camera, player1.getFire(), player1.getPoison());
             projectiles.update(enemies, player1, camera);
             player.update(enemies, projectiles, camera, mousePos);
-            player1.update(projectiles, camera, mousePos);
+            player1.update(projectiles, camera, mousePos, enemies);
 
             drawMouse();
             if (enemies.size() == 0) {
@@ -67,7 +67,7 @@ public class Main {
             camera = new Camera2D();
             rand = new Random();
             projectiles = new ProjectileHandler();
-            player1 = new Creatures.Player(200, 12, 15, 0, 0, 5, 20, 700, camera, RED);
+            player1 = new Warrior(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
             game = new GameHandler();

@@ -1,12 +1,10 @@
 package Handlers;
 
 import Attacks.*;
-import Creatures.Creature;
 import Creatures.Enemies.Enemy;
-import Creatures.Player;
+import Creatures.Players.Player;
 import Debuffs.Poison;
 import Elements.Fire;
-import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.BLACK;
@@ -43,7 +41,7 @@ public class ProjectileHandler extends ListHandler {
     private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player, Camera2D camera) {
 //        checking to see if the projectile was shot by an enemy or player
 //        (player can't hit players and enemies cant hit enemies)
-        if (projectile.getShotTag().contains("Player")){
+        if (projectile.getShotTag().contains("Creatures/Players")){
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = (Enemy) enemies.get(i);
                 Raylib.Vector2 fixedEnemy = GetScreenToWorld2D(enemy.getPos(), camera);

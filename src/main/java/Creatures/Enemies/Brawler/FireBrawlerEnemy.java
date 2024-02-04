@@ -1,10 +1,7 @@
 package Creatures.Enemies.Brawler;
 
-import Creatures.Enemies.Brawler.BrawlerEnemy;
+import Creatures.Players.Player;
 import com.raylib.Raylib;
-import Creatures.*;
-import Handlers.*;
-import Attacks.*;
 import Elements.*;
 
 public class FireBrawlerEnemy extends BrawlerEnemy {

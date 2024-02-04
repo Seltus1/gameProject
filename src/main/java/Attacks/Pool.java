@@ -1,7 +1,7 @@
 package Attacks;
 
 import Creatures.Creature;
-import Creatures.Player;
+import Creatures.Players.Player;
 import Handlers.CooldownHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;

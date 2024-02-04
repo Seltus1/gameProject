@@ -1,7 +1,7 @@
 package Handlers;
 
 import Creatures.Enemies.Enemy;
-import Creatures.Player;
+import Creatures.Players.Player;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
@@ -210,6 +210,8 @@ public class VectorHandler {
         setPosY((int) Math.round(newY));
     }
 
+
+
     public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2){
 //        getting the 1st circle
         float a =  circle1.x();
@@ -243,32 +245,6 @@ public class VectorHandler {
         return returnIntersections;
     }
 
-//    public void randMoveInAttackRange(Player player, Enemy enemy, Camera2D camera){
-////        double[] moveRange = findIntersectingPoints(player.getPosition(), enemy.getPos(), enemy.getRange(), enemy.getRange());
-////        int x1 = (int) moveRange[0];
-////        int x2 = (int) moveRange[2];
-////        int y1 = (int) moveRange[1];
-////        int y2 = (int) moveRange[3];
-////        int randX,randY;
-////        if(x1 > x2){
-////            randX = rand.nextInt(x1) + x2;
-////        }
-////        else{
-////            randX = rand.nextInt(x2) + x1;
-////        }
-////        if(y1 > y2){
-////            randY = rand.nextInt(y1) + y2;
-////        }
-////        else{
-////            randY = rand.nextInt(y2) + y1;
-////        }
-////        moveObject(newPos,"to", camera);
-//
-//        moveObject(newPos,"to",camera);
-//        if(distanceToOtherObject(player.getPosX(),player.getPosY()) >= enemy.getRange()) {
-//            moveObject(player.getPosition(),"to",camera);
-//        }
-//    }
     public void randEnemyMove(Player player, Enemy enemy, int rad, Camera2D camera){
         if(!hasAlrdyBooleanMoved){
             newPos = (new Jaylib.Vector2(enemy.getPosX(), enemy.getPosY()));
@@ -296,6 +272,24 @@ public class VectorHandler {
             }
             newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
         }
+    }
+    public void rangeLine(Player player, Raylib.Vector2 mousePos){
+        Raylib.Vector2 endPoint = findIntersectingPointOnCircleAndMousePos(player.getPosition(),player.getRange(),mousePos);
+        // Draw the line from playerPos to endPoint
+        DrawLineV(player.getPosition(), endPoint, BLACK);
+    }
+    public Raylib.Vector2 findIntersectingPointOnCircleAndMousePos(Raylib.Vector2 pos1, float rad, Raylib.Vector2 mousePos){
+        // Calculate the direction vector from player to mouse
+        Raylib.Vector2 direction = new Raylib.Vector2(new Jaylib.Vector2(mousePos.x() - pos1.x(), mousePos.y() - pos1.y()));
+
+        // Normalize the direction vector
+        float length = (float) Math.sqrt(direction.x() * direction.x() + direction.y() * direction.y());
+        direction.x(direction.x() / length);
+        direction.y(direction.y() / length);
+
+        // Calculate the endpoint of the line based on player's position and direction
+        Raylib.Vector2 endPoint = new Raylib.Vector2(new Jaylib.Vector2(pos1.x() + direction.x() * rad, pos1.y() + direction.y() * rad));
+        return endPoint;
     }
 
     public Raylib.Vector2 screenToWorld(Raylib.Vector2 vector, Camera2D camera){

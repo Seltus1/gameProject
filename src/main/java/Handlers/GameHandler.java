@@ -1,14 +1,10 @@
 package Handlers;
 
-import java.util.ArrayList;
-
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
-import Creatures.*;
-import Handlers.*;
-import Attacks.*;
-import Elements.*;
+import Creatures.Players.Player;
+
 public class GameHandler {
     private boolean isinMenu;
     private boolean isPlaying;

@@ -1,7 +1,7 @@
 package Creatures.Enemies.Magic;
 
+import Creatures.Players.Player;
 import com.raylib.Raylib;
-import Creatures.*;
 import Handlers.*;
 import Attacks.*;
 import Elements.*;

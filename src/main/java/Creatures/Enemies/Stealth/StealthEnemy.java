@@ -1,6 +1,7 @@
 package Creatures.Enemies.Stealth;
 
 import Creatures.Enemies.Enemy;
+import Creatures.Players.Player;
 import Debuffs.Poison;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -8,7 +9,7 @@ import com.raylib.Raylib;
 import java.util.Random;
 
 import static com.raylib.Jaylib.*;
-import Creatures.*;
+
 import Handlers.*;
 import Attacks.*;
 

@@ -1,8 +1,9 @@
-package Creatures;
+package Creatures.Players;
 
-import Attacks.Projectile;
+import Creatures.Creature;
 import Debuffs.Poison;
 import Handlers.CooldownHandler;
+import Handlers.EnemyHandler;
 import Handlers.ProjectileHandler;
 import Elements.Fire;
 import Handlers.VectorHandler;
@@ -32,7 +33,7 @@ public class Player implements Creature {
     private Raylib.Color color;
 
 
-    //    Creatures.Player states
+    //    Creatures.Player.Player states
     private boolean isAlive;
     private boolean isOnFire;
     private boolean isFireHex;
@@ -70,15 +71,14 @@ public class Player implements Creature {
     private int shotFrameCount;
     private Camera2D camera;
 
-    public Player(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, int shotRange, Camera2D camera, Raylib.Color color) {
+    public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
         this.hp = hp;
         initalHp = hp;
         this.damage = damage;
-        this.range = meleeRange;
+        this.range = range;
         this.moveSpeed = moveSpeed;
         this.size = size;
         this.color = color;
-        this.shotRange = shotRange;
         this.isAlive = true;
         this.canShoot = true;
         isOnFire = false;
@@ -102,11 +102,11 @@ public class Player implements Creature {
 
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
         move(camera);
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
-            shoot(projList, camera, mousePos);
-        }
+//        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
+//            shoot(projList, camera, mousePos);
+//        }
         fireHex();
         setShooting(false);
         shotCooldown();
@@ -123,19 +123,19 @@ public class Player implements Creature {
         }
     }
 
-    public void shoot(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
-        if (canShoot()) {
-            int mouseX, mouseY;
-            mouseX = (int)mousePos.x();
-            mouseY = (int) mousePos.y();
-            setCanShoot(false);
-            setShooting(true);
-            Projectile shot = new Projectile(13, getPosX(), getPosY() , 7,  mouseX, mouseY, "Player", getShotRange(), true, camera, BLACK);
-            shot.setShotTag("Player");
-            shot.createShotLine(camera);
-            projList.add(shot);
-        }
-    }
+//    public void shoot(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
+//        if (canShoot()) {
+//            int mouseX, mouseY;
+//            mouseX = (int)mousePos.x();
+//            mouseY = (int) mousePos.y();
+//            setCanShoot(false);
+//            setShooting(true);
+//            Projectile shot = new Projectile(13, getPosX(), getPosY() , 7,  mouseX, mouseY, "Creatures/Players", getShotRange(), true, camera, BLACK);
+//            shot.setShotTag("Creatures/Players");
+//            shot.createShotLine(camera);
+//            projList.add(shot);
+//        }
+//    }
 
 
     public void shotCooldown(){

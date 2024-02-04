@@ -1,10 +1,8 @@
 package Elements;
 import Creatures.*;
-import Creatures.Enemies.Brawler.BrawlerEnemy;
-import Creatures.Enemies.Brawler.FireBrawlerEnemy;
+import Creatures.Players.Player;
 import Handlers.CooldownHandler;
-import com.raylib.Jaylib;
-import com.raylib.Raylib;
+
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 

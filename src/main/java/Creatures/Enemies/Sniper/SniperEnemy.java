@@ -1,8 +1,8 @@
 package Creatures.Enemies.Sniper;
 
 import Creatures.Enemies.Enemy;
+import Creatures.Players.Player;
 import com.raylib.Raylib;
-import Creatures.*;
 import Handlers.*;
 import Attacks.*;
 
