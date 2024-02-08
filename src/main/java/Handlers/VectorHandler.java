@@ -41,8 +41,7 @@ public class VectorHandler {
     }
 
     public void playerMove(Camera2D camera) {
-        DrawText("X" + posX + "Y" + posY, 400,400, 30, BLACK);
-        int hCheck = playerHorizontalCheck();
+         int hCheck = playerHorizontalCheck();
         int vCheck = playerVerticalCheck();
         if (hCheck != 0 && vCheck != 0) {
             posX += (hCheck * moveSpeed * diagCheck);
@@ -53,6 +52,8 @@ public class VectorHandler {
         }
         screenToWorld(position,camera);
         updateActualPositions(camera);
+        setActualXPos(getPosX());
+        setActualYPos(getPosY());
     }
 
     private void updateCamera(Raylib.Vector2 position, Camera2D camera){
@@ -98,6 +99,7 @@ public class VectorHandler {
 
     public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
 //
+
         double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
@@ -222,11 +224,12 @@ public class VectorHandler {
 
         // Handling infinite slope
         double x1, x2, y1, y2;
+        float m,c;
 
         if (b - q != 0) {
             // Making mx + c
-            float m = (p - a) / (b - q);
-            float c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
+            m = (p - a) / (b - q);
+            c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
 
             // Making quadratic formula
             float A = 1 + (m * m);
@@ -234,17 +237,18 @@ public class VectorHandler {
             long C = (long) ((a * a) + ((c - b) * (c - b)) - (r * r));
 
             // Getting the x intersections
+
             x1 = ((-B + Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
             x2 = ((-B - Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
-
             // Getting the y intersections
             y1 = (m * x1) + c;
             y2 = (m * x2) + c;
-            intersectingCircleDistance = Math.sqrt(Math.pow((double)y2 - (double)y1, 2) + Math.pow((double)x2 - (double)x1, 2));
-        } else {
+            intersectingCircleDistance = Math.sqrt(Math.pow((double) y2 - (double) y1, 2) + Math.pow((double) x2 - (double) x1, 2));
+        }
+        else{
+            x1 = x2 = a;
             // Handle infinite slope separately (vertical line)
-                    Raylib.Vector2 pos = findIntersectingPointOnCircleAndMousePos(circle1,r1,mousePos);  // Line passes through the point (a, b)
-            x1 = x2 = r1 - pos.x() / 2;
+//          Raylib.Vector2 pos = findIntersectingPointOnCircleAndMousePos(circle1,r1,mousePos);  // Line passes through the point (a, b)
             y1 = b + intersectingCircleDistance / 2;  // One intersection point
             y2 = b - intersectingCircleDistance / 2;  // Other intersection poi nt
         }

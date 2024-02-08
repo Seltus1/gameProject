@@ -27,11 +27,12 @@ public class Enemy implements Creature {
     private boolean isPoisoned;
     private int poisonTicks;
     private Raylib.Color color;
-    private Jaylib.Vector2 pos;
+    private Raylib.Vector2 pos;
     private Jaylib.Vector2 fixedPos;
     private Ellipse2D.Double circle;
     private VectorHandler vector;
     private Random rand;
+    private int initialSpeed;
     private boolean shooting;
     private boolean isRandMoving;
     private boolean gotinRange;
@@ -45,7 +46,7 @@ public class Enemy implements Creature {
         this.size = size;
         this.color = color;
         this.isAlive = true;
-        this.pos = new Jaylib.Vector2(posX,posY);
+        this.pos = vector.getPosition();
         DrawCircle(posX, posY, size, color);
         circle = new Ellipse2D.Double(posX,posY,size,size);
         shouldDraw = true;
@@ -326,5 +327,13 @@ public class Enemy implements Creature {
 
     public void setInitialMoveSpeed(int initialMoveSpeed) {
         this.initialMoveSpeed = initialMoveSpeed;
+    }
+
+    public int getInitialSpeed() {
+        return initialSpeed;
+    }
+
+    public void setInitialSpeed(int initialSpeed) {
+        this.initialSpeed = initialSpeed;
     }
 }

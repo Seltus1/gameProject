@@ -71,6 +71,10 @@ public class PlayerHandler {
         }
     }
 
+    public void drawPos(){
+        DrawText("X: " + player.getPosX() + " Y: " + player.getPosY(), player.getPosX() - (GetScreenWidth()/ 2) + 100, player.getPosY() + (GetScreenHeight() / 2) - 300,30,BLACK);
+    }
+
     public void drawPoison(){
         if(player.isPoisoned()){
             DrawCircle(player.getPosX(), player.getPosY() - 50, 8,GREEN);
@@ -90,5 +94,6 @@ public class PlayerHandler {
         drawRange(mousePos);
         drawPoison();
         drawPlayer();
+        drawPos();
     }
 }

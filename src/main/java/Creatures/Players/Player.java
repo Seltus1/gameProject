@@ -36,6 +36,8 @@ public class Player implements Creature {
     //    Creatures.Player.Player states
     private boolean isAlive;
     private boolean isOnFire;
+    private boolean reachedDestination;
+    private boolean directionLocked;
     private boolean isFireHex;
     private int burnTicks;
     private int intialBurn;
@@ -44,11 +46,13 @@ public class Player implements Creature {
     private boolean isPoisoned;
     private int poisonTicks;
     private Poison poison = new Poison(5,.3f,1.3f,2500);
+    private int shieldingSpeed;
 
     //    cooldowns
     private boolean canShoot;
     private boolean canMelee;
     private boolean canRegen;
+    private boolean isMeleeing;
     private int shotCD;
     private int initialShotCD;
     private long timeSinceHit;
@@ -70,6 +74,7 @@ public class Player implements Creature {
     private int fireHexCount;
     private int shotFrameCount;
     private Camera2D camera;
+
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
         this.hp = hp;
@@ -99,11 +104,13 @@ public class Player implements Creature {
         shotCD = 250;
         initialShotCD = shotCD;
         initialMoveSpeed = moveSpeed;
-
+        shieldingSpeed = moveSpeed / 2;
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
-        move(camera);
+        if(!directionLocked){
+            move(camera);
+        }
 //        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
 //            shoot(projList, camera, mousePos);
 //        }
@@ -549,4 +556,37 @@ public class Player implements Creature {
     public void setPoison(Poison poison) {
         this.poison = poison;
     }
+
+    public boolean isMeleeing() {
+        return isMeleeing;
+    }
+
+    public void setMeleeing(boolean meleeing) {
+        isMeleeing = meleeing;
+    }
+
+    public int getShieldingSpeed() {
+        return shieldingSpeed;
+    }
+
+    public void setShieldingSpeed(int shieldingSpeed) {
+        this.shieldingSpeed = shieldingSpeed;
+    }
+
+    public boolean isDirectionLocked() {
+        return directionLocked;
+    }
+    public void setDirectionLocked(boolean directionLocked) {
+        this.directionLocked = directionLocked;
+    }
+
+    public boolean isReachedDestination() {
+        return reachedDestination;
+    }
+
+    public void setReachedDestination(boolean reachedDestination) {
+        this.reachedDestination = reachedDestination;
+    }
+
+
 }

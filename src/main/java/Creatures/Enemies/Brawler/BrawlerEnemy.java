@@ -5,6 +5,7 @@ import Creatures.Players.Player;
 import com.raylib.Raylib;
 import Handlers.*;
 import Attacks.*;
+import Creatures.Players.Player;
 
 public class BrawlerEnemy extends Enemy {
     private MeleeAttack melee;
