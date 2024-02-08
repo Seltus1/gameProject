@@ -21,6 +21,7 @@ public class VectorHandler {
     private double yNormalizedMovement;
     private double xNormalizedMovement;
     private double angularPosition = 0.0;
+    private double intersectingCircleDistance;
     private Raylib.Vector2 shotPosition;
     private CooldownHandler circleCooldown;
     private Random rand;
@@ -208,38 +209,50 @@ public class VectorHandler {
         setPosY((int) Math.round(newY));
     }
 
-    public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2){
-//        getting the 1st circle
-        float a =  circle1.x();
-        float b =  circle1.y();
-        float r =  r1;
+    public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2, Raylib.Vector2 mousePos) {
+        // Getting the 1st circle
+        float a = circle1.x();
+        float b = circle1.y();
+        float r = r1;
 
-//        getting the 2nd circle
-        float p =  circle2.x();
-        float q =  circle2.y();
-        float d =  r2;
+        // Getting the 2nd circle
+        float p = circle2.x();
+        float q = circle2.y();
+        float d = r2;
 
-//        making mx + c
-        float m = (p - a) / (b - q);
-        float c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
+        // Handling infinite slope
+        double x1, x2, y1, y2;
 
-//        making quadratic formula
-        float A = 1 + (m * m);
-        float B = 2 * (m * (c - b) - a);
-        long C =  (long)((a * a) + ((c - b) * (c - b)) - (r * r));
+        if (b - q != 0) {
+            // Making mx + c
+            float m = (p - a) / (b - q);
+            float c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
 
-//        getting the x intersections
+            // Making quadratic formula
+            float A = 1 + (m * m);
+            float B = 2 * (m * (c - b) - a);
+            long C = (long) ((a * a) + ((c - b) * (c - b)) - (r * r));
 
-        double x1 = ((-B + Math.sqrt((B * B) - (4 * A * C)) )/ (2 * A));
-        double x2 = ((-B + -1 *(Math.sqrt((B * B) - (4 * A * C)))) / (2 * A));
+            // Getting the x intersections
+            x1 = ((-B + Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
+            x2 = ((-B - Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
 
-//        getting the y intersections
-        double y1 = (m * x1) + c;
-        double y2 = (m * x2) + c;
+            // Getting the y intersections
+            y1 = (m * x1) + c;
+            y2 = (m * x2) + c;
+            intersectingCircleDistance = Math.sqrt(Math.pow((double)y2 - (double)y1, 2) + Math.pow((double)x2 - (double)x1, 2));
+        } else {
+            // Handle infinite slope separately (vertical line)
+                    Raylib.Vector2 pos = findIntersectingPointOnCircleAndMousePos(circle1,r1,mousePos);  // Line passes through the point (a, b)
+            x1 = x2 = r1 - pos.x() / 2;
+            y1 = b + intersectingCircleDistance / 2;  // One intersection point
+            y2 = b - intersectingCircleDistance / 2;  // Other intersection poi nt
+        }
 
         double[] returnIntersections = {x1, y1, x2, y2};
         return returnIntersections;
     }
+
 
     public void randEnemyMove(Player player, Enemy enemy, int rad, Camera2D camera){
         if(!hasAlrdyBooleanMoved){
