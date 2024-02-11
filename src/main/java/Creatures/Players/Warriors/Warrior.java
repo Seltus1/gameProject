@@ -6,6 +6,7 @@ import Creatures.Players.Player;
 import Handlers.CooldownHandler;
 import Handlers.EnemyHandler;
 import Handlers.ProjectileHandler;
+import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -19,16 +20,17 @@ public class Warrior extends Player {
     private CooldownHandler attackCooldown;
     private CooldownHandler drawCooldown;
     private Raylib.Vector2 currMousePos;
-    private boolean isCharging;
     private Raylib.Vector2 endOfChargeLocation;
     private boolean startChargeCD;
     private boolean isMeleeing;
     private CooldownHandler chargingTime;
     private CooldownHandler chargeCooldown;
     private boolean canCharge;
+    private double[] chargingShieldPos;
     private float chargeX;
     private float chargeY;
-    private int counter;
+    private VectorHandler shieldVector;
+
 
     public Warrior(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, Raylib.Camera2D camera, Raylib.Color color) {
         super(hp, damage, meleeRange, posX, posY, moveSpeed, size, camera, color);
@@ -39,6 +41,7 @@ public class Warrior extends Player {
         chargingTime = new CooldownHandler();
         chargeCooldown = new CooldownHandler();
         canCharge = true;
+        shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
@@ -52,7 +55,7 @@ public class Warrior extends Player {
     }
 
     public void attack(EnemyHandler enemies, Raylib.Vector2 mousePos) {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isCharging() && !isMeleeing) {
             if (!canMelee()) {
                 if (attackCooldown.cooldown(getShotcooldown())) {
                     setCanMelee(true);
@@ -72,29 +75,32 @@ public class Warrior extends Player {
         if (IsKeyPressed(KEY_Q) && canCharge) {
             currMousePos = mousePos;
             getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
-            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);
-//            chargeX = mousePos.x();
-//            chargeY = mousePos.y();
-//            getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
-//            getVector().setShootLine(camera);
+//            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);
+            chargeX = mousePos.x();
+            chargeY = mousePos.y();
+            getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
+            getVector().setShootLine(camera);
             startChargeCD = true;
-            isCharging = true;
+            setCharging(true);
             canCharge = false;
             setDirectionLocked(true);
         }
-        if (isCharging) {
-//            getVector().updateShootLinePosition(camera);
-            getVector().moveObject(endOfChargeLocation, "to", camera);
-//            shield.drawShield(shield.calculateShieldLocation(player,mousePos));
+        if (isCharging()) {
+            currMousePos = shieldVector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),100000,currMousePos);
+            chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
+//            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
+            shield.drawShield(chargingShieldPos);
+            getVector().updateShootLinePosition(camera);
+//            getVector().moveObject(endOfChargeLocation, "to", camera);
         }
         if (chargingTime.cooldown(2000)) {
             setMoveSpeed(getInitialMoveSpeed());
-            isCharging = false;
+            setCharging(false);
             setDirectionLocked(false);
             return;
         }
         if (startChargeCD) {
-            if (chargeCooldown.cooldown(1000)) {
+            if (chargeCooldown.cooldown(5000)) {
                 canCharge = true;
                 startChargeCD = false;
             }

@@ -1,4 +1,5 @@
 package Handlers;
+import Creatures.Players.Warriors.Warrior;
 import Elements.*;
 import Creatures.Players.Player;
 
@@ -37,12 +38,14 @@ public class PlayerHandler {
 
 
     public void drawHp(Camera2D camera){
-        double thing = (double) player.getHp() /  player.getInitalHp();
-        double width = thing * 150;
-        DrawRectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 100, (int) width, 40, DARKGREEN);
-        DrawRectangleLines(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 100, 150, 40, BLACK);
-        String s = String.format("HP: %d", player.getHp());
-        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 100, 20, BLACK);
+        double percentage = (double) player.getHp() /  player.getInitalHp();
+        double width = percentage * 300;
+        Raylib.Rectangle HP = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 100, (int) width, 40));
+        Raylib.Rectangle HPContainer = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 100, 300, 40));
+        DrawRectangleRounded(HP,5,10,DARKGREEN);
+        DrawRectangleRoundedLines(HPContainer, 5,10,3, BLACK);
+        String s = String.format("%d", player.getHp());
+        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 180, player.getPosY() + (GetScreenHeight() / 2) - 90, 20, BLACK);
     }
 
     public void drawBurn(){
@@ -81,6 +84,49 @@ public class PlayerHandler {
         }
     }
 
+    public void drawCooldowns(){
+        Raylib.Vector2 cd1Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 235));
+        Raylib.Vector2 cd1Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 60), player.getPosY() + (GetScreenHeight() / 2) - 175));
+        Raylib.Vector2 cd1Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 60), player.getPosY() + (GetScreenHeight() / 2) - 175));
+        Raylib.Vector2 cd1Bot = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 115));
+
+        DrawLineV(cd1Top,cd1Left,BLACK);
+        DrawLineV(cd1Left,cd1Bot,BLACK);
+        DrawLineV(cd1Bot,cd1Right,BLACK);
+        DrawLineV(cd1Right,cd1Top,BLACK);
+
+        Raylib.Vector2 cd2Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 50), player.getPosY() + (GetScreenHeight() / 2) - 150));
+        Raylib.Vector2 cd2Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 95), player.getPosY() + (GetScreenHeight() / 2) - 105));
+        Raylib.Vector2 cd2Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 5), player.getPosY() + (GetScreenHeight() / 2) - 105));
+        Raylib.Vector2 cd2Bot = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 50), player.getPosY() + (GetScreenHeight() / 2) - 60) );
+
+        DrawLineV(cd2Top,cd2Left,BLACK);
+        DrawLineV(cd2Left,cd2Bot,BLACK);
+        DrawLineV(cd2Bot,cd2Right,BLACK);
+        DrawLineV(cd2Right,cd2Top,BLACK);
+
+
+        Raylib.Vector2 cd3Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 50), player.getPosY() + (GetScreenHeight() / 2) - 150));
+        Raylib.Vector2 cd3Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()  + 5), player.getPosY() + (GetScreenHeight() / 2) - 105));
+        Raylib.Vector2 cd3Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 95), player.getPosY() + (GetScreenHeight() / 2) - 105));
+        Raylib.Vector2 cd3Bot = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 50), player.getPosY() + (GetScreenHeight() / 2) - 60) );
+
+        DrawLineV(cd3Top,cd3Left,BLACK);
+        DrawLineV(cd3Left,cd3Bot,BLACK);
+        DrawLineV(cd3Bot,cd3Right,BLACK);
+        DrawLineV(cd3Right,cd3Top,BLACK);
+
+        Raylib.Vector2 cd4Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 100));
+        Raylib.Vector2 cd4Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()  + 30), player.getPosY() + (GetScreenHeight() / 2) - 55));
+        Raylib.Vector2 cd4Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 30), player.getPosY() + (GetScreenHeight() / 2) - 55));
+        Raylib.Vector2 cd4Bot = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 10) );
+
+        DrawLineV(cd4Top,cd4Left,BLACK);
+        DrawLineV(cd4Left,cd4Bot,BLACK);
+        DrawLineV(cd4Bot,cd4Right,BLACK);
+        DrawLineV(cd4Right,cd4Top,BLACK);
+    }
+
     public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
 //        shoot(projList);
         if (player.getHp() <= 0){
@@ -95,5 +141,6 @@ public class PlayerHandler {
         drawPoison();
         drawPlayer();
         drawPos();
+        drawCooldowns();
     }
 }

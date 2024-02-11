@@ -34,10 +34,10 @@ public class Shield {
     }
 
     public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !player.isMeleeing() && canShield){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !player.isMeleeing() && canShield && !player.isCharging()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses);
-            for (int j = 0; j < projList.size() ; j++) {
+            for (int j = 0; j < projList.size() ; j++){
                 Projectile projectile = (Projectile) projList.get(j);
                 if (!projectile.isDraw()) {
                     continue;
@@ -54,8 +54,8 @@ public class Shield {
         }
     }
     public double[] calculateShieldLocation(Player player, Raylib.Vector2 mousePos){
-        Raylib.Vector2 endPoint = vector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),player.getRange() / 2, mousePos);
-        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint,player.getRange() / 2,35, mousePos);
+        Raylib.Vector2 endPoint = vector.findIntersectingPointOnCircleAndMousePos(player.getPosition(), player.getRange() / 2, mousePos);
+        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35, mousePos);
         linePoint1 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[0], (float) poses[1]));
         linePoint2 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[2], (float) poses[3]));
         return poses;
@@ -70,12 +70,14 @@ public class Shield {
         }
     }
     private void updateMovingSpeed(Player player){
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && canShield){
+        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && canShield && !player.isCharging()){
             player.setMoveSpeed(player.getShieldingSpeed());
+            player.setShielding(true);
             return;
         }
         player.setMoveSpeed(player.getInitialMoveSpeed());
-
+        player.setShielding(false);
     }
+
 
 }

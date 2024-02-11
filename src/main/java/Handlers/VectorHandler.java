@@ -296,9 +296,9 @@ public class VectorHandler {
         Raylib.Vector2 direction = new Raylib.Vector2(new Jaylib.Vector2(mousePos.x() - pos1.x(), mousePos.y() - pos1.y()));
 
         // Normalize the direction vector
-        float length = (float) Math.sqrt(direction.x() * direction.x() + direction.y() * direction.y());
-        direction.x(direction.x() / length);
-        direction.y(direction.y() / length);
+        double length =  Math.sqrt((double) (direction.x() * direction.x()) + (double) (direction.y() * direction.y()));
+        direction.x((float) (direction.x() / length));
+        direction.y((float)(direction.y() / length));
 
         // Calculate the endpoint of the line based on player's position and direction
         Raylib.Vector2 endPoint = new Raylib.Vector2(new Jaylib.Vector2(pos1.x() + direction.x() * rad, pos1.y() + direction.y() * rad));

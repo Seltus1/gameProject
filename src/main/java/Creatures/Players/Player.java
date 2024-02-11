@@ -47,6 +47,7 @@ public class Player implements Creature {
     private int poisonTicks;
     private Poison poison = new Poison(5,.3f,1.3f,2500);
     private int shieldingSpeed;
+    private boolean isShielding;
 
     //    cooldowns
     private boolean canShoot;
@@ -63,6 +64,7 @@ public class Player implements Creature {
     private CooldownHandler poisonCooldown;
 
     private int infernoCooldown;
+    private boolean isCharging;
 
     //    instance of other stuffs
     private int burnDamage;
@@ -588,5 +590,19 @@ public class Player implements Creature {
         this.reachedDestination = reachedDestination;
     }
 
+    public boolean isCharging() {
+        return isCharging;
+    }
 
+    public void setCharging(boolean charging) {
+        isCharging = charging;
+    }
+
+    public boolean isShielding() {
+        return isShielding;
+    }
+
+    public void setShielding(boolean shielding) {
+        isShielding = shielding;
+    }
 }
