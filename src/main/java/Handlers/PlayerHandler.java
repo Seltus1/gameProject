@@ -8,6 +8,7 @@ import com.raylib.Raylib;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
+import static com.raylib.Raylib.GetScreenWidth;
 
 public class PlayerHandler {
     private Player player;
@@ -84,6 +85,24 @@ public class PlayerHandler {
         }
     }
 
+    public void drawShieldHP(){
+        float percentage =  (float) (player.getShieldThreshold() - player.getShieldDamageAbsorbed()) / player.getShieldThreshold();
+        double width = percentage * 300;
+        Raylib.Rectangle shieldHP = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 150, (int) width, 40));
+        Raylib.Rectangle shieldHPContainer = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 150, 300, 40));
+        DrawRectangleRounded(shieldHP,5,10,BLUE);
+        DrawRectangleRoundedLines(shieldHPContainer, 5,10,3, BLACK);
+        String s = String.format("%d", 150 - player.getShieldDamageAbsorbed());
+        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 180, player.getPosY() + (GetScreenHeight() / 2) - 140, 20, BLACK);
+//        DrawTriangle(shieldLeft,shieldRight,shieldBot,BLUE);
+
+
+
+//        DrawRectangleRoundedLines(HPContainer, 5,10,3, BLACK);
+//        String s = String.format("%d", player.getHp());
+//        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 180, player.getPosY() + (GetScreenHeight() / 2) - 90, 20, BLACK);
+    }
+
     public void drawCooldowns(){
         Raylib.Vector2 cd1Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 235));
         Raylib.Vector2 cd1Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 60), player.getPosY() + (GetScreenHeight() / 2) - 175));
@@ -142,5 +161,8 @@ public class PlayerHandler {
         drawPlayer();
         drawPos();
         drawCooldowns();
+        if(player instanceof Warrior){
+            drawShieldHP();
+        }
     }
 }

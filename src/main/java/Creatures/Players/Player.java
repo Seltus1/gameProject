@@ -35,6 +35,7 @@ public class Player implements Creature {
 
     //    Creatures.Player.Player states
     private boolean isAlive;
+    private boolean canShield;
     private boolean isOnFire;
     private boolean reachedDestination;
     private boolean directionLocked;
@@ -65,6 +66,8 @@ public class Player implements Creature {
 
     private int infernoCooldown;
     private boolean isCharging;
+    private int shieldThreshold;
+    private int shieldDamageAbsorbed;
 
     //    instance of other stuffs
     private int burnDamage;
@@ -107,6 +110,8 @@ public class Player implements Creature {
         initialShotCD = shotCD;
         initialMoveSpeed = moveSpeed;
         shieldingSpeed = moveSpeed / 2;
+        setShieldThreshold(150);
+
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
@@ -604,5 +609,29 @@ public class Player implements Creature {
 
     public void setShielding(boolean shielding) {
         isShielding = shielding;
+    }
+
+    public int getShieldThreshold() {
+        return shieldThreshold;
+    }
+
+    public void setShieldThreshold(int shieldThreshold) {
+        this.shieldThreshold = shieldThreshold;
+    }
+
+    public int getShieldDamageAbsorbed() {
+        return shieldDamageAbsorbed;
+    }
+
+    public void setShieldDamageAbsorbed(int shieldDamageAbsorbed) {
+        this.shieldDamageAbsorbed = shieldDamageAbsorbed;
+    }
+
+    public boolean isCanShield() {
+        return canShield;
+    }
+
+    public void setCanShield(boolean canShield) {
+        this.canShield = canShield;
     }
 }

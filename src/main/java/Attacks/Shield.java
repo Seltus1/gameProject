@@ -12,8 +12,6 @@ import static com.raylib.Jaylib.*;
 
 public class Shield {
     private VectorHandler vector;
-    private int threshold;
-    private int damageAbsorbed;
     private boolean canShield;
     private Raylib.Vector2 linePoint1;
     private Raylib.Vector2 linePoint2;
@@ -22,19 +20,18 @@ public class Shield {
         vector = new VectorHandler(0, 0, 0, camera);
         canShield = true;
         shieldCD = new CooldownHandler();
-        threshold = 150;
     }
 
     public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
         defend(player, mousePos, projList);
         updateMovingSpeed(player);
         if(!canShield){
-            shieldCD();
+            shieldCD(player);
         }
     }
 
     public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !player.isMeleeing() && canShield && !player.isCharging()){
+        if (IsKeyDown(KEY_E) && !player.isMeleeing() && canShield && !player.isCharging()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses);
             for (int j = 0; j < projList.size() ; j++){
@@ -43,11 +40,10 @@ public class Shield {
                     continue;
                 }
                 if (vector.CheckCollisionBetweenLineAndCircle(linePoint1, linePoint2, projectile.getPosition(), projectile.getShotRad())) {
-                    damageAbsorbed += projectile.getDamage();
+                    player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
                     projList.removeObject(projectile);
-                    if(damageAbsorbed >= threshold){
+                    if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
                         canShield = false;
-                        damageAbsorbed = 0;
                     }
                 }
             }
@@ -64,13 +60,14 @@ public class Shield {
         DrawLine((int)poses[0],(int)poses[1],(int)poses[2],(int)poses[3], BLACK);
     }
 
-    private void shieldCD(){
+    private void shieldCD(Player player){
         if(shieldCD.cooldown(5000)){
             canShield = true;
+            player.setShieldDamageAbsorbed(0);
         }
     }
     private void updateMovingSpeed(Player player){
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && canShield && !player.isCharging()){
+        if(IsKeyDown(KEY_E) && canShield && !player.isCharging()){
             player.setMoveSpeed(player.getShieldingSpeed());
             player.setShielding(true);
             return;
