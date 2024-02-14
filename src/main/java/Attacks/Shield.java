@@ -16,10 +16,13 @@ public class Shield {
     private Raylib.Vector2 linePoint1;
     private Raylib.Vector2 linePoint2;
     private CooldownHandler shieldCD;
+    private int maxDamageToDeal;
+    private int currentDamageDealt;
     public Shield(Camera2D camera) {
         vector = new VectorHandler(0, 0, 0, camera);
         canShield = true;
         shieldCD = new CooldownHandler();
+        maxDamageToDeal = 300;
     }
 
     public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
@@ -76,5 +79,35 @@ public class Shield {
         player.setShielding(false);
     }
 
+    public Raylib.Vector2 getLinePoint1() {
+        return linePoint1;
+    }
 
+    public void setLinePoint1(Raylib.Vector2 linePoint1) {
+        this.linePoint1 = linePoint1;
+    }
+
+    public Raylib.Vector2 getLinePoint2() {
+        return linePoint2;
+    }
+
+    public void setLinePoint2(Raylib.Vector2 linePoint2) {
+        this.linePoint2 = linePoint2;
+    }
+
+    public int getMaxDamageToDeal() {
+        return maxDamageToDeal;
+    }
+
+    public void setMaxDamageToDeal(int maxDamageToDeal) {
+        this.maxDamageToDeal = maxDamageToDeal;
+    }
+
+    public int getCurrentDamageDealt() {
+        return currentDamageDealt;
+    }
+
+    public void setCurrentDamageDealt(int currentDamageDealt) {
+        this.currentDamageDealt = currentDamageDealt;
+    }
 }

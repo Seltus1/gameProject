@@ -110,6 +110,10 @@ public class Warrior extends Player {
     private void dealingDamage(EnemyHandler enemies, Raylib.Vector2 mousePos) {
         for (int i = 0; i < enemies.size(); i++) {
             Enemy enemy = (Enemy) enemies.get(i);
+            if(isCharging()){
+                dealDamageToEnemies(enemy);
+                return;
+            }
             Raylib.Vector2[] trianglePoints = sword.calculateTriangle(this, mousePos);
             if (CheckCollisionPointTriangle(enemy.getPos(), trianglePoints[0], trianglePoints[1], trianglePoints[2])) {
                 sword.attack(enemy, this);
@@ -126,5 +130,12 @@ public class Warrior extends Player {
             return;
         }
         setMeleeing(false);
+    }
+    private void dealDamageToEnemies(Enemy enemy){
+        if(shieldVector.CheckCollisionBetweenLineAndCircle(shield.getLinePoint1(),shield.getLinePoint2(),enemy.getPos(),enemy.getSize())){
+            if(shield.getCurrentDamageDealt() < shield.getMaxDamageToDeal()) {
+//                enemy.setHp(enemy.getHp() -);
+            }
+        }
     }
 }
