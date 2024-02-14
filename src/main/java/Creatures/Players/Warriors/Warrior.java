@@ -131,6 +131,7 @@ public class Warrior extends Player {
         }
         setMeleeing(false);
     }
+
     private void dealDamageToEnemies(Enemy enemy){
         if(shieldVector.CheckCollisionBetweenLineAndCircle(shield.getLinePoint1(),shield.getLinePoint2(),enemy.getPos(),enemy.getSize())){
             if(shield.getCurrentDamageDealt() < shield.getMaxDamageToDeal()) {
