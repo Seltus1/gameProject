@@ -49,7 +49,7 @@ public class Warrior extends Player {
         checkIfIsMeleeing();
         attack(enemies, mousePos);
         shield.update(this, mousePos, projList);
-        charge(mousePos, camera, this);
+        charge(mousePos, camera, this, enemies);
 //        this needs to update last so that the camera doesn't jiggle
         super.update(projList, camera, mousePos, enemies);
     }
@@ -71,7 +71,7 @@ public class Warrior extends Player {
         }
     }
 
-    public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player) {
+    public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player, EnemyHandler enemies) {
         if (IsKeyPressed(KEY_Q) && canCharge) {
             currMousePos = mousePos;
             getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
@@ -91,6 +91,8 @@ public class Warrior extends Player {
 //            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
             shield.drawShield(chargingShieldPos);
             getVector().updateShootLinePosition(camera);
+            dealingDamage(enemies,mousePos);
+
 //            getVector().moveObject(endOfChargeLocation, "to", camera);
         }
         if (chargingTime.cooldown(2000)) {
@@ -108,18 +110,19 @@ public class Warrior extends Player {
     }
 
     private void dealingDamage(EnemyHandler enemies, Raylib.Vector2 mousePos) {
-        for (int i = 0; i < enemies.size(); i++) {
-            Enemy enemy = (Enemy) enemies.get(i);
-            if(isCharging()){
-                dealDamageToEnemies(enemy);
-                return;
-            }
-            Raylib.Vector2[] trianglePoints = sword.calculateTriangle(this, mousePos);
-            if (CheckCollisionPointTriangle(enemy.getPos(), trianglePoints[0], trianglePoints[1], trianglePoints[2])) {
-                sword.attack(enemy, this);
-            }
-            if (CheckCollisionPointTriangle(enemy.getPos(), trianglePoints[0], trianglePoints[2], trianglePoints[1])) {
-                sword.attack(enemy, this);
+        if(isCharging() || isMeleeing()) {
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy enemy = (Enemy) enemies.get(i);
+                if (isCharging()) {
+                    dealDamageToEnemiesWhileCharging(enemy);
+                }
+                Raylib.Vector2[] trianglePoints = sword.calculateTriangle(this, mousePos);
+                if (CheckCollisionPointTriangle(enemy.getPos(), trianglePoints[0], trianglePoints[1], trianglePoints[2])) {
+                    sword.attack(enemy, this);
+                }
+                if (CheckCollisionPointTriangle(enemy.getPos(), trianglePoints[0], trianglePoints[2], trianglePoints[1])) {
+                    sword.attack(enemy, this);
+                }
             }
         }
     }
@@ -132,10 +135,19 @@ public class Warrior extends Player {
         setMeleeing(false);
     }
 
-    private void dealDamageToEnemies(Enemy enemy){
+    private void dealDamageToEnemiesWhileCharging(Enemy enemy){
+
         if(shieldVector.CheckCollisionBetweenLineAndCircle(shield.getLinePoint1(),shield.getLinePoint2(),enemy.getPos(),enemy.getSize())){
+//          check if the shield can do more damage
             if(shield.getCurrentDamageDealt() < shield.getMaxDamageToDeal()) {
-//                enemy.setHp(enemy.getHp() -);
+//                check if the enemies helath is less than or = to the amount of damage left to deal on the shield
+                if(shield.getMaxDamageToDeal() - shield.getCurrentDamageDealt() >= enemy.getHp()){
+                    shield.setCurrentDamageDealt(shield.getCurrentDamageDealt() + enemy.getHp());
+                    enemy.setHp(0);
+                    return;
+                }
+                enemy.setHp(enemy.getHp() - (shield.getMaxDamageToDeal() - shield.getCurrentDamageDealt()));
+                shield.setCurrentDamageDealt(0);
             }
         }
     }
