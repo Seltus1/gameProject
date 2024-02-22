@@ -82,7 +82,7 @@ public class Warrior extends Player {
     }
 
     public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player, EnemyHandler enemies) {
-        if (IsKeyPressed(KEY_Q) && player.getCanCharge()) {
+        if (IsKeyPressed(KEY_Q) && player.getCanCharge() && !player.isMeleeing() && !player.isShielding()) {
             currMousePos = mousePos;
             getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
 //            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);

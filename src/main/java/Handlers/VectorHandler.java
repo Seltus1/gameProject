@@ -318,6 +318,7 @@ public class VectorHandler {
         return iterationsForX(linePoint1, linePoint2, circle, circleRad, slope, b);
     }
 
+
     private boolean iterationForY(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad, float slope, float b){
         int maxY = (int) Math.max(linePoint2.y(), linePoint1.y());
         int iterations = (int) (maxY - Math.min(linePoint2.y(), linePoint1.y()));

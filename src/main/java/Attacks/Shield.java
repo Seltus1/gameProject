@@ -33,7 +33,7 @@ public class Shield {
     }
 
     public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && !player.isMeleeing() && player.isCanShield() && !player.isCharging()){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanShield() && !player.isMeleeing() && !player.isCharging()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses);
             for (int j = 0; j < projList.size() ; j++){
