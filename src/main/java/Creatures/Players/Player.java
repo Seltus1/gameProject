@@ -63,11 +63,18 @@ public class Player implements Creature {
     private CooldownHandler shotCooldownHandler;
     private CooldownHandler applyRegenCooldown;
     private CooldownHandler poisonCooldown;
+    private CooldownHandler shieldCD;
+    private int totalShieldCD;
+    private CooldownHandler chargeCD;
+    private Boolean canCharge;
+    private int totalChargeCD;
+    private CooldownHandler meleeCD;
 
     private int infernoCooldown;
     private boolean isCharging;
     private int shieldThreshold;
     private int shieldDamageAbsorbed;
+    private int totalMeleeCD;
 
     //    instance of other stuffs
     private int burnDamage;
@@ -111,6 +118,9 @@ public class Player implements Creature {
         initialMoveSpeed = moveSpeed;
         shieldingSpeed = moveSpeed / 2;
         setShieldThreshold(150);
+        shieldCD = new CooldownHandler();
+        chargeCD = new CooldownHandler();
+        meleeCD = new CooldownHandler();
 
     }
 
@@ -633,5 +643,53 @@ public class Player implements Creature {
 
     public void setCanShield(boolean canShield) {
         this.canShield = canShield;
+    }
+
+    public CooldownHandler getShieldCD() {
+        return shieldCD;
+    }
+
+    public void setShieldCD(CooldownHandler shieldCD) {
+        this.shieldCD = shieldCD;
+    }
+
+    public int getTotalShieldCD() {
+        return totalShieldCD;
+    }
+
+    public void setTotalShieldCD(int totalShieldCD) {
+        this.totalShieldCD = totalShieldCD;
+    }
+
+    public CooldownHandler getChargeCD() {
+        return chargeCD;
+    }
+
+    public void setChargeCD(CooldownHandler chargeCD) {
+        this.chargeCD = chargeCD;
+    }
+
+    public Boolean getCanCharge() {
+        return canCharge;
+    }
+
+    public void setCanCharge(Boolean canCharge) {
+        this.canCharge = canCharge;
+    }
+
+    public int getTotalChargeCD() {
+        return totalChargeCD;
+    }
+
+    public void setTotalChargeCD(int totalChargeCD) {
+        this.totalChargeCD = totalChargeCD;
+    }
+
+    public CooldownHandler getMeleeCD() {
+        return meleeCD;
+    }
+
+    public void setTotalMeleeCD(int totalMeleeCD) {
+        this.totalMeleeCD = totalMeleeCD;
     }
 }

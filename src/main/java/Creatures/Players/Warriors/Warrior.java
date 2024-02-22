@@ -25,23 +25,25 @@ public class Warrior extends Player {
     private boolean isMeleeing;
     private CooldownHandler chargingTime;
     private CooldownHandler chargeCooldown;
-    private boolean canCharge;
     private double[] chargingShieldPos;
     private float chargeX;
     private float chargeY;
     private VectorHandler shieldVector;
+    private boolean didMelee;
 
 
     public Warrior(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, Raylib.Camera2D camera, Raylib.Color color) {
         super(hp, damage, meleeRange, posX, posY, moveSpeed, size, camera, color);
         sword = new Sword(damage, camera);
-        shield = new Shield(camera);
+        shield = new Shield(camera, this);
         attackCooldown = new CooldownHandler();
         drawCooldown = new CooldownHandler();
         chargingTime = new CooldownHandler();
         chargeCooldown = new CooldownHandler();
-        canCharge = true;
+        setCanCharge(true);
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
+        setTotalShieldCD(5000);
+        setTotalChargeCD(5000);
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
@@ -55,24 +57,32 @@ public class Warrior extends Player {
     }
 
     public void attack(EnemyHandler enemies, Raylib.Vector2 mousePos) {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isCharging() && !isMeleeing) {
-            if (!canMelee()) {
-                if (attackCooldown.cooldown(getShotcooldown())) {
-                    setCanMelee(true);
-                }
+//        is the player off cooldown for attacking
+        if(canMelee()){
+//            is the player attacking
+            if(isMeleeing() && !didMelee){
+                didMelee = true;
             }
-            if (canMelee()) {
+            if(didMelee) {
                 dealingDamage(enemies, mousePos);
                 sword.drawSword(this, mousePos);
                 if (drawCooldown.cooldown(200)) {
                     setCanMelee(false);
+                    didMelee = false;
                 }
+            }
+            return;
+        }
+
+        if (!canMelee()) {
+            if (attackCooldown.cooldown(getShotcooldown())) {
+                setCanMelee(true);
             }
         }
     }
 
     public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player, EnemyHandler enemies) {
-        if (IsKeyPressed(KEY_Q) && canCharge) {
+        if (IsKeyPressed(KEY_Q) && player.getCanCharge()) {
             currMousePos = mousePos;
             getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
 //            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);
@@ -82,7 +92,7 @@ public class Warrior extends Player {
             getVector().setShootLine(camera);
             startChargeCD = true;
             setCharging(true);
-            canCharge = false;
+            player.setCanCharge(false);
             setDirectionLocked(true);
         }
         if (isCharging()) {
@@ -102,8 +112,8 @@ public class Warrior extends Player {
             return;
         }
         if (startChargeCD) {
-            if (chargeCooldown.cooldown(5000)) {
-                canCharge = true;
+            if (getChargeCD().cooldown(getTotalChargeCD())) {
+                player.setCanCharge(true);
                 startChargeCD = false;
             }
         }
@@ -128,7 +138,7 @@ public class Warrior extends Player {
     }
 
     private void checkIfIsMeleeing() {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isCharging() && !isMeleeing && !isShielding()) {
             setMeleeing(true);
             return;
         }

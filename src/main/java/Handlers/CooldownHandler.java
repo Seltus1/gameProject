@@ -24,6 +24,9 @@ public class CooldownHandler {
     public int getCurrentFrame() {
         return currentFrame;
     }
+    public double getCurrentFrameInMilliSeconds(){
+        return ((double) currentFrame / 60) * 1000;
+    }
 
     public void setCurrentFrame(int currentFrame) {
         this.currentFrame = currentFrame;

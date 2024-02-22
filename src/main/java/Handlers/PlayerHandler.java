@@ -125,6 +125,7 @@ public class PlayerHandler {
         DrawLineV(cd2Right,cd2Top,BLACK);
 
 
+
         Raylib.Vector2 cd3Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 50), player.getPosY() + (GetScreenHeight() / 2) - 150));
         Raylib.Vector2 cd3Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()  + 5), player.getPosY() + (GetScreenHeight() / 2) - 105));
         Raylib.Vector2 cd3Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() + 95), player.getPosY() + (GetScreenHeight() / 2) - 105));
@@ -135,6 +136,7 @@ public class PlayerHandler {
         DrawLineV(cd3Bot,cd3Right,BLACK);
         DrawLineV(cd3Right,cd3Top,BLACK);
 
+
         Raylib.Vector2 cd4Top = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()), player.getPosY() + (GetScreenHeight() / 2) - 100));
         Raylib.Vector2 cd4Left = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX()  + 30), player.getPosY() + (GetScreenHeight() / 2) - 55));
         Raylib.Vector2 cd4Right = new Raylib.Vector2(new Jaylib.Vector2((player.getPosX() - 30), player.getPosY() + (GetScreenHeight() / 2) - 55));
@@ -144,6 +146,55 @@ public class PlayerHandler {
         DrawLineV(cd4Left,cd4Bot,BLACK);
         DrawLineV(cd4Bot,cd4Right,BLACK);
         DrawLineV(cd4Right,cd4Top,BLACK);
+        drawCooldownNumbers();
+    }
+
+    private void drawCooldownNumbers(){
+        if(player instanceof Warrior){
+//            when we add the ult, add the same system.
+
+            DrawText("ULT", player.getPosX() - 30,player.getPosY() + (GetScreenHeight() / 2) - 190, 30, BLACK);
+
+//          charge texts
+            chargeCDNums();
+//            shield texts
+            shieldCDNums();
+//            sword texts
+            swordCDNums();
+        }
+    }
+    private void chargeCDNums(){
+        if(player.getCanCharge()) {
+            DrawText("CHARGE", player.getPosX() - 95, player.getPosY() + (GetScreenHeight() / 2) - 115, 20, BLACK);
+            return;
+        }
+//        calculating the timer for the cooldown
+        int cdNumSecs = (int) player.getChargeCD().getCurrentFrameInMilliSeconds() / 1000;
+        cdNumSecs = (player.getTotalChargeCD() / 1000) - cdNumSecs;
+//        drawing the calculated number
+        DrawText("" + cdNumSecs, player.getPosX() - 65, player.getPosY() + (GetScreenHeight() / 2) - 115, 40, BLACK);
+    }
+
+
+    private void shieldCDNums(){
+        if(player.isCanShield()) {
+            DrawText("SHIELD", player.getPosX() + 10, player.getPosY() + (GetScreenHeight() / 2) - 115, 20, BLACK);
+            return;
+        }
+        int cdNumSecs = (int) player.getShieldCD().getCurrentFrameInMilliSeconds() / 1000;
+        cdNumSecs = (player.getTotalShieldCD() / 1000) - cdNumSecs;
+        DrawText("" + cdNumSecs, player.getPosX() + 40, player.getPosY() + (GetScreenHeight() / 2) - 115, 40, BLACK);
+    }
+
+
+    private void swordCDNums(){
+        if(player.canMelee()){
+            DrawText("SWORD", player.getPosX() - 25,player.getPosY() + (GetScreenHeight() / 2) - 65, 15, BLACK);
+            return;
+        }
+        int cdNumSecs = (int) player.getShieldCD().getCurrentFrameInMilliSeconds() / 1000;
+        cdNumSecs = (player.getShotcooldown() / 1000) - cdNumSecs;
+        DrawText("" + cdNumSecs, player.getPosX() - 10, player.getPosY() + (GetScreenHeight() / 2) - 65, 40, BLACK);
     }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
