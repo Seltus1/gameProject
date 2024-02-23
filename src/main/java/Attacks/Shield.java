@@ -41,13 +41,30 @@ public class Shield {
                 if (!projectile.isDraw()) {
                     continue;
                 }
-                if (vector.CheckCollisionBetweenLineAndCircle(linePoint1, linePoint2, projectile.getPosition(), projectile.getShotRad())) {
-                    player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
-                    projList.removeObject(projectile);
-                    if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
-                        player.setCanShield(false);
+                float centerX = (linePoint1.x() + linePoint2.x()) / 2;
+                float centerY = (linePoint1.y() + linePoint2.y()) / 2;
+                Raylib.Vector2 shieldCenterPoint = new Raylib.Vector2(new Jaylib.Vector2(centerX, centerY));
+                if (projectile.getVector().distanceToOtherObject((int) centerX,(int) centerY) <= projectile.getShotSpeed()){
+                    System.out.println("Hello");
+                }
+                if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())){
+                    if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)){
+                        player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
+                        projList.removeObject(projectile);
+                        if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
+                            player.setCanShield(false);
+                        }
                     }
                 }
+//                else{
+//                    if (vector.CheckCollisionBetweenLineAndCircle(linePoint1, linePoint2, projectile.getPosition(), projectile.getShotRad())) {
+//                        player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
+//                        projList.removeObject(projectile);
+//                        if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
+//                            player.setCanShield(false);
+//                        }
+//                    }
+//                }
             }
         }
     }

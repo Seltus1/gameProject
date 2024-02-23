@@ -1,10 +1,13 @@
 package Handlers;
 
+import Attacks.Projectile;
+import Creatures.Creature;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
 import com.raylib.Raylib;
 import com.raylib.Jaylib;
 
+import java.util.HashMap;
 import java.util.Random;
 
 import static com.raylib.Jaylib.BLACK;
@@ -258,6 +261,26 @@ public class VectorHandler {
     }
 
 
+    private HashMap<String, Float> findSlopeAndIntercept(Raylib.Vector2 startPoint, Raylib.Vector2 endPoint){
+        float slope = (endPoint.y() - startPoint.y()) / (endPoint.x() - startPoint.x());
+        float intercept = endPoint.y() - (slope * endPoint.x());
+        HashMap<String, Float> lineInformation = new HashMap<>();
+        lineInformation.put("slope", slope);
+        lineInformation.put("intercept", intercept);
+        return lineInformation;
+    }
+
+    private float[] collisionBetweenLines(HashMap<String, Float> line1, HashMap<String, Float> line2){
+//        solving for X
+        float newSlope = line2.get("slope") - line1.get("slope");
+        float newIntercept = line1.get("intercept") - line2.get("intercept");
+        float newX = newIntercept / newSlope;
+
+//        solving for Y
+        float newY = line2.get("slope") * newX + line2.get("intercept");
+        return new float[]{newX, newY};
+    }
+
     public void randEnemyMove(Player player, Enemy enemy, int rad, Camera2D camera){
         if(!hasAlrdyBooleanMoved){
             newPos = (new Jaylib.Vector2(enemy.getPosX(), enemy.getPosY()));
@@ -305,7 +328,26 @@ public class VectorHandler {
         return endPoint;
     }
 
-    public boolean CheckCollisionBetweenLineAndCircle(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad){
+
+    public boolean canTheProjectileHitThePlayerCircle(Projectile projectile, Player player, Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2){
+//            calculating projectile shot Line
+        Raylib.Vector2 projectileFinalPosition = projectile.getTargetPosition();
+        Raylib.Vector2 projectileCurrentPosition = projectile.getPosition();
+        HashMap<String, Float> projectileLineInformation = findSlopeAndIntercept(projectileCurrentPosition, projectileFinalPosition);
+        HashMap<String, Float> shieldLineInformation = findSlopeAndIntercept(linePoint1, linePoint2);
+        float[] interceptingPoint = collisionBetweenLines(projectileLineInformation, shieldLineInformation);
+        float x = interceptingPoint[0];
+        float y = interceptingPoint[1];
+        float maxX = Math.max(linePoint2.x(), linePoint1.x());
+        float minX = Math.min(linePoint2.x(), linePoint1.x());
+        float maxY = Math.max(linePoint2.y(), linePoint1.y());
+        float minY = Math.min(linePoint2.y(), linePoint1.y());
+        if ((x >= minX && x <= maxX) && (y >= minY && y <= maxY)){
+            return true;
+        }
+        return false;
+    }
+    public boolean CheckCollisionBetweenLineAndCircle(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad) {
         float slope = (float) ((linePoint2.y() - linePoint1.y()) / (linePoint2.x() - linePoint1.x()));
         float b = (float) (linePoint2.y() - (slope * linePoint2.x()));
         int maxY = (int) Math.max(linePoint2.y(), linePoint1.y());

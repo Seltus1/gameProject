@@ -11,6 +11,8 @@ import Creatures.Players.Player;
 import Debuffs.Poison;
 import Elements.Fire;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import static com.raylib.Raylib.*;
@@ -25,15 +27,26 @@ public class EnemyHandler extends ListHandler {
     private int funcCounter;
     private int counter;
     private int falseCounter;
+    private HashMap<String, Integer> enemies;
 
     public EnemyHandler() {
         super();
+        enemies = new HashMap<>();
+        enemies.put("Sniper", 1);
+        enemies.put("Bralwer", 2);
+        enemies.put("FireBrawler", 3);
+        enemies.put("Magic", 4);
+        enemies.put("FireSniper", 5);
+        enemies.put("Stealth", 6);
+        enemies.put("FireMagic", 7);
     }
 
     public void addMultipleEnemies(int amount, Camera2D camera, Player player){
         for (int i = 0; i < amount; i++) {
-            int randEnemy = rand.nextInt(7) + 1;
-//            int randEnemy = 4;
+            ArrayList<String> keyList = new ArrayList<>(enemies.keySet());
+            int listIndex = rand.nextInt(enemies.size());
+            int randEnemy = enemies.get(keyList.get(listIndex));
+//            int randEnemy = enemies.get("Sniper");
             int size = 25;
             int[] enemyPos = enemySpawnPosition(player);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);
