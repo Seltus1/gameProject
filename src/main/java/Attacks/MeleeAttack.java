@@ -23,7 +23,6 @@ public class MeleeAttack {
     public void attack(Player player, int time){
         if(cooldown.cooldown(time)){
             player.setHp(player.getHp() - damage);
-            player.setTimeSinceHit(System.currentTimeMillis());
         }
     }
     public void setPosX(int posX){

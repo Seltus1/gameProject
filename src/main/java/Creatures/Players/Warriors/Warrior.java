@@ -42,7 +42,7 @@ public class Warrior extends Player {
         chargeCooldown = new CooldownHandler();
         setCanCharge(true);
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
-        setTotalShieldCD(5000);
+        setTotalShieldCD(10000);
         setTotalChargeCD(5000);
     }
 

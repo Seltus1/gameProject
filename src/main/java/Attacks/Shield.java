@@ -1,7 +1,7 @@
 package Attacks;
 import Creatures.Players.Player;
 import Handlers.CooldownHandler;
-import Handlers.EnemyHandler;
+import Handlers.HealthHandler;
 import Handlers.ProjectileHandler;
 import Handlers.VectorHandler;
 import com.raylib.Jaylib;
@@ -14,14 +14,23 @@ public class Shield {
     private VectorHandler vector;
     private Raylib.Vector2 linePoint1;
     private Raylib.Vector2 linePoint2;
-    private CooldownHandler shieldCD;
     private int maxDamageToDeal;
     private int currentDamageDealt;
+    private int shieldRegen;
+    private int totalTimeNeededSinceLastHitToRegen;
+    private CooldownHandler shieldRegenCD;
+    private HealthHandler regenTimer;
+    private boolean regenShield;
     public Shield(Camera2D camera, Player player) {
         vector = new VectorHandler(0, 0, 0, camera);
          player.setCanShield(true);
-        shieldCD = new CooldownHandler();
+         player.setShieldHp(150);
+         player.setShieldMaxHp(150);
         maxDamageToDeal = 300;
+        shieldRegen = 10;
+        totalTimeNeededSinceLastHitToRegen = 5000;
+        shieldRegenCD = new CooldownHandler();
+        regenTimer = new HealthHandler();
     }
 
     public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
@@ -29,6 +38,9 @@ public class Shield {
         updateMovingSpeed(player);
         if(!player.isCanShield()){
             shieldCD(player);
+        }
+        else {
+            regenShield(player);
         }
     }
 
@@ -44,27 +56,19 @@ public class Shield {
                 float centerX = (linePoint1.x() + linePoint2.x()) / 2;
                 float centerY = (linePoint1.y() + linePoint2.y()) / 2;
                 Raylib.Vector2 shieldCenterPoint = new Raylib.Vector2(new Jaylib.Vector2(centerX, centerY));
-                if (projectile.getVector().distanceToOtherObject((int) centerX,(int) centerY) <= projectile.getShotSpeed()){
-                    System.out.println("Hello");
-                }
-                if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())){
-                    if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)){
-                        player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
-                        projList.removeObject(projectile);
-                        if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
-                            player.setCanShield(false);
+                if(!projectile.getShotTag().contains("Pool")) {
+                    if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())) {
+                        if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)) {
+                            player.setShieldHp(player.getShieldHp() - projectile.getDamage());
+                            shieldRegenCD.setCurrentFrame(0);
+                            regenShield = false;
+                            projList.removeObject(projectile);
+                            if (player.getShieldHp() <= 0) {
+                                player.setCanShield(false);
+                            }
                         }
                     }
                 }
-//                else{
-//                    if (vector.CheckCollisionBetweenLineAndCircle(linePoint1, linePoint2, projectile.getPosition(), projectile.getShotRad())) {
-//                        player.setShieldDamageAbsorbed(player.getShieldDamageAbsorbed() + projectile.getDamage());
-//                        projList.removeObject(projectile);
-//                        if(player.getShieldDamageAbsorbed() >= player.getShieldThreshold()){
-//                            player.setCanShield(false);
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -73,6 +77,7 @@ public class Shield {
         double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35, mousePos);
         linePoint1 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[0], (float) poses[1]));
         linePoint2 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[2], (float) poses[3]));
+
         return poses;
     }
     public void drawShield(double[] poses){
@@ -82,9 +87,29 @@ public class Shield {
     private void shieldCD(Player player){
         if(player.getShieldCD().cooldown(player.getTotalShieldCD())){
             player.setCanShield(true);
-            player.setShieldDamageAbsorbed(0);
+            player.setShieldHp(player.getShieldMaxHp());
         }
     }
+    private void regenShield(Player player){
+        if(player.getShieldHp() < player.getShieldMaxHp()) {
+            if (shieldRegenCD.cooldown(totalTimeNeededSinceLastHitToRegen)){
+                regenShield = true;
+            }
+            if (regenShield) {
+                int amtToRegen = regenTimer.regenHp(player.getShieldHp(), shieldRegen, 500);
+                player.setShieldHp(amtToRegen);
+                if (player.getShieldHp() >= player.getShieldMaxHp()){
+                    regenShield = false;
+                }
+            }
+            if(player.getShieldHp() > 0){
+                player.setCanShield(true);
+            }
+            return;
+        }
+        regenShield = false;
+    }
+
     private void updateMovingSpeed(Player player){
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanShield() && !player.isCharging()){
             player.setMoveSpeed(player.getShieldingSpeed());

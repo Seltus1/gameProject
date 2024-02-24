@@ -16,12 +16,14 @@ public class ProjectileHandler extends ListHandler {
     private CooldownHandler cooldown;
     private Fire fire;
     private Poison poison;
+    private HealthHandler playerHp;
 
     public ProjectileHandler(){
         super();
         cooldown = new CooldownHandler();
         fire = new Fire();
         poison = new Poison(1,.2f,1.2f,200);
+        playerHp = new HealthHandler();
     }
 
     public void update(EnemyHandler enemies, Player player, Camera2D camera){
@@ -72,7 +74,7 @@ public class ProjectileHandler extends ListHandler {
 
     private void colliededWithPlayer(Player player, Projectile projectile, Camera2D camera){
         if(!projectile.getShotTag().equals("Enemy_Pool")) {
-            player.setHp(player.getHp() - projectile.getDamage());
+            playerHp.damagePlayer(player,projectile.getDamage());
         }
         applySpecialShot(projectile,player, camera);
         if (player.getHp() <= 0) {

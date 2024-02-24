@@ -86,13 +86,13 @@ public class PlayerHandler {
     }
 
     public void drawShieldHP(){
-        float percentage =  (float) (player.getShieldThreshold() - player.getShieldDamageAbsorbed()) / player.getShieldThreshold();
+        float percentage =  (float) player.getShieldHp() / player.getShieldMaxHp();
         double width = percentage * 300;
         Raylib.Rectangle shieldHP = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 150, (int) width, 40));
         Raylib.Rectangle shieldHPContainer = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50, player.getPosY() + (GetScreenHeight() / 2) - 150, 300, 40));
         DrawRectangleRounded(shieldHP,5,10,BLUE);
         DrawRectangleRoundedLines(shieldHPContainer, 5,10,3, BLACK);
-        String s = String.format("%d", 150 - player.getShieldDamageAbsorbed());
+        String s = String.format("%d", player.getShieldHp());
         DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 180, player.getPosY() + (GetScreenHeight() / 2) - 140, 20, BLACK);
 //        DrawTriangle(shieldLeft,shieldRight,shieldBot,BLUE);
 

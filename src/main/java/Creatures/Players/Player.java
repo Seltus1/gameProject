@@ -17,75 +17,134 @@ public class Player implements Creature {
     private int hp;
     private int initalHp;
     private int regenAmt;
+    private int shieldMaxHp;
+    private int shieldHp;
+
+
+
+
+
+
+
 
     //    DMG
     private int damage;
     private int range;
 
+
+
     //    POS
     private VectorHandler vector;
+
+
+
+
+
     //    Move
     private int moveSpeed;
     private int initialMoveSpeed;
+
+
+
+
+
+
+
+
+
 
     //    size/color
     private int size;
     private Raylib.Color color;
 
 
-    //    Creatures.Player.Player states
+
+
+
+
+
+
+
+
+    //   Player states
     private boolean isAlive;
-    private boolean canShield;
     private boolean isOnFire;
+    private boolean isFireHex;
+    private boolean canShield;
     private boolean reachedDestination;
     private boolean directionLocked;
-    private boolean isFireHex;
-    private int burnTicks;
-    private int intialBurn;
     private boolean isShooting;
     private boolean isRegening;
     private boolean isPoisoned;
-    private int poisonTicks;
-    private Poison poison = new Poison(5,.3f,1.3f,2500);
-    private int shieldingSpeed;
+    private boolean isMeleeing;
+    private boolean isCharging;
     private boolean isShielding;
 
+
+
+
+
+
+
+
+
     //    cooldowns
-    private boolean canShoot;
-    private boolean canMelee;
-    private boolean canRegen;
-    private boolean isMeleeing;
-    private int shotCD;
-    private int initialShotCD;
-    private long timeSinceHit;
-    private int regenCooldownMilliseconds;
+    private CooldownHandler meleeCD;
     private CooldownHandler regenCooldown;
     private CooldownHandler shotCooldownHandler;
     private CooldownHandler applyRegenCooldown;
-    private CooldownHandler poisonCooldown;
     private CooldownHandler shieldCD;
-    private int totalShieldCD;
     private CooldownHandler chargeCD;
-    private Boolean canCharge;
-    private int totalChargeCD;
-    private CooldownHandler meleeCD;
+    private CooldownHandler poisonCooldown;
 
+
+    private boolean canShoot;
+    private boolean canMelee;
+    private boolean canRegen;
+    private boolean canCharge;
+
+
+    private int shotCD;
+    private int initialShotCD;
+    private int regenCooldownMilliseconds;
+    private int totalShieldCD;
+    private int totalChargeCD;
     private int infernoCooldown;
-    private boolean isCharging;
-    private int shieldThreshold;
-    private int shieldDamageAbsorbed;
-    private int totalMeleeCD;
+
+
+
+
+
+
+
+
+
+
 
     //    instance of other stuffs
+    private final Fire fire;
+    private Camera2D camera;
+    private Poison poison = new Poison(5,.3f,1.3f,2500);
+
+
+
+
+
+//    info vars
+
+
+
     private int burnDamage;
     private int burnCountDown;
     private int InfernoCount;
     private boolean isFireInRange;
     private int shotRange;
-    private final Fire fire;
     private int fireHexCount;
     private int shotFrameCount;
-    private Camera2D camera;
+    private int burnTicks;
+    private int poisonTicks;
+    private int intialBurn;
+    private int shieldingSpeed;
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
@@ -98,26 +157,33 @@ public class Player implements Creature {
         this.color = color;
         this.isAlive = true;
         this.canShoot = true;
-        isOnFire = false;
         this.canMelee = true;
+        this.camera = camera;
+
+
+        isOnFire = false;
         isRegening = false;
+
+
         burnCountDown = 0;
-        intialBurn = 10;
         burnDamage = 1;
+        intialBurn = 10;
         regenCooldownMilliseconds = 10000;
+        regenAmt = 10;
+        shotCD = 250;
+        initialShotCD = shotCD;
+        initialMoveSpeed = moveSpeed;
+        shieldingSpeed = moveSpeed / 2;
+        setShieldMaxHp(150);
+
+
+
         fire = new Fire();
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
         applyRegenCooldown = new CooldownHandler();
         shotCooldownHandler = new CooldownHandler();
         poisonCooldown = new CooldownHandler();
-        this.camera = camera;
-        regenAmt = 10;
-        shotCD = 250;
-        initialShotCD = shotCD;
-        initialMoveSpeed = moveSpeed;
-        shieldingSpeed = moveSpeed / 2;
-        setShieldThreshold(150);
         shieldCD = new CooldownHandler();
         chargeCD = new CooldownHandler();
         meleeCD = new CooldownHandler();
@@ -155,7 +221,7 @@ public class Player implements Creature {
 //            setCanShoot(false);
 //            setShooting(true);
 //            Projectile shot = new Projectile(13, getPosX(), getPosY() , 7,  mouseX, mouseY, "Creatures/Players", getShotRange(), true, camera, BLACK);
-//            shot.setShotTag("Creatures/Players");
+//            shot.setShotTag("Player");
 //            shot.createShotLine(camera);
 //            projList.add(shot);
 //        }
@@ -419,14 +485,6 @@ public class Player implements Creature {
         this.shotRange = shotRange;
     }
 
-    public long getTimeSinceHit() {
-        return timeSinceHit;
-    }
-
-    public void setTimeSinceHit(long timeSinceHit) {
-        this.timeSinceHit = timeSinceHit;
-    }
-
     public CooldownHandler getRegenCooldown() {
         return regenCooldown;
     }
@@ -621,20 +679,20 @@ public class Player implements Creature {
         isShielding = shielding;
     }
 
-    public int getShieldThreshold() {
-        return shieldThreshold;
+    public int getShieldMaxHp() {
+        return shieldMaxHp;
     }
 
-    public void setShieldThreshold(int shieldThreshold) {
-        this.shieldThreshold = shieldThreshold;
+    public void setShieldMaxHp(int shieldThreshold) {
+        this.shieldMaxHp = shieldThreshold;
     }
 
-    public int getShieldDamageAbsorbed() {
-        return shieldDamageAbsorbed;
+    public int getShieldHp() {
+        return shieldHp;
     }
 
-    public void setShieldDamageAbsorbed(int shieldDamageAbsorbed) {
-        this.shieldDamageAbsorbed = shieldDamageAbsorbed;
+    public void setShieldHp(int shieldHp) {
+        this.shieldHp = shieldHp;
     }
 
     public boolean isCanShield() {
@@ -689,7 +747,4 @@ public class Player implements Creature {
         return meleeCD;
     }
 
-    public void setTotalMeleeCD(int totalMeleeCD) {
-        this.totalMeleeCD = totalMeleeCD;
-    }
 }

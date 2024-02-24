@@ -2,6 +2,7 @@ package Elements;
 import Creatures.*;
 import Creatures.Players.Player;
 import Handlers.CooldownHandler;
+import Handlers.HealthHandler;
 
 import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
@@ -21,6 +22,7 @@ public class Fire {
     private int burnFPSCount;
     private int fireHexFPSCount;
     private CooldownHandler cooldown;
+    private HealthHandler playerHp;
 
     public Fire() {
         numCoins = 10;
@@ -29,6 +31,7 @@ public class Fire {
         isInRange = false;
         range = 75;
         cooldown = new CooldownHandler();
+        playerHp = new HealthHandler();
     }
 
     public void burn(Creature creature) {
@@ -39,10 +42,6 @@ public class Fire {
 
                 if (creature.isOnFire() && !creature.isFireHex() && !isGettingMeleed){
                     creature.setBurnTicks(creature.getBurnTicks() - burnDamage);
-                }
-                if(creature instanceof Player){
-                    Player player = (Player) creature;
-                    player.getRegenCooldown().setCurrentFrame(0);
                 }
             }
             return;
@@ -106,7 +105,12 @@ public class Fire {
     }
 
     private void dealDamage(int damage, Creature creature) {
-        creature.setHp(creature.getHp() - damage);
+        if(!(creature instanceof Player)){
+            creature.setHp(creature.getHp() - damage);
+            return;
+        }
+        Player player = (Player) creature;
+        playerHp.damagePlayer(player,damage);
     }
 
 
