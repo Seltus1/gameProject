@@ -89,7 +89,8 @@ public class MagicEnemy extends Enemy {
             if (rand == 1) {
                 castLongSpell(player, projList, color, "Enemy", camera);
             } else {
-                castPoolSpell(player, projList, PoolColor, camera);
+//                castPoolSpell(player, projList, PoolColor, camera);
+                castLongSpell(player, projList, color, "Enemy", camera);
             }
         }
     }

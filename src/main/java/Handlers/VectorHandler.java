@@ -1,7 +1,6 @@
 package Handlers;
 
 import Attacks.Projectile;
-import Creatures.Creature;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
 import com.raylib.Raylib;
@@ -31,6 +30,7 @@ public class VectorHandler {
     private Raylib.Vector2 newPos;
     private int counter;
     private boolean hasAlrdyBooleanMoved;
+    private double[] positions;
 
     public VectorHandler(int posX, int posY, int moveSpeed, Camera2D camera){
         this.posX = posX;
@@ -99,10 +99,14 @@ public class VectorHandler {
 //        returning the total distance
         return (int)(Math.sqrt(x+y));
     }
+    public int distanceBetweenTwoObjects(Raylib.Vector2 pos1, Raylib.Vector2 pos2){
+        double x = Math.pow(pos2.x() - pos1.x(), 2);
+        double y = Math.pow(pos2.y() - pos1.y(), 2);
+        return (int) (Math.sqrt(x+y));
+    }
 
     public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
 //
-
         double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
@@ -168,18 +172,23 @@ public class VectorHandler {
         setPosition(new Jaylib.Vector2(posX, posY));
     }
 
-    public void setShootLine(Camera2D camera) {
+    public void setShootLineProjectiles(Camera2D camera, Projectile projectile) {
         screenToWorld(getShotPosition(), camera);
-        double[] positions = determinePositions(getShotPosition(), "to", camera);
+        positions = determinePositions(getShotPosition(), projectile.getToOrAway(), camera);
+    }
+    public void setStraightLine(Camera2D camera) {
+        screenToWorld(getShotPosition(), camera);
+        positions = determinePositions(getShotPosition(), "to", camera);
+    }
+    public void updateSpeed(){
         double[] normalizedValues = normalizeValues(positions[0], positions[1]);
         double xScaled = normalizedValues[0] * moveSpeed;
         double yScaled = normalizedValues[1] * moveSpeed;
         setxNormalizedMovement(xScaled);
         setyNormalizedMovement(yScaled);
-
     }
     public void updateShootLinePosition(Camera2D camera){
-        setShootLine(camera);
+        updateSpeed();
         actualXPos = actualXPos + xNormalizedMovement;
         posX = (int) actualXPos;
         actualYPos = actualYPos + yNormalizedMovement;

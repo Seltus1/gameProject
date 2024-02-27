@@ -30,7 +30,8 @@ public class Warrior extends Player {
     private float chargeY;
     private VectorHandler shieldVector;
     private boolean didMelee;
-    private CooldownHandler ultimateTimer;
+    private CooldownHandler ultimateCooldown;
+
 
 
     public Warrior(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, Raylib.Camera2D camera, Raylib.Color color) {
@@ -41,7 +42,7 @@ public class Warrior extends Player {
         drawCooldown = new CooldownHandler();
         chargingTime = new CooldownHandler();
         chargeCooldown = new CooldownHandler();
-        ultimateTimer = new CooldownHandler();
+        ultimateCooldown = new CooldownHandler();
         setCanUseUtility(true);
         setCanUseUltimate(true);
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
@@ -49,6 +50,7 @@ public class Warrior extends Player {
         setTotalChargeCD(5000);
         setUltimateUpTime(5000);
         setUltimateCD(20000);
+        setDefence(60);
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
@@ -64,7 +66,7 @@ public class Warrior extends Player {
 
     public void attack(EnemyHandler enemies, Raylib.Vector2 mousePos) {
 //        is the player off cooldown for attacking
-        if(canMelee()){
+        if(canMelee() && !isUsingUtility() && !isUsingUltimate() && !isUsingSecondary()){
 //            is the player attacking
             if(isMeleeing() && !didMelee){
                 didMelee = true;
@@ -79,7 +81,6 @@ public class Warrior extends Player {
             }
             return;
         }
-
         if (!canMelee()) {
             if (attackCooldown.cooldown(getShotcooldown())) {
                 setCanMelee(true);
@@ -90,22 +91,23 @@ public class Warrior extends Player {
     public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player, EnemyHandler enemies) {
         if (IsKeyPressed(KEY_Q) && player.getCanUseUtility() && !player.isMeleeing() && !player.isUsingSecondary()) {
             currMousePos = mousePos;
-            getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
 //            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);
             chargeX = mousePos.x();
             chargeY = mousePos.y();
             getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
-            getVector().setShootLine(camera);
+            getVector().setStraightLine(camera);
             startChargeCD = true;
             setUsingUtility(true);
             player.setCanUseUtility(false);
             setDirectionLocked(true);
         }
         if (isUsingUtility()) {
+            getVector().setMoveSpeed(getInitialMoveSpeed() * 2);
+
             currMousePos = shieldVector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),100000,currMousePos);
             chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
 //            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
-            shield.drawShield(chargingShieldPos);
+            shield.drawShield(chargingShieldPos, player);
             getVector().updateShootLinePosition(camera);
             dealingDamage(enemies,mousePos);
 
@@ -130,15 +132,22 @@ public class Warrior extends Player {
         if(player.isCanUseUltimate() && !player.isUsingSecondary() && !player.isUsingUtility() && !player.isMeleeing()){
 //            is the ultimate key being pressed?
             if(IsKeyPressed(KEY_E)){
-                System.out.println("ULT");
+                player.setShieldHp(150);
+                player.setCanUseSecondary(true);
                 player.setUsingUltimate(true);
+
             }
         }
         if(player.isUsingUltimate()){
-//            if(ultimateTimer.cooldown(player.getUltimateUpTime())){
-//                player.setUsingUltimate(false);
-//                System.out.println("FALSE");
-//            }
+            player.setMoveSpeed((int) (player.getMoveSpeed() * 1.5));
+            if(ultimateCooldown.cooldown(player.getUltimateUpTime())){
+                player.setUsingUltimate(false);
+                player.setCanUseUltimate(false);
+            }
+            return;
+        }
+        if(player.getUltimateTimer().cooldown(player.getUltimateCD())){
+            player.setCanUseUltimate(true);
         }
     }
 
@@ -161,7 +170,7 @@ public class Warrior extends Player {
     }
 
     private void checkIfIsMeleeing() {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary()) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary() && !isUsingUltimate()){
             setMeleeing(true);
             return;
         }

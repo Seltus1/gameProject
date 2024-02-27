@@ -32,6 +32,7 @@ public class Projectile {
     private VectorHandler vector;
     private boolean circle;
     private VectorHandler player;
+    private String toOrAway;
 
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Camera2D camera, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
@@ -41,7 +42,7 @@ public class Projectile {
         this.finalX = finalX;
         this.finalY = finalY;
         //Add this to constructor later when we have weapons
-        damage = 10;
+        damage = 70;
         this.color = color;
         this.shotTag = shotTag;
         this.maxRange = maxRange;
@@ -70,8 +71,9 @@ public class Projectile {
     }
 
     public void createShotLine(Camera2D camera){
+        setToOrAway("to");
         vector.setShotPosition(new Jaylib.Vector2(finalX, finalY));
-        vector.setShootLine(camera);
+        vector.setShootLineProjectiles(camera, this);
     }
 
     public void checkProjIsOnScreen(){
@@ -186,6 +188,10 @@ public class Projectile {
     public void setyMoveSpeed(double yMoveSpeed) {
         vector.setyNormalizedMovement(yMoveSpeed);
     }
+    public void setMoveSpeed(int moveSpeed){
+        vector.setMoveSpeed(moveSpeed);
+        setShotSpeed(moveSpeed);
+    }
     public Raylib.Color getColor() {
         return color;
     }
@@ -237,4 +243,13 @@ public class Projectile {
     public Raylib.Vector2 getTargetPosition() {
         return vector.getShotPosition();
     }
+
+    public String getToOrAway() {
+        return toOrAway;
+    }
+
+    public void setToOrAway(String toOrAway) {
+        this.toOrAway = toOrAway;
+    }
+
 }

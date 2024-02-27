@@ -153,7 +153,6 @@ public class PlayerHandler {
         if(player instanceof Warrior){
 //            when we add the ult, add the same system.
 
-            DrawText("ULT", player.getPosX() - 30,player.getPosY() + (GetScreenHeight() / 2) - 190, 30, BLACK);
 
 //          charge texts
             chargeCDNums();
@@ -161,6 +160,8 @@ public class PlayerHandler {
             shieldCDNums();
 //            sword texts
             swordCDNums();
+//            overdrive texts
+            overDriveCDNums();
         }
     }
     private void chargeCDNums(){
@@ -195,6 +196,15 @@ public class PlayerHandler {
         int cdNumSecs = (int) player.getShieldCD().getCurrentFrameInMilliSeconds() / 1000;
         cdNumSecs = (player.getShotcooldown() / 1000) - cdNumSecs;
         DrawText("" + cdNumSecs, player.getPosX() - 10, player.getPosY() + (GetScreenHeight() / 2) - 65, 40, BLACK);
+    }
+    private void overDriveCDNums(){
+        if(player.isCanUseUltimate()){
+            DrawText("ULT", player.getPosX() - 30,player.getPosY() + (GetScreenHeight() / 2) - 190, 30, BLACK);
+            return;
+        }
+        int cdNumSecs = (int) player.getUltimateTimer().getCurrentFrameInMilliSeconds() / 1000;
+        cdNumSecs = (player.getUltimateCD() / 1000) - cdNumSecs;
+        DrawText("" + cdNumSecs, player.getPosX() - 30, player.getPosY() + (GetScreenHeight() / 2) - 190, 40, BLACK);
     }
 
     public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {

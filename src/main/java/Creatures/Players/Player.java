@@ -1,6 +1,5 @@
 package Creatures.Players;
 
-import Attacks.Projectile;
 import Creatures.Creature;
 import Debuffs.Poison;
 import Handlers.CooldownHandler;
@@ -11,8 +10,6 @@ import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import java.util.ArrayList;
-
 import static com.raylib.Jaylib.*;
 
 public class Player implements Creature {
@@ -22,6 +19,7 @@ public class Player implements Creature {
     private int regenAmt;
     private int shieldMaxHp;
     private int shieldHp;
+    private int defence;
 
 
 
@@ -99,6 +97,7 @@ public class Player implements Creature {
     private CooldownHandler shieldCD;
     private CooldownHandler chargeCD;
     private CooldownHandler poisonCooldown;
+    private CooldownHandler ultimateTimer;
 
 
     private boolean canShoot;
@@ -117,6 +116,7 @@ public class Player implements Creature {
     private int infernoCooldown;
     private int ultimateUpTime;
     private int ultimateCD;
+    private int ultimateCooldown;
 
 
 
@@ -152,7 +152,6 @@ public class Player implements Creature {
     private int poisonTicks;
     private int intialBurn;
     private int shieldingSpeed;
-    private ArrayList<Projectile> ultiimateProjectiles;
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
@@ -181,11 +180,9 @@ public class Player implements Creature {
         shotCD = 250;
         initialShotCD = shotCD;
         initialMoveSpeed = moveSpeed;
-        shieldingSpeed = moveSpeed / 2;
         setShieldMaxHp(150);
 
 
-        ultiimateProjectiles = new ArrayList<>();
         fire = new Fire();
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
@@ -195,6 +192,7 @@ public class Player implements Creature {
         shieldCD = new CooldownHandler();
         chargeCD = new CooldownHandler();
         meleeCD = new CooldownHandler();
+        ultimateTimer = new CooldownHandler();
 
     }
 
@@ -220,6 +218,9 @@ public class Player implements Creature {
             fire.burn(this);
         }
     }
+
+
+// function for the original shoot
 
 //    public void shoot(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
 //        if (canShoot()) {
@@ -261,6 +262,20 @@ public class Player implements Creature {
         isRegening = false;
     }
 
+    public void move(Camera2D camera) {
+        vector.playerMove(camera);
+    }
+    public void poisoned(){
+        if(isPoisoned){
+            if(poisonCooldown.cooldown(poison.getLifetime())){
+                moveSpeed = initialMoveSpeed;
+                shotCD = initialShotCD;
+                setPoisoned(false);
+            }
+        }
+    }
+
+
     private boolean hpLessThanInitalHP(){
 //        checking if the player needs to regen health or not
         if (hp < initalHp) {
@@ -279,19 +294,12 @@ public class Player implements Creature {
             }
         }
     }
-    public void move(Camera2D camera) {
-        vector.setMoveSpeed(getMoveSpeed());
-        vector.playerMove(camera);
-    }
-    public void poisoned(){
-        if(isPoisoned){
-            if(poisonCooldown.cooldown(poison.getLifetime())){
-                moveSpeed = initialMoveSpeed;
-                shotCD = initialShotCD;
-                setPoisoned(false);
-            }
-        }
-    }
+
+
+
+
+
+
 
     public void fireHex() {
         fire.fireHex(this);
@@ -371,6 +379,7 @@ public class Player implements Creature {
     @Override
     public void setMoveSpeed(int moveSpeed) {
         this.moveSpeed = moveSpeed;
+        vector.setMoveSpeed(moveSpeed);
     }
 
     @Override
@@ -787,11 +796,19 @@ public class Player implements Creature {
         this.ultimateCD = ultimateCD;
     }
 
-    public ArrayList<Projectile> getUltiimateProjectiles() {
-        return ultiimateProjectiles;
+    public int getDefenceOrArmorForEthan() {
+        return defence;
     }
 
-    public void setUltiimateProjectiles(ArrayList<Projectile> ultiimateProjectiles) {
-        this.ultiimateProjectiles = ultiimateProjectiles;
+    public void setDefence(int defence) {
+        this.defence = defence;
+    }
+
+    public CooldownHandler getUltimateTimer() {
+        return ultimateTimer;
+    }
+
+    public void setUltimateTimer(CooldownHandler ultimateTimer) {
+        this.ultimateTimer = ultimateTimer;
     }
 }
