@@ -179,6 +179,7 @@ public class VectorHandler {
 
     }
     public void updateShootLinePosition(Camera2D camera){
+        setShootLine(camera);
         actualXPos = actualXPos + xNormalizedMovement;
         posX = (int) actualXPos;
         actualYPos = actualYPos + yNormalizedMovement;

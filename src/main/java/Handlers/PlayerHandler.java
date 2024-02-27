@@ -164,7 +164,7 @@ public class PlayerHandler {
         }
     }
     private void chargeCDNums(){
-        if(player.getCanCharge()) {
+        if(player.getCanUseUtility()) {
             DrawText("CHARGE", player.getPosX() - 95, player.getPosY() + (GetScreenHeight() / 2) - 115, 20, BLACK);
             return;
         }
@@ -177,7 +177,7 @@ public class PlayerHandler {
 
 
     private void shieldCDNums(){
-        if(player.isCanShield()) {
+        if(player.isCanUseSecondary()) {
             DrawText("SHIELD", player.getPosX() + 10, player.getPosY() + (GetScreenHeight() / 2) - 115, 20, BLACK);
             return;
         }

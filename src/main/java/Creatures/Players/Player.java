@@ -1,5 +1,6 @@
 package Creatures.Players;
 
+import Attacks.Projectile;
 import Creatures.Creature;
 import Debuffs.Poison;
 import Handlers.CooldownHandler;
@@ -9,6 +10,8 @@ import Elements.Fire;
 import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
+
+import java.util.ArrayList;
 
 import static com.raylib.Jaylib.*;
 
@@ -70,15 +73,15 @@ public class Player implements Creature {
     private boolean isAlive;
     private boolean isOnFire;
     private boolean isFireHex;
-    private boolean canShield;
     private boolean reachedDestination;
     private boolean directionLocked;
     private boolean isShooting;
     private boolean isRegening;
     private boolean isPoisoned;
     private boolean isMeleeing;
-    private boolean isCharging;
-    private boolean isShielding;
+    private boolean isUsingUtility;
+    private boolean isUsingSecondary;
+    private boolean isUsingUltimate;
 
 
 
@@ -101,7 +104,9 @@ public class Player implements Creature {
     private boolean canShoot;
     private boolean canMelee;
     private boolean canRegen;
-    private boolean canCharge;
+    private boolean canUseSecondary;
+    private boolean canUseUtility;
+    private boolean canUseUltimate;
 
 
     private int shotCD;
@@ -110,6 +115,8 @@ public class Player implements Creature {
     private int totalShieldCD;
     private int totalChargeCD;
     private int infernoCooldown;
+    private int ultimateUpTime;
+    private int ultimateCD;
 
 
 
@@ -145,6 +152,7 @@ public class Player implements Creature {
     private int poisonTicks;
     private int intialBurn;
     private int shieldingSpeed;
+    private ArrayList<Projectile> ultiimateProjectiles;
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
@@ -177,7 +185,7 @@ public class Player implements Creature {
         setShieldMaxHp(150);
 
 
-
+        ultiimateProjectiles = new ArrayList<>();
         fire = new Fire();
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         regenCooldown = new CooldownHandler();
@@ -663,20 +671,20 @@ public class Player implements Creature {
         this.reachedDestination = reachedDestination;
     }
 
-    public boolean isCharging() {
-        return isCharging;
+    public boolean isUsingUtility() {
+        return isUsingUtility;
     }
 
-    public void setCharging(boolean charging) {
-        isCharging = charging;
+    public void setUsingUtility(boolean usingUtility) {
+        isUsingUtility = usingUtility;
     }
 
-    public boolean isShielding() {
-        return isShielding;
+    public boolean isUsingSecondary() {
+        return isUsingSecondary;
     }
 
-    public void setShielding(boolean shielding) {
-        isShielding = shielding;
+    public void setUsingSecondary(boolean usingSecondary) {
+        isUsingSecondary = usingSecondary;
     }
 
     public int getShieldMaxHp() {
@@ -695,12 +703,12 @@ public class Player implements Creature {
         this.shieldHp = shieldHp;
     }
 
-    public boolean isCanShield() {
-        return canShield;
+    public boolean isCanUseSecondary() {
+        return canUseSecondary;
     }
 
-    public void setCanShield(boolean canShield) {
-        this.canShield = canShield;
+    public void setCanUseSecondary(boolean canUseSecondary) {
+        this.canUseSecondary = canUseSecondary;
     }
 
     public CooldownHandler getShieldCD() {
@@ -727,12 +735,12 @@ public class Player implements Creature {
         this.chargeCD = chargeCD;
     }
 
-    public Boolean getCanCharge() {
-        return canCharge;
+    public Boolean getCanUseUtility() {
+        return canUseUtility;
     }
 
-    public void setCanCharge(Boolean canCharge) {
-        this.canCharge = canCharge;
+    public void setCanUseUtility(Boolean canUseUtility) {
+        this.canUseUtility = canUseUtility;
     }
 
     public int getTotalChargeCD() {
@@ -747,4 +755,43 @@ public class Player implements Creature {
         return meleeCD;
     }
 
+    public boolean isCanUseUltimate() {
+        return canUseUltimate;
+    }
+
+    public void setCanUseUltimate(boolean canUseUltimate) {
+        this.canUseUltimate = canUseUltimate;
+    }
+
+    public boolean isUsingUltimate() {
+        return isUsingUltimate;
+    }
+
+    public void setUsingUltimate(boolean usingUltimate) {
+        isUsingUltimate = usingUltimate;
+    }
+
+    public int getUltimateUpTime() {
+        return ultimateUpTime;
+    }
+
+    public void setUltimateUpTime(int ultimateUpTime) {
+        this.ultimateUpTime = ultimateUpTime;
+    }
+
+    public int getUltimateCD() {
+        return ultimateCD;
+    }
+
+    public void setUltimateCD(int ultimateCD) {
+        this.ultimateCD = ultimateCD;
+    }
+
+    public ArrayList<Projectile> getUltiimateProjectiles() {
+        return ultiimateProjectiles;
+    }
+
+    public void setUltiimateProjectiles(ArrayList<Projectile> ultiimateProjectiles) {
+        this.ultiimateProjectiles = ultiimateProjectiles;
+    }
 }

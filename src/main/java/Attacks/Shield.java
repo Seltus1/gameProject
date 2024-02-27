@@ -23,7 +23,7 @@ public class Shield {
     private boolean regenShield;
     public Shield(Camera2D camera, Player player) {
         vector = new VectorHandler(0, 0, 0, camera);
-         player.setCanShield(true);
+         player.setCanUseSecondary(true);
          player.setShieldHp(150);
          player.setShieldMaxHp(150);
         maxDamageToDeal = 300;
@@ -33,10 +33,10 @@ public class Shield {
         regenTimer = new HealthHandler();
     }
 
-    public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
-        defend(player, mousePos, projList);
+    public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera){
+        defend(player, mousePos, projList, camera);
         updateMovingSpeed(player);
-        if(!player.isCanShield()){
+        if(!player.isCanUseSecondary()){
             shieldCD(player);
         }
         else {
@@ -44,12 +44,12 @@ public class Shield {
         }
     }
 
-    public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList){
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanShield() && !player.isMeleeing() && !player.isCharging()){
+    public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isMeleeing() && !player.isUsingUtility()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses);
-            for (int j = 0; j < projList.size() ; j++){
-                Projectile projectile = (Projectile) projList.get(j);
+            for (int i = 0; i < projList.size() ; i++){
+                Projectile projectile = (Projectile) projList.get(i);
                 if (!projectile.isDraw()) {
                     continue;
                 }
@@ -59,12 +59,17 @@ public class Shield {
                 if(!projectile.getShotTag().contains("Pool")) {
                     if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())) {
                         if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)) {
+                            if(player.isUsingUltimate()) {
+//                                player.getUltiimateProjectiles().add(projectile);
+                                projectile.setShotSpeed(0);
+                                return;
+                            }
                             player.setShieldHp(player.getShieldHp() - projectile.getDamage());
                             shieldRegenCD.setCurrentFrame(0);
                             regenShield = false;
                             projList.removeObject(projectile);
                             if (player.getShieldHp() <= 0) {
-                                player.setCanShield(false);
+                                player.setCanUseSecondary(false);
                             }
                         }
                     }
@@ -86,7 +91,7 @@ public class Shield {
 
     private void shieldCD(Player player){
         if(player.getShieldCD().cooldown(player.getTotalShieldCD())){
-            player.setCanShield(true);
+            player.setCanUseSecondary(true);
             player.setShieldHp(player.getShieldMaxHp());
         }
     }
@@ -103,7 +108,7 @@ public class Shield {
                 }
             }
             if(player.getShieldHp() > 0){
-                player.setCanShield(true);
+                player.setCanUseSecondary(true);
             }
             return;
         }
@@ -111,13 +116,13 @@ public class Shield {
     }
 
     private void updateMovingSpeed(Player player){
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanShield() && !player.isCharging()){
+        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isUsingUtility()){
             player.setMoveSpeed(player.getShieldingSpeed());
-            player.setShielding(true);
+            player.setUsingSecondary(true);
             return;
         }
         player.setMoveSpeed(player.getInitialMoveSpeed());
-        player.setShielding(false);
+        player.setUsingSecondary(false);
     }
 
     public Raylib.Vector2 getLinePoint1() {

@@ -30,6 +30,7 @@ public class Warrior extends Player {
     private float chargeY;
     private VectorHandler shieldVector;
     private boolean didMelee;
+    private CooldownHandler ultimateTimer;
 
 
     public Warrior(int hp, int damage, int meleeRange, int posX, int posY, int moveSpeed, int size, Raylib.Camera2D camera, Raylib.Color color) {
@@ -40,18 +41,23 @@ public class Warrior extends Player {
         drawCooldown = new CooldownHandler();
         chargingTime = new CooldownHandler();
         chargeCooldown = new CooldownHandler();
-        setCanCharge(true);
+        ultimateTimer = new CooldownHandler();
+        setCanUseUtility(true);
+        setCanUseUltimate(true);
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
         setTotalShieldCD(10000);
         setTotalChargeCD(5000);
+        setUltimateUpTime(5000);
+        setUltimateCD(20000);
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
 //        checkIfIsCharging();
         checkIfIsMeleeing();
         attack(enemies, mousePos);
-        shield.update(this, mousePos, projList);
+        shield.update(this, mousePos, projList, camera);
         charge(mousePos, camera, this, enemies);
+        overDrive(this);
 //        this needs to update last so that the camera doesn't jiggle
         super.update(projList, camera, mousePos, enemies);
     }
@@ -82,7 +88,7 @@ public class Warrior extends Player {
     }
 
     public void charge(Raylib.Vector2 mousePos, Camera2D camera, Player player, EnemyHandler enemies) {
-        if (IsKeyPressed(KEY_Q) && player.getCanCharge() && !player.isMeleeing() && !player.isShielding()) {
+        if (IsKeyPressed(KEY_Q) && player.getCanUseUtility() && !player.isMeleeing() && !player.isUsingSecondary()) {
             currMousePos = mousePos;
             getVector().setMoveSpeed(getInitialMoveSpeed() + 7);
 //            endOfChargeLocation = getVector().findIntersectingPointOnCircleAndMousePos(getPosition(), 1000000, mousePos);
@@ -91,11 +97,11 @@ public class Warrior extends Player {
             getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
             getVector().setShootLine(camera);
             startChargeCD = true;
-            setCharging(true);
-            player.setCanCharge(false);
+            setUsingUtility(true);
+            player.setCanUseUtility(false);
             setDirectionLocked(true);
         }
-        if (isCharging()) {
+        if (isUsingUtility()) {
             currMousePos = shieldVector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),100000,currMousePos);
             chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
 //            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
@@ -107,23 +113,40 @@ public class Warrior extends Player {
         }
         if (chargingTime.cooldown(2000)) {
             setMoveSpeed(getInitialMoveSpeed());
-            setCharging(false);
+            setUsingUtility(false);
             setDirectionLocked(false);
             return;
         }
         if (startChargeCD) {
             if (getChargeCD().cooldown(getTotalChargeCD())) {
-                player.setCanCharge(true);
+                player.setCanUseUtility(true);
                 startChargeCD = false;
             }
         }
     }
 
+    public void overDrive(Player player){
+//        can the ultimate be used
+        if(player.isCanUseUltimate() && !player.isUsingSecondary() && !player.isUsingUtility() && !player.isMeleeing()){
+//            is the ultimate key being pressed?
+            if(IsKeyPressed(KEY_E)){
+                System.out.println("ULT");
+                player.setUsingUltimate(true);
+            }
+        }
+        if(player.isUsingUltimate()){
+//            if(ultimateTimer.cooldown(player.getUltimateUpTime())){
+//                player.setUsingUltimate(false);
+//                System.out.println("FALSE");
+//            }
+        }
+    }
+
     private void dealingDamage(EnemyHandler enemies, Raylib.Vector2 mousePos) {
-        if(isCharging() || isMeleeing()) {
+        if(isUsingUtility() || isMeleeing()) {
             for (int i = 0; i < enemies.size(); i++) {
                 Enemy enemy = (Enemy) enemies.get(i);
-                if (isCharging()) {
+                if (isUsingUtility()) {
                     dealDamageToEnemiesWhileCharging(enemy);
                 }
                 Raylib.Vector2[] trianglePoints = sword.calculateTriangle(this, mousePos);
@@ -138,7 +161,7 @@ public class Warrior extends Player {
     }
 
     private void checkIfIsMeleeing() {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isCharging() && !isMeleeing && !isShielding()) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary()) {
             setMeleeing(true);
             return;
         }
@@ -146,7 +169,6 @@ public class Warrior extends Player {
     }
 
     private void dealDamageToEnemiesWhileCharging(Enemy enemy){
-
         if(shieldVector.CheckCollisionBetweenLineAndCircle(shield.getLinePoint1(),shield.getLinePoint2(),enemy.getPos(),enemy.getSize())){
 //          check if the shield can do more damage
             if(shield.getCurrentDamageDealt() < shield.getMaxDamageToDeal()) {
