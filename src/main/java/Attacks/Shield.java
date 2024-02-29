@@ -1,4 +1,5 @@
 package Attacks;
+import Creatures.Enemies.Brawler.BrawlerEnemy;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
 import Handlers.*;
@@ -21,8 +22,8 @@ public class Shield {
     private boolean regenShield;
     private boolean didUpdateSpeed;
     private Raylib.Vector2 shieldCenterPoint;
-    private CooldownHandler enemyKnockback;
-    private boolean enemyCollidedWithShield;
+    private boolean shieldTookDamage;
+
 
     public Shield(Camera2D camera, Player player) {
         vector = new VectorHandler(0, 0, 0, camera);
@@ -35,7 +36,7 @@ public class Shield {
         shieldRegenCD = new CooldownHandler();
         regenTimer = new HealthHandler();
         didUpdateSpeed = false;
-        enemyKnockback = new CooldownHandler();
+
     }
 
     public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera, EnemyHandler enemies){
@@ -53,6 +54,7 @@ public class Shield {
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isMeleeing() && !player.isUsingUtility()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses, player);
+            calculateShieldCenterPoint();
             for (int i = 0; i < projList.size() ; i++){
                 Projectile projectile = (Projectile) projList.get(i);
                 if (!projectile.isDraw()) {
@@ -60,20 +62,12 @@ public class Shield {
                 }
                 calculateShieldAndCollision(player, projectile, projList);
             }
-        }
-
-    }
-
-    private void checkShieldCollisionWithEnemies(EnemyHandler enemies){
-        for(int i = 0; i < enemies.size(); i++){
-            Enemy enemy = (Enemy) enemies.get(i);
-
-            if(enemyCollidedWithShield){
-                if(enemyKnockback.cooldown(500)){
-                    enemy.setMoveSpeed(enemy.getInitialMoveSpeed());
-                }
+            for( int i = 0; i < enemies.size(); i++){
+                Enemy enemy = (Enemy) enemies.get(i);
+                checkEnemyCollisionWithShield(player,enemy, enemies, camera);
             }
         }
+
     }
 
 
@@ -124,17 +118,21 @@ public class Shield {
             player.setCanUseSecondary(false);
         }
     }
-    private void enemyCollisionsWithShield(Enemy enemy, EnemyHandler enemies, Player player){
-        enemy.setHp(enemy.getHp() - 5);
-        player.setShieldHp(player.getShieldHp() - 5);
-        shieldRegenCD.setCurrentFrame(0);
-        regenShield = false;
-
+    private void enemyCollisionsWithShield(Enemy enemy, EnemyHandler enemies, Player player, Camera2D camera){
+//        enemy.setHp(enemy.getHp() - 5);
+        if(!shieldTookDamage) {
+            player.setShieldHp(player.getShieldHp() - 5);
+            shieldRegenCD.setCurrentFrame(0);
+            regenShield = false;
+            shieldTookDamage = true;
+        }
         if (player.getShieldHp() <= 0) {
             player.setCanUseSecondary(false);
         }
-        enemy.setMoveSpeed(enemy.getMoveSpeed() * -1);
-        enemyCollidedWithShield = true;
+        if(enemy instanceof BrawlerEnemy){
+            BrawlerEnemy brawlerEnemy = (BrawlerEnemy) enemy;
+            brawlerEnemy.setCollidedWithShield(true);
+        }
     }
 
     private void calculateShieldAndCollision(Player player, Projectile projectile, ProjectileHandler projList) {
@@ -149,12 +147,23 @@ public class Shield {
                     }
                 }
             }
-//            if (CheckCollisionCircles(shieldCenterPoint, enemy.getMoveSpeed(), enemy.getPos(), enemy.getSize())) {
-//                if (vector.canTheEnemyHitThePlayerCircle(enemy, player, linePoint1, linePoint2)) {
-//
-//                }
+        }
+    }
+    private void checkEnemyCollisionWithShield(Player player, Enemy enemy, EnemyHandler enemies, Camera2D camera){
+        if (CheckCollisionCircles(shieldCenterPoint, enemy.getMoveSpeed(), enemy.getPos(), enemy.getSize())) {
+            if (vector.canTheEnemyHitThePlayerCircle(enemy, player, linePoint1, linePoint2)) {
+                enemyCollisionsWithShield(enemy, enemies, player, camera);
+                return;
+            }
+//            else if(enemy instanceof BrawlerEnemy){
+//                BrawlerEnemy brawlerEnemy = (BrawlerEnemy) enemy;
+//                brawlerEnemy.setSpeedWhileAttacking(6);
+//                brawlerEnemy.setMoveSpeed(brawlerEnemy.getInitialMoveSpeed());
+//                brawlerEnemy.setDirectionLocked(false);
+//                brawlerEnemy.setCollidedWithShield(false);
 //            }
         }
+        shieldTookDamage = false;
     }
     private void regenShield(Player player){
         if(player.getShieldHp() < player.getShieldMaxHp()) {
@@ -162,7 +171,7 @@ public class Shield {
                 regenShield = true;
             }
             if (regenShield) {
-                int amtToRegen = regenTimer.regenHp(player.getShieldHp(), shieldRegen, 500);
+                int amtToRegen = regenTimer.regenHp(player.getShieldHp(), shieldRegen,  player.getShieldMaxHp(), 500);
                 player.setShieldHp(amtToRegen);
                 if (player.getShieldHp() >= player.getShieldMaxHp()){
                     regenShield = false;
@@ -193,6 +202,8 @@ public class Shield {
         player.setUsingSecondary(false);
         didUpdateSpeed = false;
     }
+
+
 
     public Raylib.Vector2 getLinePoint1() {
         return linePoint1;

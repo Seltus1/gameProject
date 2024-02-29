@@ -8,8 +8,11 @@ public class HealthHandler {
         regenTimer = new CooldownHandler();
     }
 
-    public int regenHp(int currHp, int regenAmt, int timeBetweenRegenMilli){
+    public int regenHp(int currHp, int regenAmt, int maxHp, int timeBetweenRegenMilli){
         if(regenTimer.cooldown(timeBetweenRegenMilli)){
+            if(regenAmt + currHp >= maxHp){
+                return maxHp;
+            }
             currHp += regenAmt;
         }
         return currHp;

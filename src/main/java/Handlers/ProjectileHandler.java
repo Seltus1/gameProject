@@ -118,7 +118,7 @@ public class ProjectileHandler extends ListHandler {
         poison.applyDebuffs(player);
     }
     private void moveProjectilesOnScreen(Projectile projectile, Camera2D camera, Player player){
-        projectile.checkProjIsOnScreen();
+//        projectile.checkProjIsOnScreen();
 //        if the projectile is off screen stop drawing it
 //        if (!(projectile.isInBounds())) {
 //            projectile.setDraw(false);

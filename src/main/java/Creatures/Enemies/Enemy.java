@@ -195,6 +195,7 @@ public class Enemy implements Creature {
     @Override
     public void setMoveSpeed(int moveSpeed) {
         this.moveSpeed = moveSpeed;
+        getVector().setMoveSpeed(moveSpeed);
     }
 
     @Override

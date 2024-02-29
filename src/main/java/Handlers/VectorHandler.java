@@ -359,6 +359,9 @@ public class VectorHandler {
     }
     public boolean canTheEnemyHitThePlayerCircle(Enemy enemy, Player player, Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2){
 //            calculating projectile shot Line
+        if(enemy.getVector().getShotPosition() == null){
+            enemy.getVector().setShotPosition(player.getPosition());
+        }
         Raylib.Vector2 projectileFinalPosition = enemy.getVector().getShotPosition();
         Raylib.Vector2 projectileCurrentPosition = enemy.getPos();
         HashMap<String, Float> projectileLineInformation = findSlopeAndIntercept(projectileCurrentPosition, projectileFinalPosition);
