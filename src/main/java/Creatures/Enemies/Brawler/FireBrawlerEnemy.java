@@ -11,8 +11,8 @@ public class FireBrawlerEnemy extends BrawlerEnemy {
         super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
     }
 
-    public void attack(Player player, Fire fire){
-        super.attack(player);
+    public void attack(Player player, Fire fire, Raylib.Camera2D camera){
+        super.attack(player, camera);
         if (getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) < fire.getRange()){
             fire.meleeAttack(player);
             player.setFireInRange(true);

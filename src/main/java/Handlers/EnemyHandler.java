@@ -33,7 +33,7 @@ public class EnemyHandler extends ListHandler {
         super();
         enemies = new HashMap<>();
         enemies.put("Sniper", 1);
-        enemies.put("Bralwer", 2);
+        enemies.put("Brawler", 2);
         enemies.put("FireBrawler", 3);
         enemies.put("Magic", 4);
         enemies.put("FireSniper", 5);
@@ -45,8 +45,8 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < amount; i++) {
             ArrayList<String> keyList = new ArrayList<>(enemies.keySet());
             int listIndex = rand.nextInt(enemies.size());
-            int randEnemy = enemies.get(keyList.get(listIndex));
-//            int randEnemy = enemies.get("Sniper");
+//            int randEnemy = enemies.get(keyList.get(listIndex));
+            int randEnemy = enemies.get("Brawler");
             int size = 25;
             int[] enemyPos = enemySpawnPosition(player);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);
@@ -75,7 +75,7 @@ public class EnemyHandler extends ListHandler {
             add(enemy);
         }
         else if(randEnemy == 2){
-            BrawlerEnemy enemy = new BrawlerEnemy(1, 6, Xpos, Ypos, 3, size, 150, BLUE, camera);
+            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
             add(enemy);
         }
         else if(randEnemy == 3){
@@ -138,7 +138,7 @@ public class EnemyHandler extends ListHandler {
             if (enemy instanceof  FireBrawlerEnemy) {
                 counter++;
                 FireBrawlerEnemy fireBrawlerEnemy = (FireBrawlerEnemy) enemy;
-                fireBrawlerEnemy.attack(player, fire);
+                fireBrawlerEnemy.attack(player, fire, camera);
                 if (fireBrawlerEnemy.getVector().distanceToOtherObject(player.getPosX(),player.getPosY()) >= fireBrawlerEnemy.getRange()){
                     falseCounter++;
                 }

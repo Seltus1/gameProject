@@ -357,6 +357,24 @@ public class VectorHandler {
         }
         return false;
     }
+    public boolean canTheEnemyHitThePlayerCircle(Enemy enemy, Player player, Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2){
+//            calculating projectile shot Line
+        Raylib.Vector2 projectileFinalPosition = enemy.getVector().getShotPosition();
+        Raylib.Vector2 projectileCurrentPosition = enemy.getPos();
+        HashMap<String, Float> projectileLineInformation = findSlopeAndIntercept(projectileCurrentPosition, projectileFinalPosition);
+        HashMap<String, Float> shieldLineInformation = findSlopeAndIntercept(linePoint1, linePoint2);
+        float[] interceptingPoint = collisionBetweenLines(projectileLineInformation, shieldLineInformation);
+        float x = interceptingPoint[0];
+        float y = interceptingPoint[1];
+        float maxX = Math.max(linePoint2.x(), linePoint1.x());
+        float minX = Math.min(linePoint2.x(), linePoint1.x());
+        float maxY = Math.max(linePoint2.y(), linePoint1.y());
+        float minY = Math.min(linePoint2.y(), linePoint1.y());
+        if ((x >= minX && x <= maxX) && (y >= minY && y <= maxY)){
+            return true;
+        }
+        return false;
+    }
     public boolean CheckCollisionBetweenLineAndCircle(Raylib.Vector2 linePoint1, Raylib.Vector2 linePoint2, Raylib.Vector2 circle, int circleRad) {
         float slope = (float) ((linePoint2.y() - linePoint1.y()) / (linePoint2.x() - linePoint1.x()));
         float b = (float) (linePoint2.y() - (slope * linePoint2.x()));

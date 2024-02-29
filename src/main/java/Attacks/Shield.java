@@ -1,9 +1,7 @@
 package Attacks;
+import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
-import Handlers.CooldownHandler;
-import Handlers.HealthHandler;
-import Handlers.ProjectileHandler;
-import Handlers.VectorHandler;
+import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -22,6 +20,9 @@ public class Shield {
     private HealthHandler regenTimer;
     private boolean regenShield;
     private boolean didUpdateSpeed;
+    private Raylib.Vector2 shieldCenterPoint;
+    private CooldownHandler enemyKnockback;
+    private boolean enemyCollidedWithShield;
 
     public Shield(Camera2D camera, Player player) {
         vector = new VectorHandler(0, 0, 0, camera);
@@ -34,10 +35,11 @@ public class Shield {
         shieldRegenCD = new CooldownHandler();
         regenTimer = new HealthHandler();
         didUpdateSpeed = false;
+        enemyKnockback = new CooldownHandler();
     }
 
-    public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera){
-        defend(player, mousePos, projList, camera);
+    public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera, EnemyHandler enemies){
+        defend(player, mousePos, projList, camera, enemies);
         updateMovingSpeed(player);
         if(!player.isCanUseSecondary()){
             shieldCD(player);
@@ -47,47 +49,35 @@ public class Shield {
         }
     }
 
-    public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera){
+    public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera, EnemyHandler enemies){
         if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isMeleeing() && !player.isUsingUtility()){
-
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses, player);
             for (int i = 0; i < projList.size() ; i++){
                 Projectile projectile = (Projectile) projList.get(i);
-//                if (!projectile.isDraw()) {
-//                    continue;
-//                }
-                if(player.isUsingUltimate()) {
-//                    37 is the distance from the player to the shield
-//                    (dont ask why it just is) - dany 2/27/24
-
-                    if(CheckCollisionCircles(projectile.getPosition(),projectile.getShotRad(),player.getPosition(), 37)){
-                        projectile.setMoveSpeed(projectile.getShotSpeed() * -1);
-                        projectile.setColor(ColorFromHSV(196f,.67f,.97f));
-                        projectile.setShotTag("Player");
-                    }
+                if (!projectile.isDraw()) {
+                    continue;
                 }
-                else{
-                    float centerX = (linePoint1.x() + linePoint2.x()) / 2;
-                    float centerY = (linePoint1.y() + linePoint2.y()) / 2;
-                    Raylib.Vector2 shieldCenterPoint = new Raylib.Vector2(new Jaylib.Vector2(centerX, centerY));
-                    if(!projectile.getShotTag().contains("Pool")) {
-                        if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())) {
-                            if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)) {
-                                player.setShieldHp(player.getShieldHp() - projectile.getDamage());
-                                shieldRegenCD.setCurrentFrame(0);
-                                regenShield = false;
-                                projList.removeObject(projectile);
-                                if (player.getShieldHp() <= 0) {
-                                    player.setCanUseSecondary(false);
-                                }
-                            }
-                        }
-                    }
+                calculateShieldAndCollision(player, projectile, projList);
+            }
+        }
+
+    }
+
+    private void checkShieldCollisionWithEnemies(EnemyHandler enemies){
+        for(int i = 0; i < enemies.size(); i++){
+            Enemy enemy = (Enemy) enemies.get(i);
+
+            if(enemyCollidedWithShield){
+                if(enemyKnockback.cooldown(500)){
+                    enemy.setMoveSpeed(enemy.getInitialMoveSpeed());
                 }
             }
         }
     }
+
+
+//    shield block helper fucntions
     public double[] calculateShieldLocation(Player player, Raylib.Vector2 mousePos){
         Raylib.Vector2 endPoint = vector.findIntersectingPointOnCircleAndMousePos(player.getPosition(), player.getRange() / 2, mousePos);
         double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35, mousePos);
@@ -95,6 +85,11 @@ public class Shield {
         linePoint2 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[2], (float) poses[3]));
 
         return poses;
+    }
+    private void calculateShieldCenterPoint(){
+        float centerX = (linePoint1.x() + linePoint2.x()) / 2;
+        float centerY = (linePoint1.y() + linePoint2.y()) / 2;
+        shieldCenterPoint = new Raylib.Vector2(new Jaylib.Vector2(centerX, centerY));
     }
     public void drawShield(double[] poses, Player player){
         if(player.isUsingUltimate()){
@@ -108,6 +103,57 @@ public class Shield {
         if(player.getShieldCD().cooldown(player.getTotalShieldCD())){
             player.setCanUseSecondary(true);
             player.setShieldHp(player.getShieldMaxHp());
+        }
+    }
+    private void shieldingWhileUltimate(Player player, Projectile projectile){
+        //             37 is the distance from the player to the shield
+//                    (dont ask why it just is) - dany 2/27/24
+
+        if(CheckCollisionCircles(projectile.getPosition(),projectile.getShotRad(),player.getPosition(), 37)){
+            projectile.setMoveSpeed(projectile.getShotSpeed() * -1);
+            projectile.setColor(ColorFromHSV(196f,.67f,.97f));
+            projectile.setShotTag("Player");
+        }
+    }
+    private void collidedWithShield(Player player, Projectile projectile, ProjectileHandler projList){
+        player.setShieldHp(player.getShieldHp() - projectile.getDamage());
+        shieldRegenCD.setCurrentFrame(0);
+        regenShield = false;
+        projList.removeObject(projectile);
+        if (player.getShieldHp() <= 0) {
+            player.setCanUseSecondary(false);
+        }
+    }
+    private void enemyCollisionsWithShield(Enemy enemy, EnemyHandler enemies, Player player){
+        enemy.setHp(enemy.getHp() - 5);
+        player.setShieldHp(player.getShieldHp() - 5);
+        shieldRegenCD.setCurrentFrame(0);
+        regenShield = false;
+
+        if (player.getShieldHp() <= 0) {
+            player.setCanUseSecondary(false);
+        }
+        enemy.setMoveSpeed(enemy.getMoveSpeed() * -1);
+        enemyCollidedWithShield = true;
+    }
+
+    private void calculateShieldAndCollision(Player player, Projectile projectile, ProjectileHandler projList) {
+        if (player.isUsingUltimate()) {
+            shieldingWhileUltimate(player, projectile);
+        } else {
+            calculateShieldCenterPoint();
+            if (!projectile.getShotTag().contains("Pool")) {
+                if (CheckCollisionCircles(shieldCenterPoint, projectile.getShotSpeed(), projectile.getPosition(), projectile.getShotRad())) {
+                    if (vector.canTheProjectileHitThePlayerCircle(projectile, player, linePoint1, linePoint2)) {
+                        collidedWithShield(player, projectile, projList);
+                    }
+                }
+            }
+//            if (CheckCollisionCircles(shieldCenterPoint, enemy.getMoveSpeed(), enemy.getPos(), enemy.getSize())) {
+//                if (vector.canTheEnemyHitThePlayerCircle(enemy, player, linePoint1, linePoint2)) {
+//
+//                }
+//            }
         }
     }
     private void regenShield(Player player){
@@ -129,6 +175,9 @@ public class Shield {
         }
         regenShield = false;
     }
+
+
+//    block helper functions end here
 
     private void updateMovingSpeed(Player player){
         if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isUsingUtility() && !player.isCanUseUltimate() && !player.isMeleeing()){

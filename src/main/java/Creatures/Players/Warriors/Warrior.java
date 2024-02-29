@@ -57,7 +57,7 @@ public class Warrior extends Player {
 //        checkIfIsCharging();
         checkIfIsMeleeing();
         attack(enemies, mousePos);
-        shield.update(this, mousePos, projList, camera);
+        shield.update(this, mousePos, projList, camera, enemies);
         charge(mousePos, camera, this, enemies);
         overDrive(this);
 //        this needs to update last so that the camera doesn't jiggle
@@ -135,7 +135,6 @@ public class Warrior extends Player {
                 player.setShieldHp(150);
                 player.setCanUseSecondary(true);
                 player.setUsingUltimate(true);
-
             }
         }
         if(player.isUsingUltimate()){
