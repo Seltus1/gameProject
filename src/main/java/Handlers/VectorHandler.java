@@ -320,18 +320,19 @@ public class VectorHandler {
         }
     }
     public void rangeLine(Player player, Raylib.Vector2 mousePos){
-        Raylib.Vector2 endPoint = findIntersectingPointOnCircleAndMousePos(player.getPosition(),player.getRange(),mousePos);
+        Raylib.Vector2 endPoint = findEndPointOfLine(player.getPosition(),player.getRange(),mousePos);
         // Draw the line from playerPos to endPoint
         DrawLineV(player.getPosition(), endPoint, BLACK);
     }
-    public Raylib.Vector2 findIntersectingPointOnCircleAndMousePos(Raylib.Vector2 pos1, float rad, Raylib.Vector2 mousePos){
+
+    public Raylib.Vector2 findEndPointOfLine(Raylib.Vector2 pos1, float rad, Raylib.Vector2 pos2){
         // Calculate the direction vector from player to mouse
-        Raylib.Vector2 direction = new Raylib.Vector2(new Jaylib.Vector2(mousePos.x() - pos1.x(), mousePos.y() - pos1.y()));
+        Raylib.Vector2 direction = new Raylib.Vector2(new Jaylib.Vector2(pos2.x() - pos1.x(), pos2.y() - pos1.y()));
 
         // Normalize the direction vector
-        double length =  Math.sqrt((double) (direction.x() * direction.x()) + (double) (direction.y() * direction.y()));
-        direction.x((float) (direction.x() / length));
-        direction.y((float)(direction.y() / length));
+        double magnitude =  Math.sqrt((double) (direction.x() * direction.x()) + (double) (direction.y() * direction.y()));
+        direction.x((float) (direction.x() / magnitude));
+        direction.y((float)(direction.y() / magnitude));
 
         // Calculate the endpoint of the line based on player's position and direction
         Raylib.Vector2 endPoint = new Raylib.Vector2(new Jaylib.Vector2(pos1.x() + direction.x() * rad, pos1.y() + direction.y() * rad));

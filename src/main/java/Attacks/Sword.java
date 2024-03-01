@@ -8,7 +8,6 @@ import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Jaylib.PURPLE;
 import static com.raylib.Raylib.*;
 
 public class Sword {
@@ -45,7 +44,7 @@ public class Sword {
         }
     }
     public Raylib.Vector2[] calculateTriangle(Player player, Raylib.Vector2 mousePos){
-        Raylib.Vector2 endPoint = vector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),player.getRange(),mousePos);
+        Raylib.Vector2 endPoint = vector.findEndPointOfLine(player.getPosition(),player.getRange(),mousePos);
         double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint,player.getRange(),50, mousePos);
         Raylib.Vector2 p1 = new Jaylib.Vector2((int)poses[0],(int)poses[1]);
         Raylib.Vector2 p2 = new Jaylib.Vector2((int)poses[2],(int)poses[3]);

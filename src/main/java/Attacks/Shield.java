@@ -73,7 +73,7 @@ public class Shield {
 
 //    shield block helper fucntions
     public double[] calculateShieldLocation(Player player, Raylib.Vector2 mousePos){
-        Raylib.Vector2 endPoint = vector.findIntersectingPointOnCircleAndMousePos(player.getPosition(), player.getRange() / 2, mousePos);
+        Raylib.Vector2 endPoint = vector.findEndPointOfLine(player.getPosition(), player.getRange() / 2, mousePos);
         double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35, mousePos);
         linePoint1 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[0], (float) poses[1]));
         linePoint2 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[2], (float) poses[3]));
@@ -101,8 +101,7 @@ public class Shield {
     }
     private void shieldingWhileUltimate(Player player, Projectile projectile){
         //             37 is the distance from the player to the shield
-//                    (dont ask why it just is) - dany 2/27/24
-
+        //             (dont ask why it just is) - dany 2/27/24
         if(CheckCollisionCircles(projectile.getPosition(),projectile.getShotRad(),player.getPosition(), 37)){
             projectile.setMoveSpeed(projectile.getShotSpeed() * -1);
             projectile.setColor(ColorFromHSV(196f,.67f,.97f));

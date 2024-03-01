@@ -61,6 +61,7 @@ public class Warrior extends Player {
         charge(mousePos, camera, this, enemies);
         overDrive(this);
 //        this needs to update last so that the camera doesn't jiggle
+        getVector().rangeLine(this,mousePos);
         super.update(projList, camera, mousePos, enemies);
     }
 
@@ -104,7 +105,7 @@ public class Warrior extends Player {
         if (isUsingUtility()) {
             getVector().setMoveSpeed(getInitialMoveSpeed() * 2);
 
-            currMousePos = shieldVector.findIntersectingPointOnCircleAndMousePos(player.getPosition(),100000,currMousePos);
+            currMousePos = shieldVector.findEndPointOfLine(player.getPosition(),100000,currMousePos);
             chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
 //            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
             shield.drawShield(chargingShieldPos, player);
