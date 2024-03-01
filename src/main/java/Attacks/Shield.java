@@ -23,6 +23,9 @@ public class Shield {
     private boolean didUpdateSpeed;
     private Raylib.Vector2 shieldCenterPoint;
     private boolean shieldTookDamage;
+    private HealthHandler shieldRegener;
+    private HealthHandler shieldDamager;
+    private int shieldDefense;
 
 
     public Shield(Camera2D camera, Player player) {
@@ -36,7 +39,9 @@ public class Shield {
         shieldRegenCD = new CooldownHandler();
         regenTimer = new HealthHandler();
         didUpdateSpeed = false;
-
+        shieldRegener = new HealthHandler();
+        shieldDamager = new HealthHandler();
+        shieldDefense = 60;
     }
 
     public void update(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera, EnemyHandler enemies){
@@ -109,9 +114,8 @@ public class Shield {
         }
     }
     private void collidedWithShield(Player player, Projectile projectile, ProjectileHandler projList){
-        player.setShieldHp(player.getShieldHp() - projectile.getDamage());
-        shieldRegenCD.setCurrentFrame(0);
-        regenShield = false;
+//    HERE projectile.getDamage() DAMAGE SHIELD
+        shieldDamager.damageShield(player,projectile.getDamage(),this);
         projList.removeObject(projectile);
         if (player.getShieldHp() <= 0) {
             player.setCanUseSecondary(false);
@@ -149,39 +153,25 @@ public class Shield {
         }
     }
     private void checkEnemyCollisionWithShield(Player player, Enemy enemy, EnemyHandler enemies, Camera2D camera){
+//       the shield becomes a circle while ulted, so a new check is needed to know if the enemy hit the shield.
+        if(player.isUsingUltimate()){
+//            why 37? check projectile collision with shield
+            if(CheckCollisionCircles(enemy.getPos(),enemy.getSize(),player.getPosition(), 37)){
+                enemyCollisionsWithShield(enemy, enemies,player,camera);
+            }
+            return;
+        }
+//        regular enemy collision with the shield
         if (CheckCollisionCircles(shieldCenterPoint, enemy.getMoveSpeed(), enemy.getPos(), enemy.getSize())) {
             if (vector.canTheEnemyHitThePlayerCircle(enemy, player, linePoint1, linePoint2)) {
                 enemyCollisionsWithShield(enemy, enemies, player, camera);
                 return;
             }
-//            else if(enemy instanceof BrawlerEnemy){
-//                BrawlerEnemy brawlerEnemy = (BrawlerEnemy) enemy;
-//                brawlerEnemy.setSpeedWhileAttacking(6);
-//                brawlerEnemy.setMoveSpeed(brawlerEnemy.getInitialMoveSpeed());
-//                brawlerEnemy.setDirectionLocked(false);
-//                brawlerEnemy.setCollidedWithShield(false);
-//            }
         }
         shieldTookDamage = false;
     }
     private void regenShield(Player player){
-        if(player.getShieldHp() < player.getShieldMaxHp()) {
-            if (shieldRegenCD.cooldown(totalTimeNeededSinceLastHitToRegen)){
-                regenShield = true;
-            }
-            if (regenShield) {
-                int amtToRegen = regenTimer.regenHp(player.getShieldHp(), shieldRegen,  player.getShieldMaxHp(), 500);
-                player.setShieldHp(amtToRegen);
-                if (player.getShieldHp() >= player.getShieldMaxHp()){
-                    regenShield = false;
-                }
-            }
-            if(player.getShieldHp() > 0){
-                player.setCanUseSecondary(true);
-            }
-            return;
-        }
-        regenShield = false;
+        shieldRegener.regenShield(player,this);
     }
 
 
@@ -234,5 +224,85 @@ public class Shield {
 
     public void setCurrentDamageDealt(int currentDamageDealt) {
         this.currentDamageDealt = currentDamageDealt;
+    }
+
+    public VectorHandler getVector() {
+        return vector;
+    }
+
+    public void setVector(VectorHandler vector) {
+        this.vector = vector;
+    }
+
+    public int getShieldRegen() {
+        return shieldRegen;
+    }
+
+    public void setShieldRegen(int shieldRegen) {
+        this.shieldRegen = shieldRegen;
+    }
+
+    public int getTotalTimeNeededSinceLastHitToRegen() {
+        return totalTimeNeededSinceLastHitToRegen;
+    }
+
+    public void setTotalTimeNeededSinceLastHitToRegen(int totalTimeNeededSinceLastHitToRegen) {
+        this.totalTimeNeededSinceLastHitToRegen = totalTimeNeededSinceLastHitToRegen;
+    }
+
+    public CooldownHandler getShieldRegenCD() {
+        return shieldRegenCD;
+    }
+
+    public void setShieldRegenCD(CooldownHandler shieldRegenCD) {
+        this.shieldRegenCD = shieldRegenCD;
+    }
+
+    public HealthHandler getRegenTimer() {
+        return regenTimer;
+    }
+
+    public void setRegenTimer(HealthHandler regenTimer) {
+        this.regenTimer = regenTimer;
+    }
+
+    public boolean isRegenShield() {
+        return regenShield;
+    }
+
+    public void setRegenShield(boolean regenShield) {
+        this.regenShield = regenShield;
+    }
+
+    public boolean isDidUpdateSpeed() {
+        return didUpdateSpeed;
+    }
+
+    public void setDidUpdateSpeed(boolean didUpdateSpeed) {
+        this.didUpdateSpeed = didUpdateSpeed;
+    }
+
+    public Raylib.Vector2 getShieldCenterPoint() {
+        return shieldCenterPoint;
+    }
+
+    public void setShieldCenterPoint(Raylib.Vector2 shieldCenterPoint) {
+        this.shieldCenterPoint = shieldCenterPoint;
+    }
+
+    public boolean isShieldTookDamage() {
+        return shieldTookDamage;
+    }
+
+    public void setShieldTookDamage(boolean shieldTookDamage) {
+        this.shieldTookDamage = shieldTookDamage;
+    }
+
+    public int getShieldDefense() {
+        return shieldDefense;
+    }
+
+    public void setShieldDefense(int shieldDefense) {
+        this.shieldDefense = shieldDefense;
     }
 }

@@ -25,6 +25,10 @@ public class BrawlerEnemy extends Enemy {
     private CooldownHandler enemyKnockbackAfterShieldCollision;
     private boolean knockBackEnemy;
     private CooldownHandler resetMoveSpeed;
+    private boolean didDealDamageToPlayer;
+    private boolean startAttackCD;
+    private CooldownHandler betweenAttacksCD;
+    private boolean attackLocked;
 
 
     public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera){
@@ -33,28 +37,37 @@ public class BrawlerEnemy extends Enemy {
         attackCD = new CooldownHandler();
         attackingTime = new CooldownHandler();
         speedWhileAttacking = getMoveSpeed() * 2;
-        attackTimeInMilli = 1000;
+        attackTimeInMilli = 500;
         playerHp = new HealthHandler();
-        intervalBetweenAttacks = 500;
+        intervalBetweenAttacks = 2500;
         dealDamageCD = new CooldownHandler();
         enemyKnockbackAfterShieldCollision = new CooldownHandler();
         resetMoveSpeed = new CooldownHandler();
+        betweenAttacksCD = new CooldownHandler();
     }
 
     public void attack(Player player, Raylib.Camera2D camera){
+        if(knockBackEnemy){
+            isAttacking = false;
+            shouldAttack = false;
+            knockBackEnemy(player,camera);
+            return;
+        }
         int distance = getVector().distanceToOtherObject(player.getPosX(),player.getPosY());
+        if(startAttackCD){
+            directionLocked  = false;
+            attackLocked = true;
+            if(betweenAttacksCD.cooldown(intervalBetweenAttacks)){
+                attackLocked = false;
+            }
+        }
         if(distance <= getRange()){
-            if(attackCD.cooldown(attackCooldown) &&!isAttacking){
+            if(attackCD.cooldown(attackCooldown) &&!isAttacking&& !knockBackEnemy){
 //                player.setHp(player.getHp() - getDamage());
 //                player.getRegenCooldown().setCurrentFrame(0);
                 shouldAttack = true;
-
             }
             lungeAttack(player,camera);
-            if(knockBackEnemy){
-                knockBackEnemy(player,camera);
-                return;
-            }
             dealDamageIfCollided(player, camera);
         }
         else {
@@ -67,9 +80,9 @@ public class BrawlerEnemy extends Enemy {
                 getVector().moveObject(player.getPosition(), "to", camera);
                 getVector().setHasAlrdyBooleanMoved(false);
             }
-            else {
-                getVector().randEnemyMove(player, this, 50, camera);
-            }
+//            else {
+//                getVector().randEnemyMove(player, this, 50, camera);
+//            }
         }
     }
     public void update(Player player, Raylib.Camera2D camera){
@@ -79,31 +92,36 @@ public class BrawlerEnemy extends Enemy {
         collisionWithShield(player,camera);
     }
     private void lungeAttack(Player player, Raylib.Camera2D camera){
-        if(shouldAttack){
+        if(shouldAttack && !isAttacking && !knockBackEnemy && !attackLocked) {
             setInitialPositionBeforeAttack(getPos());
             getVector().setShotPosition(player.getPosition());
             getVector().setStraightLine(camera);
             shouldAttack = false;
             isAttacking = true;
         }
-        if(isAttacking && !knockBackEnemy){
+        if(isAttacking && !knockBackEnemy && !shouldAttack && !attackLocked){
             directionLocked = true;
             setMoveSpeed(speedWhileAttacking);
             getVector().updateShootLinePosition(camera);
             if(attackingTime.cooldown(attackTimeInMilli)){
-                isAttacking = false;
                 directionLocked = false;
+                isAttacking = false;
                 setMoveSpeed(getInitialMoveSpeed());
+                shouldAttack = false;
             }
         }
     }
     private void dealDamageIfCollided(Player player, Camera2D camera){
         if(CheckCollisionCircles(getPos(),getSize(),player.getPosition(),player.getSize())){
-            if(dealDamageCD.cooldown(intervalBetweenAttacks)) {
-                playerHp.damagePlayer(player, getDamage());
-                knockBackEnemy = true;
-            }
             setAttacking(false);
+            knockBackEnemy = true;
+            if(!didDealDamageToPlayer){
+                playerHp.damagePlayer(player, getDamage());
+                didDealDamageToPlayer = true;
+            }
+        }
+        else{
+            didDealDamageToPlayer = false;
         }
     }
 //    private void resetSpeedAfterCollisionWithShield(){
@@ -112,17 +130,19 @@ public class BrawlerEnemy extends Enemy {
 //    }
     private void collisionWithShield(Player player, Camera2D camera){
         if(collidedWithShield){
+            knockBackEnemy = true;
+            knockBackEnemy(player, camera);
             collidedWithShield = false;
-                knockBackEnemy(player, camera);
-                knockBackEnemy = true;
-
         }
     }
     private void knockBackEnemy(Player player, Camera2D camera){
         if(knockBackEnemy) {
+            startAttackCD = true;
+            setDirectionLocked(true);
             getVector().moveObject(player.getPosition(), "away", camera);
-            if (enemyKnockbackAfterShieldCollision.cooldown(1000)) {
+            if (enemyKnockbackAfterShieldCollision.cooldown(200)) {
                 knockBackEnemy = false;
+                setDirectionLocked(false);
             }
         }
     }

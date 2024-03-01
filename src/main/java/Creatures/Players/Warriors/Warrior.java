@@ -48,7 +48,7 @@ public class Warrior extends Player {
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
         setTotalShieldCD(10000);
         setTotalChargeCD(5000);
-        setUltimateUpTime(5000);
+        setUltimateUpTime(10000);
         setUltimateCD(20000);
         setDefence(60);
     }
@@ -61,7 +61,6 @@ public class Warrior extends Player {
         charge(mousePos, camera, this, enemies);
         overDrive(this);
 //        this needs to update last so that the camera doesn't jiggle
-        getVector().rangeLine(this,mousePos);
         super.update(projList, camera, mousePos, enemies);
     }
 
@@ -97,28 +96,26 @@ public class Warrior extends Player {
             chargeY = mousePos.y();
             getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
             getVector().setStraightLine(camera);
-            startChargeCD = true;
             setUsingUtility(true);
             player.setCanUseUtility(false);
             setDirectionLocked(true);
         }
         if (isUsingUtility()) {
             getVector().setMoveSpeed(getInitialMoveSpeed() * 2);
-
             currMousePos = shieldVector.findEndPointOfLine(player.getPosition(),100000,currMousePos);
             chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
 //            System.out.println(chargingShieldPos[0] + chargingShieldPos[1] +  chargingShieldPos[2] + chargingShieldPos[3]);
             shield.drawShield(chargingShieldPos, player);
             getVector().updateShootLinePosition(camera);
             dealingDamage(enemies,mousePos);
-
 //            getVector().moveObject(endOfChargeLocation, "to", camera);
-        }
-        if (chargingTime.cooldown(2000)) {
-            setMoveSpeed(getInitialMoveSpeed());
-            setUsingUtility(false);
-            setDirectionLocked(false);
-            return;
+            if (chargingTime.cooldown(2000)){
+                setMoveSpeed(getInitialMoveSpeed());
+                setUsingUtility(false);
+                setDirectionLocked(false);
+                startChargeCD = true;
+                return;
+            }
         }
         if (startChargeCD) {
             if (getChargeCD().cooldown(getTotalChargeCD())) {

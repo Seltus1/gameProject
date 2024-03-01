@@ -45,8 +45,8 @@ public class EnemyHandler extends ListHandler {
         for (int i = 0; i < amount; i++) {
             ArrayList<String> keyList = new ArrayList<>(enemies.keySet());
             int listIndex = rand.nextInt(enemies.size());
-            int randEnemy = enemies.get(keyList.get(listIndex));
-//            int randEnemy = enemies.get("Brawler");
+//            int randEnemy = enemies.get(keyList.get(listIndex));
+            int randEnemy = enemies.get("Brawler");
             int size = 25;
             int[] enemyPos = enemySpawnPosition(player);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);
@@ -75,11 +75,11 @@ public class EnemyHandler extends ListHandler {
             add(enemy);
         }
         else if(randEnemy == 2){
-            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
+            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 300, BLUE, camera);
             add(enemy);
         }
         else if(randEnemy == 3){
-            FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 75, ORANGE, camera);
+            FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 300, ORANGE, camera);
             add(enemy);
         }
         else if (randEnemy == 4){

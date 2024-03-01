@@ -74,7 +74,7 @@ public class Main {
         }
         public static void addEnemies () {
             amountOfEnemy = rand.nextInt(15) + 3;
-            enemies.addMultipleEnemies(amountOfEnemy, camera, player1);
+            enemies.addMultipleEnemies(1, camera, player1);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));
