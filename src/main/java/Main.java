@@ -39,8 +39,8 @@ public class Main {
     public static void gameLoop() {
         // Begin drawing on the window
         while (!WindowShouldClose() && isInit) {
-            cameraSet();
             HideCursor();
+            cameraSet();
             BeginDrawing();
             BeginMode2D(camera);
             ClearBackground(RAYWHITE);

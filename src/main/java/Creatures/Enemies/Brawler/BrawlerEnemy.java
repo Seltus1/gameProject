@@ -55,10 +55,13 @@ public class BrawlerEnemy extends Enemy {
         }
         int distance = getVector().distanceToOtherObject(player.getPosX(),player.getPosY());
         if(startAttackCD){
+            setMoveSpeed(0);
             directionLocked  = false;
             attackLocked = true;
             if(betweenAttacksCD.cooldown(intervalBetweenAttacks)){
+                startAttackCD = false;
                 attackLocked = false;
+                setMoveSpeed(getInitialMoveSpeed());
             }
         }
         if(distance <= getRange()){
