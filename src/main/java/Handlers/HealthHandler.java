@@ -22,7 +22,7 @@ public class HealthHandler {
         int damageToDeal = calculateDamageToDeal(player.getDefenceOrArmorForEthan(),damage);
         player.setHp(player.getHp() - damageToDeal);
         player.setCanRegen(false);
-        player.getRegenCooldown().setCurrentFrame(0);
+        player.getRegenCooldown().resetCooldown();
     }
 
     public void regenShield(Player player, Shield shield){
@@ -47,7 +47,7 @@ public class HealthHandler {
     public void damageShield(Player player, int damage, Shield shield){
         int damageToDeal = calculateDamageToDeal(shield.getShieldDefense(),damage);
         player.setShieldHp(player.getShieldHp() - damageToDeal);
-        shield.getShieldRegenCD().setCurrentFrame(0);
+        shield.getShieldRegenCD().resetCooldown();
         shield.setRegenShield(false);
     }
     private int calculateDamageToDeal(int defense, int damage){

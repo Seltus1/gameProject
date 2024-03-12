@@ -8,6 +8,7 @@ import Elements.Fire;
 import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.BLACK;
+import static com.raylib.Jaylib.RED;
 import static com.raylib.Raylib.*;
 
 import static com.raylib.Raylib.CheckCollisionCircles;
@@ -17,6 +18,9 @@ public class ProjectileHandler extends ListHandler {
     private Fire fire;
     private Poison poison;
     private HealthHandler playerHp;
+    private CooldownHandler drawingDebuff;
+    private boolean shouldDrawDebuff;
+    private String currentDebuff;
 
     public ProjectileHandler(){
         super();
@@ -24,6 +28,7 @@ public class ProjectileHandler extends ListHandler {
         fire = new Fire();
         poison = new Poison(1,.2f,1.2f,200);
         playerHp = new HealthHandler();
+        drawingDebuff = new CooldownHandler();
     }
 
     public void update(EnemyHandler enemies, Player player, Camera2D camera){
@@ -38,6 +43,7 @@ public class ProjectileHandler extends ListHandler {
 //            checking if the projectile should draw, if false removes it from the projlist
             removeProjectiles(projectile, camera);
         }
+        drawDebuffName(currentDebuff,player);
     }
 
     private void projectileCollision(Projectile projectile, EnemyHandler enemies, Player player, Camera2D camera) {
@@ -88,17 +94,23 @@ public class ProjectileHandler extends ListHandler {
     }
 
     private void applySpecialShot(Projectile currProj, Player player, Camera2D camera) {
+        shouldDrawDebuff = true;
+        drawingDebuff.resetCooldown();
         if(currProj.getShotTag().equals("Enemy_Pool_Shot")) {
             poolShot(currProj.getPosX(),currProj.getPosY(), camera);
         }
         else if (currProj.getShotTag().contains("Fire")) {
             burn(player);
+            currentDebuff = "Burn";
         }
         else if (currProj.getShotTag().contains("Inferno")) {
             inferno(player);
+            currentDebuff = "Inferno";
         }
         else if(currProj.getShotTag().contains("Poison")){
             poison(player);
+            drawDebuffName("Poison", player);
+            currentDebuff = "Poison";
         }
     }
 
@@ -145,4 +157,13 @@ public class ProjectileHandler extends ListHandler {
             removeObject(projectile);
         }
     }
+    private void drawDebuffName(String debuff, Player player){
+        if(drawingDebuff.cooldown(2000)){
+            shouldDrawDebuff = false;
+        }
+        if(shouldDrawDebuff){
+            DrawText(debuff, player.getPosX() - 100, player.getPosY() - 100, 30, RED);
+        }
+    }
+
 }

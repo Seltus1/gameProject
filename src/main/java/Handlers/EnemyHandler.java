@@ -46,7 +46,7 @@ public class EnemyHandler extends ListHandler {
             ArrayList<String> keyList = new ArrayList<>(enemies.keySet());
             int listIndex = rand.nextInt(enemies.size());
 //            int randEnemy = enemies.get(keyList.get(listIndex));
-            int randEnemy = enemies.get("Brawler");
+            int randEnemy = enemies.get("FireMagic");
             int size = 25;
             int[] enemyPos = enemySpawnPosition(player);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);

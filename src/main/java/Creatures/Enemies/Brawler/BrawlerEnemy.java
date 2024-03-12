@@ -46,7 +46,7 @@ public class BrawlerEnemy extends Enemy {
         speedWhileAttacking = getMoveSpeed() * 2;
         attackTimeInMilli = 500;
         playerHp = new HealthHandler();
-        intervalBetweenAttacks = 5000;
+        intervalBetweenAttacks = 1000;
         dealDamageCD = new CooldownHandler();
         enemyKnockbackAfterShieldCollision = new CooldownHandler();
         resetMoveSpeed = new CooldownHandler();
@@ -65,7 +65,7 @@ public class BrawlerEnemy extends Enemy {
         else{
             attack(player, camera);
         }
-        DrawText("" + isAttacking, player.getPosX() + 10, player.getPosY() + 10, 30, BLACK);
+//        DrawText("" + isAttacking, player.getPosX() + 10, player.getPosY() + 10, 30, BLACK);
     }
 
     public void attack(Player player, Raylib.Camera2D camera){
@@ -95,18 +95,18 @@ public class BrawlerEnemy extends Enemy {
                     initialPositionBeforeRandMove = getPos();
                     didStartRandMoving = true;
                 }
-                else {
-                    getVector().randEnemyMoveInArea(initialPositionBeforeRandMove, this, getRange(), camera);
-                }
+//                else {
+//                    getVector().randEnemyMoveInArea(initialPositionBeforeRandMove, this, 10, camera);
+//                }
             }
             if (getRange() <= getVector().distanceToOtherObject(player.getPosX(), player.getPosY()) && !isRandMoving()) {
                 getVector().moveObject(player.getPosition(), "to", camera);
                 getVector().setHasAlrdyBooleanMoved(false);
                 didStartRandMoving = false;
             }
-            else {
-                getVector().randEnemyMove(player, this, getRange(), camera);
-            }
+//            else {
+//                getVector().randEnemyMove(player, this, 10, camera);
+//            }
         }
     }
     private void lungeAttack(Player player, Raylib.Camera2D camera){
@@ -132,6 +132,7 @@ public class BrawlerEnemy extends Enemy {
     }
     private void dealDamageIfCollided(Player player, Camera2D camera){
         if(CheckCollisionCircles(getPos(),getSize(),player.getPosition(),player.getSize())){
+            attackingTime.resetCooldown();
             setMoveSpeed(getInitialMoveSpeed());
             setAttacking(false);
             knockBackEnemy = true;
@@ -147,8 +148,11 @@ public class BrawlerEnemy extends Enemy {
     private void collisionWithShield(Player player, Camera2D camera){
         if(collidedWithShield){
             knockBackEnemy = true;
-            knockBackEnemy(player, camera);
             collidedWithShield = false;
+            attackingTime.resetCooldown();
+            setMoveSpeed(getInitialMoveSpeed());
+            setAttacking(false);
+            knockBackEnemy = true;
         }
     }
     private void knockBackEnemy(Player player, Camera2D camera){

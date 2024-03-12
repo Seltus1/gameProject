@@ -107,7 +107,8 @@ public class Shield {
     private void shieldingWhileUltimate(Player player, Projectile projectile){
         //             37 is the distance from the player to the shield
         //             (dont ask why it just is) - dany 2/27/24
-        if(CheckCollisionCircles(projectile.getPosition(),projectile.getShotRad(),player.getPosition(), 37)){
+        if(CheckCollisionCircles(projectile.getPosition(),projectile.getShotRad(),player.getPosition(), 37) && !projectile.isDidCollideWithShield()){
+            projectile.setDidCollideWithShield(true);
             projectile.setMoveSpeed(projectile.getShotSpeed() * -1);
             projectile.setColor(ColorFromHSV(196f,.67f,.97f));
             projectile.setShotTag("Player");

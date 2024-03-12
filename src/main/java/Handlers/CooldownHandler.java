@@ -17,6 +17,9 @@ public class CooldownHandler {
         }
         return false;
     }
+        public void resetCooldown(){
+            currentFrame = 0;
+        }
     private double milliSecondsToFrames(double milliSeconds){
         return (milliSeconds/(1000.00)) * frameRate;
     }

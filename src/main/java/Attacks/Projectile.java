@@ -33,6 +33,7 @@ public class Projectile {
     private boolean circle;
     private VectorHandler player;
     private String toOrAway;
+    private boolean didCollideWithShield;
 
     public Projectile(int shotSpeed, int posX, int posY, int shotRad, int finalX, int finalY, String shotTag, int maxRange, boolean circle, Camera2D camera, Raylib.Color color) {
         this.shotSpeed = shotSpeed;
@@ -252,4 +253,11 @@ public class Projectile {
         this.toOrAway = toOrAway;
     }
 
+    public boolean isDidCollideWithShield() {
+        return didCollideWithShield;
+    }
+
+    public void setDidCollideWithShield(boolean didCollideWithShield) {
+        this.didCollideWithShield = didCollideWithShield;
+    }
 }

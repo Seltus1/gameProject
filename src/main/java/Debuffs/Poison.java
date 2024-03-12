@@ -1,6 +1,7 @@
 package Debuffs;
 
 import Creatures.Creature;
+import Creatures.Players.Player;
 import com.raylib.Raylib;
 
 import static com.raylib.Raylib.ColorFromHSV;
@@ -20,9 +21,15 @@ public class Poison {
         color = ColorFromHSV(103f,.37f,.81f);
     }
     public void applyDebuffs(Creature creature){
-        creature.setMoveSpeed((int) (creature.getMoveSpeed() - (creature.getMoveSpeed() * slowMultiplyer)));
-        creature.setShotCooldown((int)((creature.getShotcooldown()) * fireRateMultiplyer) + creature.getShotcooldown());
-        creature.setPoisoned(true);
+        if(!creature.isPoisoned()) {
+            creature.setMoveSpeed((int) (creature.getMoveSpeed() - (creature.getMoveSpeed() * slowMultiplyer)));
+            creature.setShotCooldown((int) ((creature.getShotcooldown()) * fireRateMultiplyer) + creature.getShotcooldown());
+            creature.setPoisoned(true);
+        }
+        else if (creature instanceof Player){
+            Player player = (Player) creature;
+            player.getPoisonCooldown().resetCooldown();
+        }
     }
 
     public Raylib.Color getColor() {

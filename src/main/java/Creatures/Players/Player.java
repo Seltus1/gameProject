@@ -811,4 +811,12 @@ public class Player implements Creature {
     public void setUltimateTimer(CooldownHandler ultimateTimer) {
         this.ultimateTimer = ultimateTimer;
     }
+
+    public CooldownHandler getPoisonCooldown() {
+        return poisonCooldown;
+    }
+
+    public void setPoisonCooldown(CooldownHandler poisonCooldown) {
+        this.poisonCooldown = poisonCooldown;
+    }
 }
