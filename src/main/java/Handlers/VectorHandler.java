@@ -319,6 +319,35 @@ public class VectorHandler {
             newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
         }
     }
+
+    public void randEnemyMoveInArea(Raylib.Vector2 currPosition, Enemy enemy, int rad, Camera2D camera){
+        if(!hasAlrdyBooleanMoved){
+            newPos = (new Jaylib.Vector2(enemy.getPosX(), enemy.getPosY()));
+            setHasAlrdyBooleanMoved(true);
+            return;
+        }
+        enemy.setRandMoving(false);
+        int randX,randY;
+        if(Math.abs(getPosX() - newPos.x()) >= 20 && Math.abs(getPosY() - newPos.y()) >= 20 ){
+            moveObject(newPos, "to", camera);
+            enemy.setRandMoving(true);
+        }
+        else{
+            if(currPosition.x() - enemy.getPosX() < 0) {
+                randX = -rand.nextInt(rad) + getPosX();
+            }
+            else{
+                randX = rand.nextInt(rad) + getPosX();
+            }
+            if(currPosition.y() - enemy.getPosY() < 0) {
+                randY = -rand.nextInt(rad) + getPosY();
+            }
+            else{
+                randY = rand.nextInt(rad)  + getPosY();
+            }
+            newPos = new Raylib.Vector2(new Jaylib.Vector2(randX, randY));
+        }
+    }
     public void rangeLine(Player player, Raylib.Vector2 mousePos){
         Raylib.Vector2 endPoint = findEndPointOfLine(player.getPosition(),player.getRange(),mousePos);
         // Draw the line from playerPos to endPoint

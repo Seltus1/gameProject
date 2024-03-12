@@ -75,11 +75,11 @@ public class EnemyHandler extends ListHandler {
             add(enemy);
         }
         else if(randEnemy == 2){
-            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 300, BLUE, camera);
+            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
             add(enemy);
         }
         else if(randEnemy == 3){
-            FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 300, ORANGE, camera);
+            FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 150, ORANGE, camera);
             add(enemy);
         }
         else if (randEnemy == 4){
