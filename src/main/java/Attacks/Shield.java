@@ -126,7 +126,7 @@ public class Shield {
 //        enemy.setHp(enemy.getHp() - 5);
         if(!shieldTookDamage) {
             player.setShieldHp(player.getShieldHp() - 5);
-            shieldRegenCD.setCurrentFrame(0);
+            shieldRegenCD.resetCooldown();
             regenShield = false;
             shieldTookDamage = true;
         }

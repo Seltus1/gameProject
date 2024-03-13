@@ -22,6 +22,7 @@ public interface Creature {
     boolean isPoisoned();
     int getPoisonTicks();
     int getShotcooldown();
+    boolean didMelee();
 
 
 
@@ -39,10 +40,12 @@ public interface Creature {
     void setOnFire(boolean onFire);
     void setFireHexCount(int hex);
     void setFireHex(boolean fireHex);
+    void setAttacking(boolean isAttacking);
 
     void setShooting(boolean b);
     void setFireInRange(boolean isFireInRange);
     void setPoisoned(boolean poisoned);
     void setPoisonTicks(int poisonCount);
     void setShotCooldown(int shotCooldown);
+    void setDidMelee(boolean didMelee);
 }

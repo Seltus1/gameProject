@@ -23,6 +23,7 @@ public class Fire {
     private int fireHexFPSCount;
     private CooldownHandler cooldown;
     private HealthHandler playerHp;
+    private boolean didApplyFireTicks;
 
     public Fire() {
         numCoins = 10;
@@ -58,17 +59,21 @@ public class Fire {
             }
 
 //            checking if the creature has created a projectile
-            if (creature.isShooting()) {
+            if (creature.isShooting() || creature.didMelee()) {
 
 //                adding burnTicks to the creature but never over 10
-                if (creature.getBurnTicks() + 3 > 10) {
+                if (creature.getBurnTicks() + 3 > 10 && !didApplyFireTicks) {
                     creature.setBurnTicks(getBurnTime());
-                } else {
+                } else if(!didApplyFireTicks){
                     creature.setBurnTicks(creature.getBurnTicks() + 3);
                 }
+                didApplyFireTicks = true;
 
 //                setting the creature on fire so that the brun deals damage
                 creature.setOnFire(true);
+            }
+            else{
+                didApplyFireTicks = false;
             }
             return;
         }

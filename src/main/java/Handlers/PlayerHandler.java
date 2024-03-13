@@ -1,5 +1,5 @@
 package Handlers;
-import Creatures.Players.Warriors.Warrior;
+import Creatures.Players.Warriors.Knight;
 import Elements.*;
 import Creatures.Players.Player;
 
@@ -150,7 +150,7 @@ public class PlayerHandler {
     }
 
     private void drawCooldownNumbers(){
-        if(player instanceof Warrior){
+        if(player instanceof Knight){
 //            when we add the ult, add the same system.
 
 
@@ -222,7 +222,7 @@ public class PlayerHandler {
         drawPlayer();
         drawPos();
         drawCooldowns();
-        if(player instanceof Warrior){
+        if(player instanceof Knight){
             drawShieldHP();
         }
     }

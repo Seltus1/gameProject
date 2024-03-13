@@ -138,6 +138,11 @@ public class Enemy implements Creature {
     }
 
     @Override
+    public void setAttacking(boolean isAttacking) {
+
+    }
+
+    @Override
     public int getHp() {
         return hp;
     }
@@ -302,9 +307,20 @@ public class Enemy implements Creature {
     }
 
     @Override
+    public boolean didMelee() {
+        return false;
+    }
+
+    @Override
     public void setShotCooldown(int shotCooldown){
         setShotCooldown(shotCooldown);
     }
+
+    @Override
+    public void setDidMelee(boolean didMelee) {
+
+    }
+
 
     public boolean isGotinRange() {
         return gotinRange;

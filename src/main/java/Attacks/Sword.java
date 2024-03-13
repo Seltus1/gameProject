@@ -31,7 +31,7 @@ public class Sword {
         creature.setHp(creature.getHp() - damage);
         if (creature instanceof Player){
             Player player1 = (Player) creature;
-            player1.getRegenCooldown().setCurrentFrame(0);
+            player1.getRegenCooldown().resetCooldown();
         }
     }
 

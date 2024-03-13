@@ -80,6 +80,7 @@ public class Player implements Creature {
     private boolean isUsingUtility;
     private boolean isUsingSecondary;
     private boolean isUsingUltimate;
+    private boolean didMelee;
 
 
 
@@ -98,6 +99,9 @@ public class Player implements Creature {
     private CooldownHandler chargeCD;
     private CooldownHandler poisonCooldown;
     private CooldownHandler ultimateTimer;
+    private CooldownHandler secondaryTimer;
+    private CooldownHandler specialTimer;
+    private CooldownHandler primaryTimer;
 
 
     private boolean canShoot;
@@ -193,6 +197,9 @@ public class Player implements Creature {
         chargeCD = new CooldownHandler();
         meleeCD = new CooldownHandler();
         ultimateTimer = new CooldownHandler();
+        specialTimer = new CooldownHandler();
+        secondaryTimer = new CooldownHandler();
+        primaryTimer = new CooldownHandler();
 
     }
 
@@ -460,6 +467,11 @@ public class Player implements Creature {
     }
 
     @Override
+    public void setAttacking(boolean isAttacking) {
+
+    }
+
+    @Override
     public void setFireInRange(boolean isFireInRange){
         isFireInRange = isFireInRange;
     }
@@ -629,8 +641,19 @@ public class Player implements Creature {
     }
 
     @Override
+    public boolean didMelee() {
+        return didMelee;
+    }
+
+
+    @Override
     public void setShotCooldown(int shotCooldown){
         this.shotCD = shotCooldown;
+    }
+
+    @Override
+    public void setDidMelee(boolean didMelee) {
+        this.didMelee = didMelee;
     }
 
     public int getInitialMoveSpeed() {
@@ -818,5 +841,29 @@ public class Player implements Creature {
 
     public void setPoisonCooldown(CooldownHandler poisonCooldown) {
         this.poisonCooldown = poisonCooldown;
+    }
+
+    public CooldownHandler getSecondaryTimer() {
+        return secondaryTimer;
+    }
+
+    public void setSecondaryTimer(CooldownHandler secondaryTimer) {
+        this.secondaryTimer = secondaryTimer;
+    }
+
+    public CooldownHandler getSpecialTimer() {
+        return specialTimer;
+    }
+
+    public void setSpecialTimer(CooldownHandler specialTimer) {
+        this.specialTimer = specialTimer;
+    }
+
+    public CooldownHandler getPrimaryTimer() {
+        return primaryTimer;
+    }
+
+    public void setPrimaryTimer(CooldownHandler primaryTimer) {
+        this.primaryTimer = primaryTimer;
     }
 }

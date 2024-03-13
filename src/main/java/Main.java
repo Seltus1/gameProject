@@ -1,5 +1,5 @@
 import Creatures.Players.Player;
-import Creatures.Players.Warriors.Warrior;
+import Creatures.Players.Warriors.Knight;
 import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -67,14 +67,14 @@ public class Main {
             camera = new Camera2D();
             rand = new Random();
             projectiles = new ProjectileHandler();
-            player1 = new Warrior(200, 12, 100, 0, 0, 5, 20, camera, RED);
+            player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
             game = new GameHandler();
         }
         public static void addEnemies () {
             amountOfEnemy = rand.nextInt(15) + 3;
-            enemies.addMultipleEnemies(1, camera, player1);
+            enemies.addMultipleEnemies(10, camera, player1);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));

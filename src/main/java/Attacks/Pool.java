@@ -51,7 +51,7 @@ public class Pool extends Projectile{
     private void isPlayer(Creature creature){
         if(creature instanceof Player) {
             Player player = (Player) creature;
-            player.getRegenCooldown().setCurrentFrame(0);
+            player.getRegenCooldown().resetCooldown();
         }
     }
 
