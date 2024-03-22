@@ -16,7 +16,6 @@ public class Knight extends Player {
 
     private Sword sword;
     private Shield shield;
-    private boolean canAttack;
     private CooldownHandler attackCooldown;
     private CooldownHandler drawCooldown;
     private Raylib.Vector2 currMousePos;
@@ -55,7 +54,6 @@ public class Knight extends Player {
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
 //        checkIfIsCharging();
-        checkIfIsMeleeing();
         primary(enemies, mousePos);
         secondary(mousePos,projList,camera,enemies);
         special(mousePos, camera, this, enemies);
@@ -171,13 +169,7 @@ public class Knight extends Player {
         }
     }
 
-    private void checkIfIsMeleeing() {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary() && !isUsingUltimate()){
-            setMeleeing(true);
-            return;
-        }
-        setMeleeing(false);
-    }
+
 
     private void dealDamageToEnemiesWhileCharging(Enemy enemy){
         if(shieldVector.CheckCollisionBetweenLineAndCircle(shield.getLinePoint1(),shield.getLinePoint2(),enemy.getPos(),enemy.getSize())){

@@ -12,7 +12,7 @@ import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.*;
 
-public class Player implements Creature {
+public abstract class Player implements Creature {
     //    HP
     private int hp;
     private int initalHp;
@@ -207,6 +207,7 @@ public class Player implements Creature {
         if(!directionLocked){
             move(camera);
         }
+        checkIfIsMeleeing();
 //        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
 //            shoot(projList, camera, mousePos);
 //        }
@@ -301,6 +302,18 @@ public class Player implements Creature {
             }
         }
     }
+//    public abstract void primary();
+//    public abstract void secondary();
+//    public abstract void utility();
+//    public abstract void ultimate();
+    private void checkIfIsMeleeing() {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary() && !isUsingUltimate()){
+            setMeleeing(true);
+            return;
+        }
+        setMeleeing(false);
+    }
+
 
 
 
