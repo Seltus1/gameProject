@@ -106,7 +106,6 @@ public class VectorHandler {
     }
 
     public void moveObject(Raylib.Vector2 otherPosition, String tag, Camera2D camera){
-//
         double[] positions = determinePositions(otherPosition, tag, camera);
         double verticalValues = positions[0];
         double horizontalValues = positions[1];
@@ -212,7 +211,7 @@ public class VectorHandler {
     }
 
     public void circlePlayer(Player player, float radius) {
-        float angularSpeed = 0.01f;
+        float angularSpeed = 0.1f;
         angularPosition += angularSpeed;
 
         double newX = player.getPosX() + radius * Math.cos(angularPosition);

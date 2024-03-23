@@ -1,6 +1,8 @@
 package Handlers;
 
+import Attacks.Projectile;
 import Attacks.Shield;
+import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
 
 public class HealthHandler {
@@ -49,6 +51,19 @@ public class HealthHandler {
         player.setShieldHp(player.getShieldHp() - damageToDeal);
         shield.getShieldRegenCD().resetCooldown();
         shield.setRegenShield(false);
+    }
+    public void dealDamageToEnemyFromProjectile(Enemy enemy, Projectile projectile) {
+        enemy.setHp(enemy.getHp() - projectile.getDamage());
+        if (enemy.getHp() <= 0){
+            enemy.setAlive(false);
+        }
+        projectile.setDraw(false);
+    }
+    public void dealDamageToEnemy(Enemy enemy, int damage) {
+        enemy.setHp(enemy.getHp() - damage);
+        if (enemy.getHp() <= 0){
+            enemy.setAlive(false);
+        }
     }
     private int calculateDamageToDeal(int defense, int damage){
         int damageToDeal;

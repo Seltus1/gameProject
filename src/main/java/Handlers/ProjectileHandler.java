@@ -21,6 +21,7 @@ public class ProjectileHandler extends ListHandler {
     private CooldownHandler drawingDebuff;
     private boolean shouldDrawDebuff;
     private String currentDebuff;
+    private HealthHandler enemyHp;
 
     public ProjectileHandler(){
         super();
@@ -29,6 +30,7 @@ public class ProjectileHandler extends ListHandler {
         poison = new Poison(1,.2f,1.2f,200);
         playerHp = new HealthHandler();
         drawingDebuff = new CooldownHandler();
+        enemyHp = new HealthHandler();
     }
 
     public void update(EnemyHandler enemies, Player player, Camera2D camera){
@@ -56,7 +58,7 @@ public class ProjectileHandler extends ListHandler {
                 Raylib.Vector2 fixedProj = GetScreenToWorld2D(projectile.getPosition(), camera);
                 if (CheckCollisionCircles(fixedProj, projectile.getShotRad(), fixedEnemy, enemy.getSize())){
 //                    updating enemies when collided
-                    collidedWithEnemy(enemy, projectile);
+                    enemyHp.dealDamageToEnemyFromProjectile(enemy, projectile);
                 }
             }
             return;
@@ -70,13 +72,13 @@ public class ProjectileHandler extends ListHandler {
         }
     }
 
-    private void collidedWithEnemy(Enemy enemy, Projectile projectile) {
-        enemy.setHp(enemy.getHp() - projectile.getDamage());
-        if (enemy.getHp() <= 0){
-            enemy.setAlive(false);
-        }
-        projectile.setDraw(false);
-    }
+//    private void collidedWithEnemy(Enemy enemy, Projectile projectile) {
+//        enemy.setHp(enemy.getHp() - projectile.getDamage());
+//        if (enemy.getHp() <= 0){
+//            enemy.setAlive(false);
+//        }
+//        projectile.setDraw(false);
+//    }
 
     private void colliededWithPlayer(Player player, Projectile projectile, Camera2D camera){
         if(!projectile.getShotTag().equals("Enemy_Pool")) {

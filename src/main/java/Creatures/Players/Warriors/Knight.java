@@ -100,7 +100,7 @@ public class Knight extends Player {
             getVector().setShotPosition(new Jaylib.Vector2(chargeX,chargeY));
             getVector().setStraightLine(camera);
             setUsingUtility(true);
-            player.setCanUseUtility(false);
+            setCanUseUtility(false);
             setDirectionLocked(true);
         }
         if (isUsingUtility()) {
@@ -122,7 +122,7 @@ public class Knight extends Player {
         }
         if (startChargeCD) {
             if (getChargeCD().cooldown(getTotalChargeCD())) {
-                player.setCanUseUtility(true);
+                setCanUseUtility(true);
                 startChargeCD = false;
             }
         }

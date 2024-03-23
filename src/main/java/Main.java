@@ -1,5 +1,6 @@
 import Creatures.Players.Player;
 import Creatures.Players.Warriors.Knight;
+import Creatures.Players.Warriors.Paladin;
 import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -67,7 +68,7 @@ public class Main {
             camera = new Camera2D();
             rand = new Random();
             projectiles = new ProjectileHandler();
-            player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
+            player1 = new Paladin(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
             game = new GameHandler();
