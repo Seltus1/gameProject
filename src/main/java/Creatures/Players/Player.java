@@ -2,11 +2,8 @@ package Creatures.Players;
 
 import Creatures.Creature;
 import Debuffs.Poison;
-import Handlers.CooldownHandler;
-import Handlers.EnemyHandler;
-import Handlers.ProjectileHandler;
+import Handlers.*;
 import Elements.Fire;
-import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -203,7 +200,8 @@ public abstract class Player implements Creature {
 
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
+
         if(!directionLocked){
             move(camera);
         }
@@ -217,8 +215,12 @@ public abstract class Player implements Creature {
         burn();
         regen();
         poisoned();
-        Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY()+ size);
+        dontLeaveArea(game);
+
+        Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
+
+
     }
 
     public void burn() {
@@ -312,6 +314,22 @@ public abstract class Player implements Creature {
             return;
         }
         setMeleeing(false);
+    }
+    public void dontLeaveArea(GameHandler game){
+        if(getPosX() + size >  game.getAreaSize() / 2){
+            setPosX(getPosX() - moveSpeed);
+        }
+        if(getPosX() - size <  -game.getAreaSize() / 2){
+            setPosX(getPosX() + moveSpeed);
+
+        }
+        if(getPosY() + size>  game.getAreaSize() / 2){
+            setPosY(getPosY() - moveSpeed);
+
+        }
+        if(getPosY() - size <  -game.getAreaSize() / 2){
+            setPosY(getPosY() + moveSpeed);
+        }
     }
 
 

@@ -3,10 +3,7 @@ import Attacks.Shield;
 import Attacks.Sword;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
-import Handlers.CooldownHandler;
-import Handlers.EnemyHandler;
-import Handlers.ProjectileHandler;
-import Handlers.VectorHandler;
+import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -52,14 +49,14 @@ public class Knight extends Player {
         setDefence(60);
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
 //        checkIfIsCharging();
         primary(enemies, mousePos);
         secondary(mousePos,projList,camera,enemies);
         special(mousePos, camera, this, enemies);
         ultimate(this);
 //        this needs to update last so that the camera doesn't jiggle
-        super.update(projList, camera, mousePos, enemies);
+        super.update(projList, camera, mousePos, enemies, game);
     }
 
     public void primary(EnemyHandler enemies, Raylib.Vector2 mousePos) {

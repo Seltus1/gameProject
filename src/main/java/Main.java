@@ -34,6 +34,7 @@ public class Main {
         createInstances();
 
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");
+        enemies.addMultipleEnemies(1,camera,player1);
         isInit = true;
     }
 
@@ -52,12 +53,10 @@ public class Main {
             enemies.update(projectiles, player1, camera, player1.getFire(), player1.getPoison());
             projectiles.update(enemies, player1, camera);
             player.update(enemies, projectiles, camera, mousePos);
-            player1.update(projectiles, camera, mousePos, enemies);
+            game.update(player1,enemies,camera);
+            player1.update(projectiles, camera, mousePos, enemies, game);
 
             drawMouse();
-            if (enemies.size() == 0) {
-                addEnemies();
-            }
             EndDrawing();
             EndMode2D();
         }
@@ -68,14 +67,10 @@ public class Main {
             camera = new Camera2D();
             rand = new Random();
             projectiles = new ProjectileHandler();
-            player1 = new Paladin(200, 12, 100, 0, 0, 5, 20, camera, RED);
+            player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
             game = new GameHandler();
-        }
-        public static void addEnemies () {
-            amountOfEnemy = rand.nextInt(15) + 3;
-            enemies.addMultipleEnemies(10, camera, player1);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));

@@ -3,10 +3,7 @@ import Attacks.Shield;
 import Attacks.Sword;
 import Creatures.Enemies.Enemy;
 import Creatures.Players.Player;
-import Handlers.CooldownHandler;
-import Handlers.EnemyHandler;
-import Handlers.ProjectileHandler;
-import Handlers.VectorHandler;
+import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
@@ -53,7 +50,7 @@ public class Warrior extends Player {
         setDefence(60);
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
 //        checkIfIsCharging();
         checkIfIsMeleeing();
         attack(enemies, mousePos);
@@ -61,7 +58,7 @@ public class Warrior extends Player {
         charge(mousePos, camera, this, enemies);
         overDrive(this);
 //        this needs to update last so that the camera doesn't jiggle
-        super.update(projList, camera, mousePos, enemies);
+        super.update(projList, camera, mousePos, enemies, game);
     }
 
     public void attack(EnemyHandler enemies, Raylib.Vector2 mousePos) {
