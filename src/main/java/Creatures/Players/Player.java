@@ -4,8 +4,11 @@ import Creatures.Creature;
 import Debuffs.Poison;
 import Handlers.*;
 import Elements.Fire;
+import Items.BasicItem;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
+
+import java.util.ArrayList;
 
 import static com.raylib.Jaylib.*;
 
@@ -153,6 +156,9 @@ public abstract class Player implements Creature {
     private int poisonTicks;
     private int intialBurn;
     private int shieldingSpeed;
+    private CooldownHandler attackCooldown;
+    private ArrayList<BasicItem> items;
+    private int itemTotal;
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
@@ -179,6 +185,7 @@ public abstract class Player implements Creature {
         regenCooldownMilliseconds = 10000;
         regenAmt = 10;
         shotCD = 250;
+        itemTotal = 0;
         initialShotCD = shotCD;
         initialMoveSpeed = moveSpeed;
         setShieldMaxHp(150);
@@ -197,6 +204,8 @@ public abstract class Player implements Creature {
         specialTimer = new CooldownHandler();
         secondaryTimer = new CooldownHandler();
         primaryTimer = new CooldownHandler();
+        attackCooldown = new CooldownHandler();
+        items = new ArrayList<>();
 
     }
 
@@ -330,6 +339,9 @@ public abstract class Player implements Creature {
         if(getPosY() - size <  -game.getAreaSize() / 2){
             setPosY(getPosY() + moveSpeed);
         }
+    }
+    public void newItemAdded(BasicItem item){
+        item.applyStatsOrEffect(this);
     }
 
 
@@ -896,5 +908,29 @@ public abstract class Player implements Creature {
 
     public void setPrimaryTimer(CooldownHandler primaryTimer) {
         this.primaryTimer = primaryTimer;
+    }
+
+    public CooldownHandler getAttackCooldown() {
+        return attackCooldown;
+    }
+
+    public void setAttackCooldown(CooldownHandler attackCooldown) {
+        this.attackCooldown = attackCooldown;
+    }
+
+    public ArrayList<BasicItem> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<BasicItem> items) {
+        this.items = items;
+    }
+
+    public int getItemTotal() {
+        return itemTotal;
+    }
+
+    public void setItemTotal(int itemTotal) {
+        this.itemTotal = itemTotal;
     }
 }

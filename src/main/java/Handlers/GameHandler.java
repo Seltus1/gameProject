@@ -4,6 +4,7 @@ import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
 import Creatures.Players.Player;
+import Items.Damage.FireRateUp;
 import Shops.Shop;
 
 import java.util.Random;
@@ -71,6 +72,11 @@ public class GameHandler {
     public void spawnNewWave(EnemyHandler enemies, Camera2D camera, Player player){
         if (enemies.size() == 0){
                 shop.update();
+                if(IsKeyPressed(KEY_E)){
+                    FireRateUp newItem = new FireRateUp(player);
+                    player.getItems().add(newItem);
+                    player.newItemAdded(newItem);
+                }
                 if(IsKeyPressed(KEY_SPACE)) {
                     drawWaveInCenter = true;
                     waveCount++;

@@ -13,7 +13,6 @@ public class Knight extends Player {
 
     private Sword sword;
     private Shield shield;
-    private CooldownHandler attackCooldown;
     private CooldownHandler drawCooldown;
     private Raylib.Vector2 currMousePos;
     private Raylib.Vector2 endOfChargeLocation;
@@ -34,7 +33,6 @@ public class Knight extends Player {
         super(hp, damage, meleeRange, posX, posY, moveSpeed, size, camera, color);
         sword = new Sword(damage, camera);
         shield = new Shield(camera, this);
-        attackCooldown = new CooldownHandler();
         drawCooldown = new CooldownHandler();
         chargingTime = new CooldownHandler();
         chargeCooldown = new CooldownHandler();
@@ -79,7 +77,7 @@ public class Knight extends Player {
             return;
         }
         if (!canMelee()) {
-            if (attackCooldown.cooldown(getShotcooldown())) {
+            if (getAttackCooldown().cooldown(getShotcooldown())) {
                 setCanMelee(true);
             }
         }
