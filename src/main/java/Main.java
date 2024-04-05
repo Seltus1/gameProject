@@ -10,9 +10,9 @@ import static com.raylib.Jaylib.*;
 import java.util.Random;
 
 public class Main {
-        final int frameRate = 60;
-        final static int SCREENWIDTH = GetScreenWidth();
-        final static int SCREENHEIGHT = GetRenderHeight();
+    final int frameRate = 60;
+    final static int SCREENWIDTH = GetScreenWidth();
+    final static int SCREENHEIGHT = GetRenderHeight();
     static ProjectileHandler projectiles;
     static EnemyHandler enemies;
     static Random rand;

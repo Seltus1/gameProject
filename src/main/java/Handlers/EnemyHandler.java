@@ -70,37 +70,35 @@ public class EnemyHandler extends ListHandler {
         return new int[]{Xpos, Ypos};
     }
     private void spawnEnemy(int randEnemy, int Xpos, int Ypos, int size, Camera2D camera){
-        if(randEnemy == 1){
-            SniperEnemy enemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN, camera);
-            add(enemy);
-        }
-        else if(randEnemy == 2){
-            BrawlerEnemy enemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
-            add(enemy);
-        }
-        else if(randEnemy == 3){
-            FireBrawlerEnemy enemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 150, ORANGE, camera);
-            add(enemy);
-        }
-        else if (randEnemy == 4){
-            MagicEnemy enemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550,
-                    15, PURPLE, camera);
-            add(enemy);
-        }
-        else if(randEnemy == 5){
-            FireSniperEnemy enemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300,
-                    35, ColorFromHSV(29,1,1),camera);
-            add(enemy);
-        }
-        else if (randEnemy == 6){
-            StealthEnemy enemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400,
-                    20, GRAY, camera);
-            add(enemy);
-        }
-        else if (randEnemy == 7){
-            FireMagicEnemy enemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size,
-                    800,500,20, ORANGE, camera);
-            add(enemy);
+        switch(randEnemy){
+            case 1:
+                SniperEnemy sniperEnemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN, camera);
+                add(sniperEnemy);
+                break;
+            case 2:
+                BrawlerEnemy brawlerEnemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
+                add(brawlerEnemy);
+                break;
+            case 3:
+                FireBrawlerEnemy fireBrawlerEnemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 150, ORANGE, camera);
+                add(fireBrawlerEnemy);
+                break;
+            case 4:
+                MagicEnemy magicEnemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550, 15, PURPLE, camera);
+                add(magicEnemy);
+                break;
+            case 5:
+                FireSniperEnemy fireSniperEnemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1),camera);
+                add(fireSniperEnemy);
+                break;
+            case 6:
+                StealthEnemy stealthEnemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400, 20, GRAY, camera);
+                add(stealthEnemy);
+                break;
+            case 7:
+                FireMagicEnemy fireMagicEnemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size, 800,500,20, ORANGE, camera);
+                add(fireMagicEnemy);
+                break;
         }
     }
     public void update(ProjectileHandler projList, Player player, Camera2D camera, Fire fire, Poison poison) {
