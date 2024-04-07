@@ -45,7 +45,8 @@ public class Knight extends Player {
         setSecondaryUpTime(1500);
         setUltimateUpTime(8000);
         setUltimateCD(20000);
-        setDefence(60);
+        setDefence(40);
+        setShotCooldown(1000);
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {

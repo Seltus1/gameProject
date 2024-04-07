@@ -229,6 +229,7 @@ public abstract class Player implements Creature {
         regen();
         poisoned();
 
+        DrawText(itemTotal + "", getPosX(), getPosY() - 100, 30, BLACK);
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
 
@@ -327,22 +328,27 @@ public abstract class Player implements Creature {
         }
         setMeleeing(false);
     }
-    public void dontLeaveArea(GameHandler game){
-        if(getPosX() + size >  game.getAreaSize() / 2){
-            setPosX(getPosX() - moveSpeed);
-        }
-        if(getPosX() - size <  -game.getAreaSize() / 2){
-            setPosX(getPosX() + moveSpeed);
+    public void dontLeaveArea(GameHandler game) {
+        int boundary = game.getAreaSize() / 2;
 
+        // Check boundaries for x-axis
+        if (getPosX() + size > boundary) {
+            setPosX(boundary - size);
         }
-        if(getPosY() + size>  game.getAreaSize() / 2){
-            setPosY(getPosY() - moveSpeed);
+        if (getPosX() - size < -boundary) {
+            setPosX(-boundary + size);
+        }
 
+        // Check boundaries for y-axis
+        if (getPosY() + size > boundary) {
+            setPosY(boundary - size);
         }
-        if(getPosY() - size <  -game.getAreaSize() / 2){
-            setPosY(getPosY() + moveSpeed);
+        if (getPosY() - size < -boundary) {
+            setPosY(-boundary + size);
         }
     }
+
+
     public void newItemAdded(BasicItem item){
         item.applyStatsOrEffect(this);
     }

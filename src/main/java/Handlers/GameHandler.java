@@ -4,9 +4,11 @@ import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
 import Creatures.Players.Player;
+import Items.BasicItem;
 import Items.Damage.FireRateUp;
 import Shops.Shop;
 
+import java.lang.reflect.Array;
 import java.util.Random;
 
 public class GameHandler {
@@ -21,6 +23,7 @@ public class GameHandler {
     private boolean drawWaveInCenter;
     private int areaSize;
     private Shop shop;
+    private String[] allItems;
 
     public GameHandler(){
         isinMenu = false;
@@ -33,6 +36,8 @@ public class GameHandler {
         drawWaveInCenter = true;
         areaSize = 2000;
         shop = new Shop();
+        allItems = new String[]{"FireRateUp"};
+
     }
 
     public void startGame(){
@@ -71,12 +76,13 @@ public class GameHandler {
     }
     public void spawnNewWave(EnemyHandler enemies, Camera2D camera, Player player){
         if (enemies.size() == 0){
-                shop.update();
-                if(IsKeyPressed(KEY_F)){
-                    FireRateUp newItem = new FireRateUp(player);
-                    player.getItems().add(newItem);
-                    player.newItemAdded(newItem);
-                }
+                shop.update(this);
+//                if(IsKeyPressed(KEY_F)){
+//                    FireRateUp newItem = new FireRateUp(player);
+//                    player.getItems().add(newItem);
+//                    player.newItemAdded(newItem);
+//                }
+
                 if(IsKeyPressed(KEY_SPACE)) {
                     drawWaveInCenter = true;
                     waveCount++;
@@ -132,5 +138,13 @@ public class GameHandler {
 
     public void setAreaSize(int areaSize) {
         this.areaSize = areaSize;
+    }
+
+    public String[] getAllItems() {
+        return allItems;
+    }
+
+    public void setAllItems(String[] allItems) {
+        this.allItems = allItems;
     }
 }
