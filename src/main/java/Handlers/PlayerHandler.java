@@ -207,7 +207,7 @@ public class PlayerHandler {
         DrawText("" + cdNumSecs, player.getPosX() - 30, player.getPosY() + (GetScreenHeight() / 2) - 190, 40, BLACK);
     }
 
-    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos) {
+    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, GameHandler game) {
 //        shoot(projList);
         if (player.getHp() <= 0){
             isAlive = false;
@@ -225,5 +225,6 @@ public class PlayerHandler {
         if(player instanceof Knight){
             drawShieldHP();
         }
+        player.dontLeaveArea(game);
     }
 }

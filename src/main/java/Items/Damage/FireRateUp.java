@@ -27,6 +27,7 @@ public class FireRateUp extends BasicItem {
     public void applyStatsOrEffect(Player player) {
         int newCD = calculateNewShotCooldown(player);
         player.setShotCooldown(newCD);
+        player.getAttackCooldown().resetCooldown();
     }
 
     private int calculateNewShotCooldown(Player player){

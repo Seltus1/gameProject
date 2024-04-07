@@ -26,7 +26,7 @@ public class SniperEnemy extends Enemy {
 
     public void shootPlayer(Player player, ProjectileHandler projList, String shotTag, Raylib.Color color, Raylib.Camera2D camera){
         if (getRange() > getVector().distanceToOtherObject(player.getPosX(),player.getPosY())){
-            shotCooldown = rand.nextInt(100) + 10;
+            shotCooldown = rand.nextInt(400) + 800;
             if(cooldown.cooldown(shotCooldown)){
                 int playerXPos = player.getPosX();
                 int playerYPos = player.getPosY();

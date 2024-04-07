@@ -110,6 +110,7 @@ public abstract class Player implements Creature {
     private boolean canUseSecondary;
     private boolean canUseUtility;
     private boolean canUseUltimate;
+    private boolean startUltCD;
 
 
     private int shotCD;
@@ -121,6 +122,7 @@ public abstract class Player implements Creature {
     private int ultimateUpTime;
     private int ultimateCD;
     private int ultimateCooldown;
+    private int secondaryUpTime;
 
 
 
@@ -159,6 +161,7 @@ public abstract class Player implements Creature {
     private CooldownHandler attackCooldown;
     private ArrayList<BasicItem> items;
     private int itemTotal;
+
 
 
     public Player(int hp, int damage, int range, int posX, int posY, int moveSpeed, int size, Camera2D camera, Raylib.Color color) {
@@ -222,9 +225,9 @@ public abstract class Player implements Creature {
         setShooting(false);
         shotCooldown();
         burn();
+//        DrawText(getItemTotal() + "", getPosX() - 100, getPosY(), 20, BLACK);
         regen();
         poisoned();
-        dontLeaveArea(game);
 
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
@@ -318,7 +321,7 @@ public abstract class Player implements Creature {
 //    public abstract void utility();
 //    public abstract void ultimate();
     private void checkIfIsMeleeing() {
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary() && !isUsingUltimate()){
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && !isUsingUtility() && !isMeleeing && !isUsingSecondary()){
             setMeleeing(true);
             return;
         }
@@ -932,5 +935,21 @@ public abstract class Player implements Creature {
 
     public void setItemTotal(int itemTotal) {
         this.itemTotal = itemTotal;
+    }
+
+    public boolean isStartUltCD() {
+        return startUltCD;
+    }
+
+    public void setStartUltCD(boolean startUltCD) {
+        this.startUltCD = startUltCD;
+    }
+
+    public int getSecondaryUpTime() {
+        return secondaryUpTime;
+    }
+
+    public void setSecondaryUpTime(int secondaryUpTime) {
+        this.secondaryUpTime = secondaryUpTime;
     }
 }

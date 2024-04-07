@@ -72,7 +72,7 @@ public class GameHandler {
     public void spawnNewWave(EnemyHandler enemies, Camera2D camera, Player player){
         if (enemies.size() == 0){
                 shop.update();
-                if(IsKeyPressed(KEY_E)){
+                if(IsKeyPressed(KEY_F)){
                     FireRateUp newItem = new FireRateUp(player);
                     player.getItems().add(newItem);
                     player.newItemAdded(newItem);

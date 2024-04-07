@@ -1,5 +1,6 @@
 package Handlers;
 import static com.raylib.Raylib.*;
+import java.lang.Math;
 public class CooldownHandler {
     int currentFrame;
     int frameRate;
@@ -11,7 +12,12 @@ public class CooldownHandler {
     public boolean cooldown(double milliSeconds){
         currentFrame++;
         double frames = milliSecondsToFrames(milliSeconds);
-        if(currentFrame % frames == 0){
+        int framesRounded = (int) Math.round(frames);
+        if(framesRounded <= 0){
+            currentFrame = 0;
+            return true;
+        }
+        if(currentFrame % framesRounded == 0){
             currentFrame = 0;
             return true;
         }

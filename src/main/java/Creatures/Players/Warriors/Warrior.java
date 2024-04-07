@@ -8,7 +8,6 @@ import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
 import static com.raylib.Jaylib.*;
-
 public class Warrior extends Player {
 
     private Sword sword;

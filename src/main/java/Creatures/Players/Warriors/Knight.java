@@ -42,7 +42,8 @@ public class Knight extends Player {
         shieldVector = new VectorHandler(posX,posY,getInitialMoveSpeed() + 7,camera);
         setTotalShieldCD(10000);
         setTotalChargeCD(5000);
-        setUltimateUpTime(10000);
+        setSecondaryUpTime(1500);
+        setUltimateUpTime(8000);
         setUltimateCD(20000);
         setDefence(60);
     }
@@ -59,7 +60,7 @@ public class Knight extends Player {
 
     public void primary(EnemyHandler enemies, Raylib.Vector2 mousePos) {
 //        is the player off cooldown for attacking
-        if(canMelee() && !isUsingUtility() && !isUsingUltimate() && !isUsingSecondary()){
+        if(canMelee() && !isUsingUtility() && !isUsingSecondary()){
 //            is the player attacking
             if(isMeleeing() && !didMelee()){
                 setDidMelee(true);
@@ -107,7 +108,7 @@ public class Knight extends Player {
             getVector().updateShootLinePosition(camera);
             dealingDamage(enemies,mousePos);
 //            getVector().moveObject(endOfChargeLocation, "to", camera);
-            if (chargingTime.cooldown(2000)){
+            if (chargingTime.cooldown(getSecondaryUpTime())){
                 setMoveSpeed(getInitialMoveSpeed());
                 setUsingUtility(false);
                 setDirectionLocked(false);
@@ -138,11 +139,15 @@ public class Knight extends Player {
             if(ultimateCooldown.cooldown(player.getUltimateUpTime())){
                 player.setUsingUltimate(false);
                 player.setCanUseUltimate(false);
+                player.setStartUltCD(true);
             }
             return;
         }
-        if(player.getUltimateTimer().cooldown(player.getUltimateCD())){
-            player.setCanUseUltimate(true);
+        if(player.isStartUltCD()) {
+            if (player.getUltimateTimer().cooldown(player.getUltimateCD())) {
+                player.setCanUseUltimate(true);
+                player.setStartUltCD(false);
+            }
         }
     }
 

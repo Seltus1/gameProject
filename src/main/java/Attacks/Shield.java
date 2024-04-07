@@ -56,7 +56,7 @@ public class Shield {
     }
 
     public void defend(Player player, Raylib.Vector2 mousePos, ProjectileHandler projList, Camera2D camera, EnemyHandler enemies){
-        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isMeleeing() && !player.isUsingUtility()){
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isUsingUtility()){
             double[] poses = calculateShieldLocation(player,mousePos);
             drawShield(poses, player);
             calculateShieldCenterPoint();
@@ -179,18 +179,20 @@ public class Shield {
 //    block helper functions end here
 
     private void updateMovingSpeed(Player player){
-        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isUsingUtility() && !player.isCanUseUltimate() && !player.isMeleeing()){
+        if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT) && player.isCanUseSecondary() && !player.isUsingUtility() && !player.isUsingUltimate()){
+            player.setUsingSecondary(true);
             if(!didUpdateSpeed) {
                 player.setShieldingSpeed(player.getMoveSpeed() / 2);
-                player.setUsingSecondary(true);
+
                 didUpdateSpeed = true;
                 player.setMoveSpeed(player.getShieldingSpeed());
-                return;
             }
         }
-        player.setMoveSpeed(player.getInitialMoveSpeed());
-        player.setUsingSecondary(false);
-        didUpdateSpeed = false;
+        else {
+            player.setMoveSpeed(player.getInitialMoveSpeed());
+            player.setUsingSecondary(false);
+            didUpdateSpeed = false;
+        }
     }
 
 
