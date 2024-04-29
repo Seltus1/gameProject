@@ -28,8 +28,8 @@ public class StealthEnemy extends Enemy {
     private Random rand;
     private int maxShots;
 
-    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Camera2D camera) {
-        super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
+    public StealthEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed,int numCoins, Raylib.Color color, Camera2D camera) {
+        super(hp, damage, posX, posY, moveSpeed, size, range, numCoins, color, camera);
         initialColor = color;
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
         this.shotSpeed = shotSpeed;

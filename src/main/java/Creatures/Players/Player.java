@@ -161,6 +161,8 @@ public abstract class Player implements Creature {
     private CooldownHandler attackCooldown;
     private ArrayList<BasicItem> items;
     private int itemTotal;
+    private boolean isOutsideArea;
+    private int numCoins;
 
 
 
@@ -183,6 +185,7 @@ public abstract class Player implements Creature {
 
 
         burnCountDown = 0;
+        numCoins = 0;
         burnDamage = 1;
         intialBurn = 10;
         regenCooldownMilliseconds = 10000;
@@ -328,20 +331,29 @@ public abstract class Player implements Creature {
         setMeleeing(false);
     }
     public void dontLeaveArea(GameHandler game){
+        boolean inArea = true;
         if(getPosX() + size >  game.getAreaSize() / 2){
-            setPosX(getPosX() - moveSpeed);
+            inArea = false;
+            setPosX(game.getAreaSize()/2 - size);
         }
         if(getPosX() - size <  -game.getAreaSize() / 2){
-            setPosX(getPosX() + moveSpeed);
+            inArea = false;
 
+            setPosX(-game.getAreaSize()/2 + size);
         }
-        if(getPosY() + size>  game.getAreaSize() / 2){
-            setPosY(getPosY() - moveSpeed);
-
+        if(getPosY() + size >  game.getAreaSize() / 2){
+            inArea = false;
+            setPosY(game.getAreaSize()/2 - size);
         }
         if(getPosY() - size <  -game.getAreaSize() / 2){
-            setPosY(getPosY() + moveSpeed);
+            inArea = false;
+            setPosY(-game.getAreaSize()/2 + size);
         }
+        if(!inArea){
+            isOutsideArea = true;
+            return;
+        }
+        isOutsideArea = false;
     }
     public void newItemAdded(BasicItem item){
         item.applyStatsOrEffect(this);
@@ -951,5 +963,21 @@ public abstract class Player implements Creature {
 
     public void setSecondaryUpTime(int secondaryUpTime) {
         this.secondaryUpTime = secondaryUpTime;
+    }
+
+    public boolean isOutsideArea() {
+        return isOutsideArea;
+    }
+
+    public void setOutsideArea(boolean outsideArea) {
+        isOutsideArea = outsideArea;
+    }
+
+    public int getNumCoins() {
+        return numCoins;
+    }
+
+    public void setNumCoins(int numCoins) {
+        this.numCoins = numCoins;
     }
 }

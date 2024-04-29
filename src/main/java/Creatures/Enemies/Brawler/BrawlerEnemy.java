@@ -38,8 +38,8 @@ public class BrawlerEnemy extends Enemy {
     private Raylib.Vector2 initialPositionBeforeRandMove;
 
 
-    public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera){
-        super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
+    public BrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int numCoins, Raylib.Color color, Raylib.Camera2D camera){
+        super(hp, damage, posX, posY, moveSpeed, size, range, numCoins, color, camera);
         attackCooldown = 1000;
         attackCD = new CooldownHandler();
         attackingTime = new CooldownHandler();

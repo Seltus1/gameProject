@@ -34,7 +34,7 @@ public class Main {
         createInstances();
 
         InitWindow(SCREENWIDTH, SCREENHEIGHT, "The_Game");
-        enemies.addMultipleEnemies(1,camera,player1);
+        enemies.addMultipleEnemies(1,camera,game);
         isInit = true;
     }
 
@@ -70,7 +70,7 @@ public class Main {
             player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
-            game = new GameHandler();
+            game = new GameHandler(player1);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));

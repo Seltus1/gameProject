@@ -41,62 +41,50 @@ public class EnemyHandler extends ListHandler {
         enemies.put("FireMagic", 7);
     }
 
-    public void addMultipleEnemies(int amount, Camera2D camera, Player player){
+    public void addMultipleEnemies(int amount, Camera2D camera, GameHandler game){
         for (int i = 0; i < amount; i++) {
             ArrayList<String> keyList = new ArrayList<>(enemies.keySet());
             int listIndex = rand.nextInt(enemies.size());
             int randEnemy = enemies.get(keyList.get(listIndex));
 //            int randEnemy = enemies.get("Stealth");
             int size = 25;
-            int[] enemyPos = enemySpawnPosition(player);
+            int[] enemyPos = enemySpawnPosition(game);
             spawnEnemy(randEnemy, enemyPos[0], enemyPos[1], size, camera);
         }
     }
-    private int[] enemySpawnPosition(Player player){
-        int Xpos = rand.nextInt(GetScreenWidth());
-        if (Xpos < GetScreenWidth() / 2) {
-            Xpos = (-1 * Xpos) + player.getPosX();
-        }
-        else{
-            Xpos = (Xpos / 2) + + player.getPosX();
-        }
-        int Ypos = rand.nextInt(GetScreenHeight());
-        if (Ypos < GetScreenHeight() / 2) {
-            Ypos = (-1 * Ypos) + player.getPosY();
-        }
-        else{
-            Ypos = (Ypos / 2) + + player.getPosY();
-        }
+    private int[] enemySpawnPosition(GameHandler game){
+        int Xpos = rand.nextInt(game.getAreaSize()) - game.getAreaSize() / 2;
+        int Ypos = rand.nextInt(game.getAreaSize()) - game.getAreaSize() / 2;
         return new int[]{Xpos, Ypos};
     }
     private void spawnEnemy(int randEnemy, int Xpos, int Ypos, int size, Camera2D camera){
         switch(randEnemy){
             case 1:
-                SniperEnemy sniperEnemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, GREEN, camera);
+                SniperEnemy sniperEnemy = new SniperEnemy(1, 0, Xpos, Ypos, 0, size, 1300, 35, 10, GREEN, camera);
                 add(sniperEnemy);
                 break;
             case 2:
-                BrawlerEnemy brawlerEnemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, BLUE, camera);
+                BrawlerEnemy brawlerEnemy = new BrawlerEnemy(1, 70, Xpos, Ypos, 3, size, 150, 10,BLUE, camera);
                 add(brawlerEnemy);
                 break;
             case 3:
-                FireBrawlerEnemy fireBrawlerEnemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 150, ORANGE, camera);
+                FireBrawlerEnemy fireBrawlerEnemy = new FireBrawlerEnemy(1, 3, Xpos, Ypos,3, size, 150, 15, ORANGE, camera);
                 add(fireBrawlerEnemy);
                 break;
             case 4:
-                MagicEnemy magicEnemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550, 15, PURPLE, camera);
+                MagicEnemy magicEnemy = new MagicEnemy(1, 4, Xpos, Ypos, 3, size, 800, 550, 15, 10, PURPLE, camera);
                 add(magicEnemy);
                 break;
             case 5:
-                FireSniperEnemy fireSniperEnemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300, 35, ColorFromHSV(29,1,1),camera);
+                FireSniperEnemy fireSniperEnemy = new FireSniperEnemy(1, 10, Xpos, Ypos, 0, size, 1300, 35, 15, ColorFromHSV(29,1,1),camera);
                 add(fireSniperEnemy);
                 break;
             case 6:
-                StealthEnemy stealthEnemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400, 20, GRAY, camera);
+                StealthEnemy stealthEnemy = new StealthEnemy(1, 2, Xpos, Ypos, 10, (int) (size / 1.5), 400, 20, 10, GRAY, camera);
                 add(stealthEnemy);
                 break;
             case 7:
-                FireMagicEnemy fireMagicEnemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size, 800,500,20, ORANGE, camera);
+                FireMagicEnemy fireMagicEnemy = new FireMagicEnemy(1, 2, Xpos, Ypos, 3, size, 800,500,20, 15, ORANGE, camera);
                 add(fireMagicEnemy);
                 break;
         }
@@ -169,6 +157,7 @@ public class EnemyHandler extends ListHandler {
         Enemy enemy1 = (Enemy) enemy;
 //            DrawText("" + enemy.isShouldDraw(), 200,200,20,BLACK);
         if (enemy1.getHp() <= 0){
+            player.setNumCoins(player.getNumCoins() + enemy1.getNumCoinsOnDeath());
             removeObject(enemy1);
         }
         else if(enemy1.isShouldDraw()){

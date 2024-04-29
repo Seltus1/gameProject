@@ -18,8 +18,8 @@ public class SniperEnemy extends Enemy {
     private int shootRange;
     private CooldownHandler cooldown;
 
-    public SniperEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, Raylib.Color color, Raylib.Camera2D camera) {
-        super(hp, dps, posX, posY, moveSpeed, size, range, color, camera);
+    public SniperEnemy(int hp, int dps, int posX, int posY, int moveSpeed, int size, int range, int shotSpeed, int numCoins, Raylib.Color color, Raylib.Camera2D camera) {
+        super(hp, dps, posX, posY, moveSpeed, size, range, numCoins, color, camera);
         this.shotSpeed = shotSpeed;
         cooldown = new CooldownHandler();
     }

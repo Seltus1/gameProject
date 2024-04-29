@@ -99,7 +99,7 @@ public class Knight extends Player {
             setCanUseUtility(false);
             setDirectionLocked(true);
         }
-        if (isUsingUtility()) {
+        if (isUsingUtility()){
             getVector().setMoveSpeed(getInitialMoveSpeed() * 2);
             currMousePos = shieldVector.findEndPointOfLine(player.getPosition(),100000,currMousePos);
             chargingShieldPos = shield.calculateShieldLocation(player,currMousePos);
@@ -108,7 +108,7 @@ public class Knight extends Player {
             getVector().updateShootLinePosition(camera);
             dealingDamage(enemies,mousePos);
 //            getVector().moveObject(endOfChargeLocation, "to", camera);
-            if (chargingTime.cooldown(getSecondaryUpTime())){
+            if (chargingTime.cooldown(getSecondaryUpTime()) || isOutsideArea()){
                 setMoveSpeed(getInitialMoveSpeed());
                 setUsingUtility(false);
                 setDirectionLocked(false);

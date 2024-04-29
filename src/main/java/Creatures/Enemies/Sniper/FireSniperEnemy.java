@@ -12,8 +12,8 @@ public class FireSniperEnemy extends SniperEnemy {
     private Fire fire;
     private  int burnCountDown;
 
-    public FireSniperEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int shotRange, int shotSpeed, Raylib.Color color, Camera2D camera){
-        super(hp, damage, posX, posY, moveSpeed, size, shotRange, shotSpeed, color, camera);
+    public FireSniperEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int shotRange, int shotSpeed, int numCoins, Raylib.Color color, Camera2D camera){
+        super(hp, damage, posX, posY, moveSpeed, size, shotRange, shotSpeed, numCoins, color, camera);
         fire = new Fire();
     }
 

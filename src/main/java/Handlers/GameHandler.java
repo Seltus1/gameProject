@@ -21,8 +21,9 @@ public class GameHandler {
     private boolean drawWaveInCenter;
     private int areaSize;
     private Shop shop;
+    private boolean rerolledShop;
 
-    public GameHandler(){
+    public GameHandler(Player player){
         isinMenu = false;
         isPlaying = true;
         middleX = GetScreenWidth() / 2;
@@ -32,7 +33,8 @@ public class GameHandler {
         waveInCenter = new CooldownHandler();
         drawWaveInCenter = true;
         areaSize = 2000;
-        shop = new Shop();
+        shop = new Shop(player);
+        rerolledShop = false;
     }
 
     public void startGame(){
@@ -71,18 +73,23 @@ public class GameHandler {
     }
     public void spawnNewWave(EnemyHandler enemies, Camera2D camera, Player player){
         if (enemies.size() == 0){
-                shop.update();
-                if(IsKeyPressed(KEY_F)){
-                    FireRateUp newItem = new FireRateUp(player);
-                    player.getItems().add(newItem);
-                    player.newItemAdded(newItem);
-                }
-                if(IsKeyPressed(KEY_SPACE)) {
-                    drawWaveInCenter = true;
-                    waveCount++;
-                    enemies.addMultipleEnemies(waveCount, camera, player);
-                }
+            if(!rerolledShop){
+                shop.reroll();
+                rerolledShop = true;
+            }
+                shop.update(player);
+            if(IsKeyPressed(KEY_F)){
+//                FireRateUp newItem = new FireRateUp(player, false);
+//                player.getItems().add(newItem);
+//                player.newItemAdded(newItem);
 
+            }
+            if(IsKeyPressed(KEY_SPACE)) {
+                drawWaveInCenter = true;
+                waveCount++;
+                enemies.addMultipleEnemies(waveCount, camera, this);
+                rerolledShop = false;
+            }
         }
     }
     public void drawWave(Player player){

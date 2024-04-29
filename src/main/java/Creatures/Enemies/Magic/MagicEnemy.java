@@ -25,8 +25,8 @@ public class MagicEnemy extends Enemy {
 
     private Random random;
 
-    public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color, Camera2D camera) {
-        super(hp, damage, posX, posY, moveSpeed, size, moveRange, color, camera);
+    public MagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, int numCoins, Raylib.Color color, Camera2D camera) {
+        super(hp, damage, posX, posY, moveSpeed, size, moveRange, numCoins, color, camera);
         this.shotSpeed = shotSpeed;
         this.spellRange = spellRange;
         random = new Random();

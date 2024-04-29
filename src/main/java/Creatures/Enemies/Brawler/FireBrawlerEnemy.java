@@ -7,8 +7,8 @@ import Elements.*;
 public class FireBrawlerEnemy extends BrawlerEnemy {
     private int burnCountDown;
 
-    public FireBrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera){
-        super(hp, damage, posX, posY, moveSpeed, size, range, color, camera);
+    public FireBrawlerEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int numCoins, Raylib.Color color, Raylib.Camera2D camera){
+        super(hp, damage, posX, posY, moveSpeed, size, range, numCoins, color, camera);
     }
 
     public void attack(Player player, Fire fire, Raylib.Camera2D camera){

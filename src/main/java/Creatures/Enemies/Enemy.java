@@ -19,6 +19,7 @@ public class Enemy implements Creature {
     private int moveSpeed;
     private int initialMoveSpeed;
     private int size;
+    private int numCoinsOnDeath;
     private boolean canMelee;
     private boolean canRange;
     private boolean isAlive;
@@ -37,7 +38,7 @@ public class Enemy implements Creature {
     private boolean isRandMoving;
     private boolean gotinRange;
 
-    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, Raylib.Color color, Raylib.Camera2D camera) {
+    public Enemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int range, int numCoinsOnDeath, Raylib.Color color, Raylib.Camera2D camera) {
         this.hp = hp;
         this.damage = damage;
         this.range = range;
@@ -52,6 +53,7 @@ public class Enemy implements Creature {
         shouldDraw = true;
         rand = new Random();
         initialMoveSpeed = moveSpeed;
+        this.numCoinsOnDeath = numCoinsOnDeath;
     }
 
 
@@ -352,5 +354,13 @@ public class Enemy implements Creature {
 
     public void setInitialSpeed(int initialSpeed) {
         this.initialSpeed = initialSpeed;
+    }
+
+    public int getNumCoinsOnDeath() {
+        return numCoinsOnDeath;
+    }
+
+    public void setNumCoinsOnDeath(int numCoinsOnDeath) {
+        this.numCoinsOnDeath = numCoinsOnDeath;
     }
 }

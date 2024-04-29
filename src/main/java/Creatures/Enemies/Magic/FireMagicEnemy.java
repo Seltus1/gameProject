@@ -11,8 +11,8 @@ public class FireMagicEnemy extends MagicEnemy {
     private int longCooldown;
     private CooldownHandler cooldown;
 
-    public FireMagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, Raylib.Color color, Raylib.Camera2D camera) {
-        super(hp, damage, posX, posY, moveSpeed, size, moveRange, spellRange, shotSpeed, color, camera);
+    public FireMagicEnemy(int hp, int damage, int posX, int posY, int moveSpeed, int size, int moveRange, int spellRange, int shotSpeed, int numCoins, Raylib.Color color, Raylib.Camera2D camera) {
+        super(hp, damage, posX, posY, moveSpeed, size, moveRange, spellRange, shotSpeed, numCoins, color, camera);
         fire = new Fire();
         cooldown = new CooldownHandler();
         longCooldown = 1500;
