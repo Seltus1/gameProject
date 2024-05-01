@@ -77,18 +77,15 @@ public class GameHandler {
                 shop.reroll();
                 rerolledShop = true;
             }
-                shop.update(player);
-            if(IsKeyPressed(KEY_F)){
-//                FireRateUp newItem = new FireRateUp(player, false);
-//                player.getItems().add(newItem);
-//                player.newItemAdded(newItem);
-
-            }
+            shop.update(player);
             if(IsKeyPressed(KEY_SPACE)) {
                 drawWaveInCenter = true;
                 waveCount++;
                 enemies.addMultipleEnemies(waveCount, camera, this);
                 rerolledShop = false;
+            }
+            if(IsKeyPressed(KEY_I)){
+                shop.reroll();
             }
         }
     }
@@ -108,9 +105,6 @@ public class GameHandler {
     }
 
     public String waveNumToRomanNumeral(){
-        if (waveCount < 1 || waveCount > 3999) {
-            return "Invalid number";
-        }
         String[] thousands = {"", "M", "MM", "MMM"};
         String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
         String[] tens = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};

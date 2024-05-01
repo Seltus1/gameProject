@@ -34,6 +34,7 @@ public class Shop {
     private boolean drawBroke;
     private int missingCoins;
 
+
     public Shop(Player player) {
         numItems = 3;
         rand = new Random();
@@ -61,10 +62,11 @@ public class Shop {
         }
     }
 
-    public void reroll() {
+    public void reroll(){
         for (int i = 0; i < numItems; i++) {
             int randItem = rand.nextInt(allPossibleItems.size()) + 1;
 //            int randItem = 2;
+
             switch(randItem){
                 case 1:
                     createIcons(shopFireRate.getName(), shopFireRate.getCost(), i);
@@ -74,14 +76,17 @@ public class Shop {
                     break;
             }
             currentShopItems[i] = icon;
+            int rarity = rand.nextInt(100);
+            currentShopItems[i].determineRarity(rarity);
+            currentShopItems[i].rarityToColor();
         }
     }
 
     private void displayItems() {
         for (int i = 0; i < numItems; i++) {
             if(!currentShopItems[i].isAddedItem()) {
-                DrawRectangleLines(currentShopItems[i].getPosX(), currentShopItems[i].getPosY(), currentShopItems[i].getBoxSize(), currentShopItems[i].getBoxSize(), BLACK);
-                DrawText(currentShopItems[i].getName(), currentShopItems[i].getPosX(), currentShopItems[i].getPosY(), 30, BLACK);
+                DrawRectangleLines(currentShopItems[i].getPosX(), currentShopItems[i].getPosY(), currentShopItems[i].getBoxSize(), currentShopItems[i].getBoxSize(), currentShopItems[i].getColor());
+                DrawText(currentShopItems[i].getName(), currentShopItems[i].getPosX(), currentShopItems[i].getPosY(), 30, currentShopItems[i].getColor());
             }
         }
     }
@@ -98,7 +103,6 @@ public class Shop {
                         itemToAdd.applyStatsOrEffect(player);
                         player.setNumCoins(player.getNumCoins() - currentShopItems[inBoxNum].getCost());
                         currentShopItems[inBoxNum].setAddedItem(true);
-                        System.out.println(player.getItemTotal());
                     }
                     else{
                         missingCoins = currentShopItems[inBoxNum].getCost() - player.getNumCoins();
@@ -111,7 +115,6 @@ public class Shop {
             if(drawCD.cooldown(4000)){
                 drawBroke = false;
             }
-
             DrawText("TOO BROKE MISSING " + missingCoins  + " COINS", player.getPosX() - 30, player.getPosY() + (GetScreenHeight() / 2) - 300, 30, BLACK);
         }
     }
