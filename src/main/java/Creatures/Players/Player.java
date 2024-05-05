@@ -102,6 +102,7 @@ public abstract class Player implements Creature {
     private CooldownHandler secondaryTimer;
     private CooldownHandler specialTimer;
     private CooldownHandler primaryTimer;
+    private CooldownHandler outsideBorderDmgCH;
 
 
     private boolean canShoot;
@@ -123,6 +124,7 @@ public abstract class Player implements Creature {
     private int ultimateCD;
     private int ultimateCooldown;
     private int secondaryUpTime;
+    private int outsideBorderDmgCD;
 
 
 
@@ -138,6 +140,7 @@ public abstract class Player implements Creature {
     private final Fire fire;
     private Camera2D camera;
     private Poison poison = new Poison(5,.3f,1.3f,2500);
+    private HealthHandler playerHP;
 
 
 
@@ -163,6 +166,7 @@ public abstract class Player implements Creature {
     private int itemTotal;
     private boolean isOutsideArea;
     private int numCoins;
+    private float outsideBorderSpeedMult;
 
 
 
@@ -192,9 +196,11 @@ public abstract class Player implements Creature {
         regenAmt = 10;
         shotCD = 250;
         itemTotal = 0;
+        outsideBorderDmgCD = 250;
         initialShotCD = shotCD;
         initialMoveSpeed = moveSpeed;
         setShieldMaxHp(150);
+        outsideBorderSpeedMult = .5f;
 
 
         fire = new Fire();
@@ -211,12 +217,14 @@ public abstract class Player implements Creature {
         secondaryTimer = new CooldownHandler();
         primaryTimer = new CooldownHandler();
         attackCooldown = new CooldownHandler();
+        outsideBorderDmgCH = new CooldownHandler();
         items = new ArrayList<>();
+        playerHP = new HealthHandler();
 
     }
 
     public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
-
+        playerOutsideBorderArea();
         if(!directionLocked){
             move(camera);
         }
@@ -231,11 +239,8 @@ public abstract class Player implements Creature {
 //        DrawText(getItemTotal() + "", getPosX() - 100, getPosY(), 20, BLACK);
         regen();
         poisoned();
-
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
-
-
     }
 
     public void burn() {
@@ -332,28 +337,38 @@ public abstract class Player implements Creature {
     }
     public void dontLeaveArea(GameHandler game){
         boolean inArea = true;
-        if(getPosX() + size >  game.getAreaSize() / 2){
+        if(getPosX() - size >  game.getAreaSize() / 2){
             inArea = false;
-            setPosX(game.getAreaSize()/2 - size);
+//            setPosX(game.getAreaSize()/2 - size);
         }
-        if(getPosX() - size <  -game.getAreaSize() / 2){
+        if(getPosX() + size <  -game.getAreaSize() / 2){
             inArea = false;
 
-            setPosX(-game.getAreaSize()/2 + size);
+//            setPosX(-game.getAreaSize()/2 + size);
         }
-        if(getPosY() + size >  game.getAreaSize() / 2){
+        if(getPosY() - size >  game.getAreaSize() / 2){
             inArea = false;
-            setPosY(game.getAreaSize()/2 - size);
+//            setPosY(game.getAreaSize()/2 - size);
         }
-        if(getPosY() - size <  -game.getAreaSize() / 2){
+        if(getPosY() + size <  -game.getAreaSize() / 2){
             inArea = false;
-            setPosY(-game.getAreaSize()/2 + size);
+//            setPosY(-game.getAreaSize()/2 + size);
         }
         if(!inArea){
             isOutsideArea = true;
+
             return;
         }
         isOutsideArea = false;
+    }
+    public void playerOutsideBorderArea(){
+        if(isOutsideArea){
+            if(outsideBorderDmgCH.cooldown(outsideBorderDmgCD)){
+//              add luck here
+                playerHP.damagePlayer(this,1);
+            }
+            setMoveSpeed(getMoveSpeed() - (int) (getMoveSpeed() * outsideBorderSpeedMult));
+        }
     }
     public void newItemAdded(BasicItem item){
         item.applyStatsOrEffect(this);

@@ -4,8 +4,8 @@ import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
 import Creatures.Players.Player;
-import Items.Damage.FireRateUp;
 import Shops.Shop;
+import com.raylib.Raylib;
 
 import java.util.Random;
 
@@ -22,6 +22,16 @@ public class GameHandler {
     private int areaSize;
     private Shop shop;
     private boolean rerolledShop;
+    private CooldownHandler borderShrinker;
+    private int borderShrinkCD;
+    private int currentArenaElement;
+    private Raylib.Color arenaColor;
+    private boolean drawFailedElementChange;
+    private boolean drawSuccessElementChange;
+    private boolean startElementChangeCD;
+    private CooldownHandler elementChangeCH;
+    private String currentArenaElementString;
+    private Sound sound;
 
     public GameHandler(Player player){
         isinMenu = false;
@@ -31,10 +41,17 @@ public class GameHandler {
         rand = new Random();
         waveCount = 1;
         waveInCenter = new CooldownHandler();
+        borderShrinker = new CooldownHandler();
+        elementChangeCH = new CooldownHandler();
+        sound = LoadSound("..\\gameProject\\sounds\\war-drum-loop-103870.mp3");
         drawWaveInCenter = true;
         areaSize = 2000;
         shop = new Shop(player);
         rerolledShop = false;
+        borderShrinkCD = 75;
+        currentArenaElement = 6;
+        arenaColor = GRAY;
+
     }
 
     public void startGame(){
@@ -47,11 +64,10 @@ public class GameHandler {
     }
 
     public void update(Player player, EnemyHandler enemies, Camera2D camera){
-        spawnNewWave(enemies,camera,player);
+        betweenRoundStuff(enemies,camera,player);
         drawWave(player);
         drawArea();
-
-
+        shrinkBorder(enemies);
 //        drawTexts();
 //        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 //            if(GetMouseX() > (middleX - 100) && GetMouseX() < (middleX + 100)) {
@@ -71,7 +87,7 @@ public class GameHandler {
 //            }
 
     }
-    public void spawnNewWave(EnemyHandler enemies, Camera2D camera, Player player){
+    public void betweenRoundStuff(EnemyHandler enemies, Camera2D camera, Player player){
         if (enemies.size() == 0){
             if(!rerolledShop){
                 shop.reroll();
@@ -83,10 +99,13 @@ public class GameHandler {
                 waveCount++;
                 enemies.addMultipleEnemies(waveCount, camera, this);
                 rerolledShop = false;
+//                PlaySound(sound);
             }
             if(IsKeyPressed(KEY_I)){
-                shop.reroll();
+                rerollArenaElement();
+                elementToColor();
             }
+            drawElementSwitch(player);
         }
     }
     public void drawWave(Player player){
@@ -104,6 +123,14 @@ public class GameHandler {
         }
     }
 
+    public void shrinkBorder(EnemyHandler enemies){
+        if(enemies.size() != 0){
+            if(borderShrinker.cooldown(borderShrinkCD)){
+                areaSize--;
+            }
+        }
+    }
+
     public String waveNumToRomanNumeral(){
         String[] thousands = {"", "M", "MM", "MMM"};
         String[] hundreds = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
@@ -116,7 +143,86 @@ public class GameHandler {
                 ones[waveCount % 10];
     }
     public void drawArea(){
-        DrawRectangleLines(-areaSize / 2, -areaSize / 2,areaSize,areaSize,BLACK);
+        DrawRectangleLines(-areaSize / 2, -areaSize / 2,areaSize,areaSize,arenaColor);
+    }
+    private void rerollArenaElement(){
+//        elements: fire, water, earth, wind, Electric, void
+//        fire = 1
+//        water = 2
+//        earth = 3
+//        electric = 4
+//        void = 5
+        int randElement = rand.nextInt(100);
+        if(randElement  <= 50){
+            drawFailedElementChange = true;
+            areaSize -= 50;
+        }
+        else if(randElement <= 60){
+            drawSuccessElementChange = true;
+            currentArenaElement = 1;
+            currentArenaElementString = "FIRE";
+        }
+        else if(randElement <= 70){
+            drawSuccessElementChange = true;
+            currentArenaElement = 2;
+            currentArenaElementString = "WATER";
+        }
+        else if(randElement <= 80){
+            drawSuccessElementChange = true;
+            currentArenaElement = 3;
+            currentArenaElementString = "EARTH";
+        }
+        else if(randElement <= 90){
+            drawSuccessElementChange = true;
+            currentArenaElement = 4;
+            currentArenaElementString = "ELECTRIC";
+        }
+        else{
+            drawSuccessElementChange = true;
+            currentArenaElement = 5;
+            currentArenaElementString = "VOID";
+        }
+        startElementChangeCD = true;
+        elementChangeCH.resetCooldown();
+    }
+    private void elementToColor(){
+        switch(currentArenaElement){
+            case 1:
+                arenaColor = RED;
+                break;
+            case 2:
+                arenaColor = BLUE;
+                break;
+            case 3:
+                arenaColor = BROWN;
+                break;
+            case 4:
+                arenaColor = YELLOW;
+                break;
+            case 5:
+                arenaColor = PURPLE;
+                break;
+            case 6:
+                arenaColor = GRAY;
+                break;
+        }
+    }
+    private void drawElementSwitch(Player player){
+        if(drawSuccessElementChange){
+            DrawText("The Gods favor you and have changed the arena element to " + currentArenaElementString,player.getPosX() - 300, player.getPosY() + (GetScreenHeight() / 2) - 300, 30, BLACK);;
+        }
+        else if(drawFailedElementChange){
+            DrawText("The Gods spite you and shrink the arena", player.getPosX() - 300, player.getPosY() + (GetScreenHeight() / 2) - 300, 30, BLACK);
+        }
+
+        if (startElementChangeCD){
+            if(elementChangeCH.cooldown(4000)){
+                startElementChangeCD = false;
+                drawSuccessElementChange = false;
+                drawFailedElementChange = false;
+            }
+        }
+
     }
 
     public boolean isIsinMenu() {

@@ -232,5 +232,6 @@ public class PlayerHandler {
             drawShieldHP();
         }
         player.dontLeaveArea(game);
+//        player.playerOutsideBorderArea();
     }
 }

@@ -30,6 +30,7 @@ public class Main {
     public static void init(){
         // Set the target frames per second (fps)
         SetTargetFPS(60);
+        InitAudioDevice();
         // Create instances of necessary game objects
         createInstances();
 

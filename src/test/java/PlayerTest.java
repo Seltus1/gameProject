@@ -1,17 +1,21 @@
 import Creatures.Players.Player;
 import Handlers.ProjectileHandler;
+import com.raylib.Jaylib;
+import com.raylib.Raylib;
 import org.junit.jupiter.api.Test;
 
 import static com.raylib.Jaylib.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
+    Camera2D camera2D = new Camera2D();
 
-    Player getPlayer = new Player(10, 10, 10, 10, 10, 10, 10, 10, BLACK);
-    Player setPlayer = new Player(0, 0, 0, 0, 0, 0, 0, 0, BLACK);
-    Player player = new Player(100, 12, 15, 550, 250, 5, 20, 700, RED);
+    Player getPlayer = new Player(10, 10, 10, 10, 10, 10, 10, 10, camera2D, BLACK);
+    Player setPlayer = new Player(0, 0, 0, 0, 0, 0, 0, 0, camera2D, BLACK);
+    Player player = new Player(100, 12, 15, 550, 250, 5, 20, 700, camera2D, RED);
     int gameTicks = 300; // 5 seconds for 60 FPS
     ProjectileHandler projectileList = new ProjectileHandler();
+    Raylib.Vector2 mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera2D);
     @Test
     void get_hp() {
         assertEquals(getPlayer.getHp(), 10);
@@ -99,7 +103,7 @@ public class PlayerTest {
 
     @Test
     void checking_to_see_if_shoot_add_projectile_to_projList() {
-//        player.shoot(projectileList);
+        player.shoot(projectileList,camera2D, mousePos);
         assertEquals(1, projectileList.size());
     }
 
@@ -108,7 +112,7 @@ public class PlayerTest {
         player.setFireHex(true);
         player.setFireHexCount(10);
         for (int i = 0; i < 1; i++) {
-//            player.shoot(projectileList);
+            player.shoot(projectileList,camera2D, mousePos);
             player.fireHex();
         }
         assertEquals(3, player.getBurnTicks());
@@ -120,7 +124,7 @@ public class PlayerTest {
         player.setFireHexCount(10);
         player.setFireHex(true);
         for (int i = 0; i < 45; i++) {
-//            player.shoot(projectileList);
+            player.shoot(projectileList,camera2D, mousePos);
             player.shotCooldown();
             player.fireHex();
             player.setShooting(false);
@@ -133,7 +137,7 @@ public class PlayerTest {
         player.setFireHexCount(10);
         player.setFireHex(true);
         for (int i = 0; i < gameTicks; i++) {
-//            player.shoot(projectileList);
+            player.shoot(projectileList,camera2D, mousePos);
             player.shotCooldown();
             player.fireHex();
             player.burn();
@@ -145,7 +149,7 @@ public class PlayerTest {
     @Test
     void check_shotCooldown_works_properly() {
         for (int i = 0; i < gameTicks; i++) {
-//            player.shoot(projectileList);
+            player.shoot(projectileList,camera2D, mousePos);
             player.shotCooldown();
         }
         assertEquals(20, projectileList.size());
