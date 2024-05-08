@@ -81,6 +81,8 @@ public abstract class Player implements Creature {
     private boolean isUsingSecondary;
     private boolean isUsingUltimate;
     private boolean didMelee;
+    private boolean isUsingSpaceSuit;
+
 
 
 
@@ -103,6 +105,7 @@ public abstract class Player implements Creature {
     private CooldownHandler specialTimer;
     private CooldownHandler primaryTimer;
     private CooldownHandler outsideBorderDmgCH;
+    private CooldownHandler spaceSuitOxygenCH;
 
 
     private boolean canShoot;
@@ -125,6 +128,8 @@ public abstract class Player implements Creature {
     private int ultimateCooldown;
     private int secondaryUpTime;
     private int outsideBorderDmgCD;
+    private int spaceSuitOxygenDecreaseCD;
+    private int spaceSuitOxygenIncreaseCD;
 
 
 
@@ -167,6 +172,7 @@ public abstract class Player implements Creature {
     private boolean isOutsideArea;
     private int numCoins;
     private float outsideBorderSpeedMult;
+    private int spaceSuitOxygen;
 
 
 
@@ -201,6 +207,9 @@ public abstract class Player implements Creature {
         initialMoveSpeed = moveSpeed;
         setShieldMaxHp(150);
         outsideBorderSpeedMult = .5f;
+        spaceSuitOxygenDecreaseCD = 100;
+        spaceSuitOxygenIncreaseCD = 200;
+        spaceSuitOxygen = 100;
 
 
         fire = new Fire();
@@ -218,6 +227,7 @@ public abstract class Player implements Creature {
         primaryTimer = new CooldownHandler();
         attackCooldown = new CooldownHandler();
         outsideBorderDmgCH = new CooldownHandler();
+        spaceSuitOxygenCH = new CooldownHandler();
         items = new ArrayList<>();
         playerHP = new HealthHandler();
 
@@ -232,6 +242,8 @@ public abstract class Player implements Creature {
 //        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)){
 //            shoot(projList, camera, mousePos);
 //        }
+        equipSpaceSuit();
+        usingSpaceSuit();
         fireHex();
         setShooting(false);
         shotCooldown();
@@ -295,6 +307,31 @@ public abstract class Player implements Creature {
     public void move(Camera2D camera) {
         vector.playerMove(camera);
     }
+    public void equipSpaceSuit(){
+        if(IsKeyPressed(KEY_LEFT_SHIFT)){
+            if(isUsingSpaceSuit){
+                isUsingSpaceSuit = false;
+            }
+            else if(spaceSuitOxygen > 75){
+                isUsingSpaceSuit = true;
+            }
+        }
+    }
+    public void usingSpaceSuit(){
+        if(isUsingSpaceSuit){
+            if(spaceSuitOxygenCH.cooldown(spaceSuitOxygenDecreaseCD)){
+                spaceSuitOxygen--;
+                if(spaceSuitOxygen == 0){
+                    isUsingSpaceSuit = false;
+                }
+            }
+        }
+        else if(spaceSuitOxygen < 100){
+            if(spaceSuitOxygenCH.cooldown(spaceSuitOxygenIncreaseCD)){
+                spaceSuitOxygen++;
+            }
+        }
+    }
     public void poisoned(){
         if(isPoisoned){
             if(poisonCooldown.cooldown(poison.getLifetime())){
@@ -356,13 +393,12 @@ public abstract class Player implements Creature {
         }
         if(!inArea){
             isOutsideArea = true;
-
             return;
         }
         isOutsideArea = false;
     }
     public void playerOutsideBorderArea(){
-        if(isOutsideArea){
+        if(isOutsideArea && !isUsingSpaceSuit){
             if(outsideBorderDmgCH.cooldown(outsideBorderDmgCD)){
 //              add luck here
                 playerHP.damagePlayer(this,1);
