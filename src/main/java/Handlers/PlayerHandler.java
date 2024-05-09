@@ -28,6 +28,32 @@ public class PlayerHandler {
         cooldown = new CooldownHandler();
     }
 
+    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, GameHandler game) {
+//        shoot(projList);
+
+        if (player.getHp() <= 0){
+            isAlive = false;
+        }
+        drawHp();
+        if(player.isOnFire()){
+            drawBurn();
+        }
+        drawFireFex();
+        drawRange(mousePos);
+        drawPoison();
+        drawPlayer();
+        drawOxygen();
+        drawPos();
+        drawCooldowns();
+        drawNumCoins();
+        if(player instanceof Knight){
+            drawShieldHP();
+        }
+        player.checkIfOutsideArea(game);
+//        player.playerOutsideBorderArea();
+
+    }
+
     public void drawRange(Raylib.Vector2 mousePos) {
 //        player.getVector().rangeLine(player, mousePos);
     }
@@ -38,7 +64,7 @@ public class PlayerHandler {
 
 
 
-    public void drawHp(Camera2D camera){
+    public void drawHp(){
         double percentage = (double) player.getHp() /  player.getInitalHp();
         double width = percentage * 300;
         Raylib.Rectangle HP = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 50,  player.getPosY() + (GetScreenHeight() / 2) - 100, (int) width, 40));
@@ -47,6 +73,18 @@ public class PlayerHandler {
         DrawRectangleRoundedLines(HPContainer, 5,10,3, BLACK);
         String s = String.format("%d", player.getHp());
         DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 180, player.getPosY() + (GetScreenHeight() / 2) - 90, 20, BLACK);
+    }
+    public void drawOxygen(){
+        float percentage = (float) player.getSpaceSuitOxygen() /  player.getInitialSpaceSuitOxygen();
+        float height = percentage * 100;
+        float remainingHeight = 100 - height;
+        float barTop = player.getPosY() + (GetScreenHeight() / 2) - 150 + remainingHeight;
+        Raylib.Rectangle oxygen = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 380, barTop, 40, height));
+        Raylib.Rectangle OxyContainer = new Raylib.Rectangle(new Jaylib.Rectangle(player.getPosX() - (GetScreenWidth() / 2) + 380, player.getPosY() + (GetScreenHeight() / 2) - 150, 40, 100));
+        DrawRectangleRounded(oxygen,10,5,SKYBLUE);
+        DrawRectangleRoundedLines(OxyContainer, 10,5,3, BLACK);
+        String s = String.format("%d", player.getSpaceSuitOxygen());
+        DrawText(s, player.getPosX() - (GetScreenWidth() / 2) + 390, player.getPosY() + (GetScreenHeight() / 2) - 120, 20, BLACK);
     }
 
     public void drawBurn(){
@@ -208,30 +246,5 @@ public class PlayerHandler {
         int cdNumSecs = (int) player.getUltimateTimer().getCurrentFrameInMilliSeconds() / 1000;
         cdNumSecs = (player.getUltimateCD() / 1000) - cdNumSecs;
         DrawText("" + cdNumSecs, player.getPosX() - 30, player.getPosY() + (GetScreenHeight() / 2) - 190, 40, BLACK);
-    }
-
-
-    public void update(EnemyHandler enemy, ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, GameHandler game) {
-//        shoot(projList);
-
-        if (player.getHp() <= 0){
-            isAlive = false;
-        }
-        drawHp(camera);
-        if(player.isOnFire()){
-            drawBurn();
-        }
-        drawFireFex();
-        drawRange(mousePos);
-        drawPoison();
-        drawPlayer();
-        drawPos();
-        drawCooldowns();
-        drawNumCoins();
-        if(player instanceof Knight){
-            drawShieldHP();
-        }
-        player.dontLeaveArea(game);
-//        player.playerOutsideBorderArea();
     }
 }

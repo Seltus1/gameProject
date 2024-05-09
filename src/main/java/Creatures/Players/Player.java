@@ -4,6 +4,7 @@ import Creatures.Creature;
 import Debuffs.Poison;
 import Handlers.*;
 import Elements.Fire;
+import Interactables.Interactable;
 import Items.BasicItem;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -173,6 +174,7 @@ public abstract class Player implements Creature {
     private int numCoins;
     private float outsideBorderSpeedMult;
     private int spaceSuitOxygen;
+    private int initialSpaceSuitOxygen;
 
 
 
@@ -210,7 +212,7 @@ public abstract class Player implements Creature {
         spaceSuitOxygenDecreaseCD = 100;
         spaceSuitOxygenIncreaseCD = 200;
         spaceSuitOxygen = 100;
-
+        initialSpaceSuitOxygen = 100;
 
         fire = new Fire();
         vector = new VectorHandler(posX, posY, moveSpeed, camera);
@@ -253,6 +255,10 @@ public abstract class Player implements Creature {
         poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
+
+//        update interactables after or else they do the jiggle bug no idea why.....
+        game.updateInteractables(this);
+
     }
 
     public void burn() {
@@ -372,26 +378,8 @@ public abstract class Player implements Creature {
         }
         setMeleeing(false);
     }
-    public void dontLeaveArea(GameHandler game){
-        boolean inArea = true;
-        if(getPosX() - size >  game.getAreaSize() / 2){
-            inArea = false;
-//            setPosX(game.getAreaSize()/2 - size);
-        }
-        if(getPosX() + size <  -game.getAreaSize() / 2){
-            inArea = false;
-
-//            setPosX(-game.getAreaSize()/2 + size);
-        }
-        if(getPosY() - size >  game.getAreaSize() / 2){
-            inArea = false;
-//            setPosY(game.getAreaSize()/2 - size);
-        }
-        if(getPosY() + size <  -game.getAreaSize() / 2){
-            inArea = false;
-//            setPosY(-game.getAreaSize()/2 + size);
-        }
-        if(!inArea){
+    public void checkIfOutsideArea(GameHandler game){
+        if(vector.distanceBetweenTwoObjects(getPosition(),game.getCenterOfArena()) > game.getAreaSize()/2){
             isOutsideArea = true;
             return;
         }
@@ -400,8 +388,7 @@ public abstract class Player implements Creature {
     public void playerOutsideBorderArea(){
         if(isOutsideArea && !isUsingSpaceSuit){
             if(outsideBorderDmgCH.cooldown(outsideBorderDmgCD)){
-//              add luck here
-                playerHP.damagePlayer(this,1);
+                playerHP.damagePlayer(this,2);
             }
             setMoveSpeed(getMoveSpeed() - (int) (getMoveSpeed() * outsideBorderSpeedMult));
         }
@@ -1030,5 +1017,21 @@ public abstract class Player implements Creature {
 
     public void setNumCoins(int numCoins) {
         this.numCoins = numCoins;
+    }
+
+    public int getSpaceSuitOxygen() {
+        return spaceSuitOxygen;
+    }
+
+    public void setSpaceSuitOxygen(int spaceSuitOxygen) {
+        this.spaceSuitOxygen = spaceSuitOxygen;
+    }
+
+    public int getInitialSpaceSuitOxygen() {
+        return initialSpaceSuitOxygen;
+    }
+
+    public void setInitialSpaceSuitOxygen(int initialSpaceSuitOxygen) {
+        this.initialSpaceSuitOxygen = initialSpaceSuitOxygen;
     }
 }

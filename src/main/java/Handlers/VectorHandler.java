@@ -100,6 +100,9 @@ public class VectorHandler {
         return (int)(Math.sqrt(x+y));
     }
     public int distanceBetweenTwoObjects(Raylib.Vector2 pos1, Raylib.Vector2 pos2){
+//        if(pos1.x() - pos2.x() == 0 && pos1.y() - pos2.y() == 0){
+//            return 0;
+//        }
         double x = Math.pow(pos2.x() - pos1.x(), 2);
         double y = Math.pow(pos2.y() - pos1.y(), 2);
         return (int) (Math.sqrt(x+y));

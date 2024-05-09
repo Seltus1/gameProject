@@ -4,9 +4,12 @@ import static com.raylib.Raylib.*;
 import static com.raylib.Jaylib.*;
 
 import Creatures.Players.Player;
+import Interactables.Interactable;
 import Shops.Shop;
+import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameHandler {
@@ -32,8 +35,16 @@ public class GameHandler {
     private CooldownHandler elementChangeCH;
     private String currentArenaElementString;
     private Sound sound;
+    private Raylib.Vector2 centerOfArena;
+    private boolean isRoundOver;
+    private int interactableRadius;
+    private ArrayList<Interactable> interactables;
+    private ArrayList<Interactable> interactablesToUpdate;
+    private Interactable testInteractable;
+    private VectorHandler distanceVector;
 
-    public GameHandler(Player player){
+
+    public GameHandler(Player player, Camera2D camera){
         isinMenu = false;
         isPlaying = true;
         middleX = GetScreenWidth() / 2;
@@ -43,15 +54,22 @@ public class GameHandler {
         waveInCenter = new CooldownHandler();
         borderShrinker = new CooldownHandler();
         elementChangeCH = new CooldownHandler();
-        sound = LoadSound("..\\gameProject\\sounds\\war-drum-loop-103870.mp3");
+//        sound = LoadSound("..\\gameProject\\sounds\\war-drum-loop-103870.mp3");
         drawWaveInCenter = true;
-        areaSize = 2000;
+        areaSize = 2500;
         shop = new Shop(player);
         rerolledShop = false;
-        borderShrinkCD = 75;
+        borderShrinkCD = 125;
         currentArenaElement = 6;
         arenaColor = GRAY;
-
+        centerOfArena = new Raylib.Vector2(new Jaylib.Vector2(0,0));
+        isRoundOver = false;
+        interactableRadius = 70;
+        interactables = new ArrayList<>();
+        interactablesToUpdate = new ArrayList<>();
+        testInteractable = new Interactable(20,interactableRadius,1,10,10);
+        interactables.add(testInteractable);
+        distanceVector = new VectorHandler(0,0,0,camera);
     }
 
     public void startGame(){
@@ -67,6 +85,8 @@ public class GameHandler {
         betweenRoundStuff(enemies,camera,player);
         drawWave(player);
         drawArea();
+//        drawAtmosphereAmplifier();
+        determineIfRoundIsOver(enemies);
         shrinkBorder(enemies);
 //        drawTexts();
 //        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
@@ -88,7 +108,7 @@ public class GameHandler {
 
     }
     public void betweenRoundStuff(EnemyHandler enemies, Camera2D camera, Player player){
-        if (enemies.size() == 0){
+        if (isRoundOver){
             if(!rerolledShop){
                 shop.reroll();
                 rerolledShop = true;
@@ -96,6 +116,7 @@ public class GameHandler {
             shop.update(player);
             if(IsKeyPressed(KEY_SPACE)) {
                 drawWaveInCenter = true;
+                isRoundOver = false;
                 waveCount++;
                 enemies.addMultipleEnemies(waveCount, camera, this);
                 rerolledShop = false;
@@ -124,7 +145,7 @@ public class GameHandler {
     }
 
     public void shrinkBorder(EnemyHandler enemies){
-        if(enemies.size() != 0){
+        if(!isRoundOver){
             if(borderShrinker.cooldown(borderShrinkCD)){
                 areaSize--;
             }
@@ -143,7 +164,19 @@ public class GameHandler {
                 ones[waveCount % 10];
     }
     public void drawArea(){
-        DrawRectangleLines(-areaSize / 2, -areaSize / 2,areaSize,areaSize,arenaColor);
+//        DrawRectangleLines(-areaSize / 2, -areaSize / 2,areaSize,areaSize,arenaColor);
+        DrawCircleLines(0,0,areaSize/2,arenaColor);
+    }
+//    public void drawAtmosphereAmplifier(){
+//        if(!isRoundOver){
+//            DrawCircle((int) getCenterOfArena().x() - 50,(int) getCenterOfArena().y(), 20, BLACK);
+//            DrawCircleLines((int) getCenterOfArena().x() - 50,(int) getCenterOfArena().y(), interactableRadius, BLACK);
+//        }
+//    }
+    private void determineIfRoundIsOver(EnemyHandler enemies){
+        if(enemies.size() == 0){
+            isRoundOver = true;
+        }
     }
     private void rerollArenaElement(){
 //        elements: fire, water, earth, wind, Electric, void
@@ -222,7 +255,33 @@ public class GameHandler {
                 drawFailedElementChange = false;
             }
         }
+    }
 
+    public void updateInteractables(Player player){
+        for (int i = 0; i < getInteractables().size(); i++) {
+            drawInteractables(getInteractables().get(i));
+                Interactable current = getInteractables().get(i);
+                DrawText("PosX: " + current.getPosX(), current.getPosX(), current.getPosY() - 200,0, BLACK);
+                DrawText("PosY: " + current.getPosY(), current.getPosX() - 100, current.getPosY() - 200,0, BLACK);
+            if(IsKeyPressed(KEY_F)) {
+                if (distanceVector.distanceBetweenTwoObjects(current.getPos(), player.getPosition()) < current.getInteractRadius()) {
+                    getInteractables().get(i).setInRange(true);
+                    if(getInteractables().get(i).isPickup()){
+                        getInteractables().get(i).setPickup(false);
+                    }
+                    else{
+                        getInteractables().get(i).setPickup(true);
+                    }
+                    interactablesToUpdate.add(getInteractables().get(i));
+                }
+            }
+        }
+        for(int i = 0; i < interactablesToUpdate.size(); i++){
+            interactablesToUpdate.get(i).pickUpItem(player);
+        }
+    }
+    private void drawInteractables(Interactable interactable){
+        DrawCircle(interactable.getPosX(),interactable.getPosY(),interactable.getSize(),BLACK);
     }
 
     public boolean isIsinMenu() {
@@ -239,5 +298,21 @@ public class GameHandler {
 
     public void setAreaSize(int areaSize) {
         this.areaSize = areaSize;
+    }
+
+    public Raylib.Vector2 getCenterOfArena() {
+        return centerOfArena;
+    }
+
+    public void setCenterOfArena(Raylib.Vector2 centerOfArena) {
+        this.centerOfArena = centerOfArena;
+    }
+
+    public ArrayList<Interactable> getInteractables() {
+        return interactables;
+    }
+
+    public void setInteractables(ArrayList<Interactable> interactables) {
+        this.interactables = interactables;
     }
 }

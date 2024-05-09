@@ -57,6 +57,7 @@ public class Main {
             player.update(enemies, projectiles, camera, mousePos, game);
             player1.update(projectiles, camera, mousePos, enemies, game);
 
+
             drawMouse();
             EndDrawing();
             EndMode2D();
@@ -71,7 +72,7 @@ public class Main {
             player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
             player = new PlayerHandler(player1);
-            game = new GameHandler(player1);
+            game = new GameHandler(player1, camera);
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));
