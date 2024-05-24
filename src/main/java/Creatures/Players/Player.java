@@ -83,6 +83,8 @@ public abstract class Player implements Creature {
     private boolean isUsingUltimate;
     private boolean didMelee;
     private boolean isUsingSpaceSuit;
+    private boolean connectingPowerLine;
+
 
 
 
@@ -147,6 +149,7 @@ public abstract class Player implements Creature {
     private Camera2D camera;
     private Poison poison = new Poison(5,.3f,1.3f,2500);
     private HealthHandler playerHP;
+    private Interactable materializer;
 
 
 
@@ -175,6 +178,7 @@ public abstract class Player implements Creature {
     private float outsideBorderSpeedMult;
     private int spaceSuitOxygen;
     private int initialSpaceSuitOxygen;
+    private boolean didEquipMaterializer;
 
 
 
@@ -235,7 +239,8 @@ public abstract class Player implements Creature {
 
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game, InteractablesHandler interactables) {
+        equipMaterializer(interactables);
         playerOutsideBorderArea();
         if(!directionLocked){
             move(camera);
@@ -255,10 +260,6 @@ public abstract class Player implements Creature {
         poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
-
-//        update interactables after or else they do the jiggle bug no idea why.....
-        game.updateInteractables(this);
-
     }
 
     public void burn() {
@@ -332,10 +333,14 @@ public abstract class Player implements Creature {
                 }
             }
         }
-        else if(spaceSuitOxygen < 100){
-            if(spaceSuitOxygenCH.cooldown(spaceSuitOxygenIncreaseCD)){
-                spaceSuitOxygen++;
-            }
+    }
+    public void equipMaterializer(InteractablesHandler interactables){
+        if(IsKeyDown(KEY_SPACE)){
+            DrawCircle(getPosX()-50,getPosY(),5,BLACK);
+            didEquipMaterializer = true;
+        }
+        else{
+            didEquipMaterializer = false;
         }
     }
     public void poisoned(){
@@ -1033,5 +1038,29 @@ public abstract class Player implements Creature {
 
     public void setInitialSpaceSuitOxygen(int initialSpaceSuitOxygen) {
         this.initialSpaceSuitOxygen = initialSpaceSuitOxygen;
+    }
+
+    public boolean isUsingSpaceSuit() {
+        return isUsingSpaceSuit;
+    }
+
+    public void setUsingSpaceSuit(boolean usingSpaceSuit) {
+        isUsingSpaceSuit = usingSpaceSuit;
+    }
+
+    public boolean isDidEquipMaterializer() {
+        return didEquipMaterializer;
+    }
+
+    public void setDidEquipMaterializer(boolean didEquipMaterializer) {
+        this.didEquipMaterializer = didEquipMaterializer;
+    }
+
+    public boolean isConnectingPowerLine() {
+        return connectingPowerLine;
+    }
+
+    public void setConnectingPowerLine(boolean connectingPowerLine) {
+        this.connectingPowerLine = connectingPowerLine;
     }
 }

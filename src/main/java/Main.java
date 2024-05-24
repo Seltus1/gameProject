@@ -1,6 +1,5 @@
 import Creatures.Players.Player;
 import Creatures.Players.Warriors.Knight;
-import Creatures.Players.Warriors.Paladin;
 import Handlers.*;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
@@ -17,9 +16,10 @@ public class Main {
     static EnemyHandler enemies;
     static Random rand;
     static Camera2D camera;
-    static Player player1;
+    static Player player;
     static GameHandler game;
-    static PlayerHandler player;
+    static PlayerHandler playerHandler;
+    static InteractablesHandler interactablesHandler;
     static int amountOfEnemy;
     static Raylib.Vector2 mousePos;
     static boolean isInit = false;
@@ -47,15 +47,16 @@ public class Main {
             BeginDrawing();
             BeginMode2D(camera);
             ClearBackground(RAYWHITE);
-            DrawFPS(player1.getPosX() - (GetScreenWidth() / 2) + 100, player1.getPosY() - (GetScreenHeight() / 2) + 100);
+            DrawFPS(player.getPosX() - (GetScreenWidth() / 2) + 100, player.getPosY() - (GetScreenHeight() / 2) + 100);
 
 
             mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
-            enemies.update(projectiles, player1, camera, player1.getFire(), player1.getPoison());
-            projectiles.update(enemies, player1, camera);
-            game.update(player1,enemies,camera);
-            player.update(enemies, projectiles, camera, mousePos, game);
-            player1.update(projectiles, camera, mousePos, enemies, game);
+            enemies.update(projectiles, player, camera, player.getFire(), player.getPoison());
+            projectiles.update(enemies, player, camera);
+            game.update(player,enemies,camera);
+            interactablesHandler.update(player, game, camera);
+            playerHandler.update(enemies, projectiles, camera, mousePos, game);
+            player.update(projectiles, camera, mousePos, enemies, game, interactablesHandler);
 
 
             drawMouse();
@@ -69,10 +70,12 @@ public class Main {
             camera = new Camera2D();
             rand = new Random();
             projectiles = new ProjectileHandler();
-            player1 = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
+            player = new Knight(200, 12, 100, 0, 0, 5, 20, camera, RED);
             enemies = new EnemyHandler();
-            player = new PlayerHandler(player1);
-            game = new GameHandler(player1, camera);
+            playerHandler = new PlayerHandler(player);
+            game = new GameHandler(player, camera);
+            interactablesHandler = new InteractablesHandler(camera);
+
         }
         public static void cameraSet () {
             camera.offset(new Jaylib.Vector2(GetScreenWidth() / 2f, GetScreenHeight() / 2f));

@@ -49,14 +49,14 @@ public class Knight extends Player {
         setShotCooldown(1000);
     }
 
-    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game) {
+    public void update(ProjectileHandler projList, Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game, InteractablesHandler interactables) {
 //        checkIfIsCharging();
         primary(enemies, mousePos);
         secondary(mousePos,projList,camera,enemies);
         special(mousePos, camera, this, enemies);
         ultimate(this);
 //        this needs to update last so that the camera doesn't jiggle
-        super.update(projList, camera, mousePos, enemies, game);
+        super.update(projList, camera, mousePos, enemies, game, interactables);
     }
 
     public void primary(EnemyHandler enemies, Raylib.Vector2 mousePos) {

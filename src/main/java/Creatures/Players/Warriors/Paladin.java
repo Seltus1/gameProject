@@ -2,10 +2,7 @@ package Creatures.Players.Warriors;
 
 import Attacks.Mace;
 import Creatures.Players.Player;
-import Handlers.CooldownHandler;
-import Handlers.EnemyHandler;
-import Handlers.GameHandler;
-import Handlers.ProjectileHandler;
+import Handlers.*;
 import com.raylib.Raylib;
 import static com.raylib.Jaylib.*;
 
@@ -22,7 +19,7 @@ public class Paladin extends Player {
         setDefence(60);
 
     }
-    public void update(ProjectileHandler projList, Raylib.Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game){
+    public void update(ProjectileHandler projList, Raylib.Camera2D camera, Raylib.Vector2 mousePos, EnemyHandler enemies, GameHandler game, InteractablesHandler interactables){
         mace.update(mousePos,camera, this, enemies);
         primary();
         secondary();
@@ -30,7 +27,7 @@ public class Paladin extends Player {
 
 
         //        Update this last
-        super.update(projList,camera,mousePos,enemies, game);
+        super.update(projList,camera,mousePos,enemies, game, interactables);
     }
     public void primary(){
         if(canMelee() && !isUsingUtility() && !isUsingUltimate() && !isUsingSecondary()) {

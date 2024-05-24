@@ -37,11 +37,9 @@ public class GameHandler {
     private Sound sound;
     private Raylib.Vector2 centerOfArena;
     private boolean isRoundOver;
-    private int interactableRadius;
-    private ArrayList<Interactable> interactables;
-    private ArrayList<Interactable> interactablesToUpdate;
-    private Interactable testInteractable;
     private VectorHandler distanceVector;
+    private boolean shrinkBorder;
+    private int defaultInteractableSize;
 
 
     public GameHandler(Player player, Camera2D camera){
@@ -64,11 +62,7 @@ public class GameHandler {
         arenaColor = GRAY;
         centerOfArena = new Raylib.Vector2(new Jaylib.Vector2(0,0));
         isRoundOver = false;
-        interactableRadius = 70;
-        interactables = new ArrayList<>();
-        interactablesToUpdate = new ArrayList<>();
-        testInteractable = new Interactable(20,interactableRadius,1,10,10);
-        interactables.add(testInteractable);
+        shrinkBorder = true;
         distanceVector = new VectorHandler(0,0,0,camera);
     }
 
@@ -85,9 +79,8 @@ public class GameHandler {
         betweenRoundStuff(enemies,camera,player);
         drawWave(player);
         drawArea();
-//        drawAtmosphereAmplifier();
         determineIfRoundIsOver(enemies);
-        shrinkBorder(enemies);
+        shrinkBorder();
 //        drawTexts();
 //        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 //            if(GetMouseX() > (middleX - 100) && GetMouseX() < (middleX + 100)) {
@@ -109,11 +102,14 @@ public class GameHandler {
     }
     public void betweenRoundStuff(EnemyHandler enemies, Camera2D camera, Player player){
         if (isRoundOver){
+            if(waveCount == 1){
+//                interactables.startTelepatherTask();
+            }
             if(!rerolledShop){
                 shop.reroll();
                 rerolledShop = true;
             }
-            shop.update(player);
+//            shop.update(player);
             if(IsKeyPressed(KEY_SPACE)) {
                 drawWaveInCenter = true;
                 isRoundOver = false;
@@ -144,8 +140,8 @@ public class GameHandler {
         }
     }
 
-    public void shrinkBorder(EnemyHandler enemies){
-        if(!isRoundOver){
+    public void shrinkBorder(){
+        if(!isRoundOver && shrinkBorder){
             if(borderShrinker.cooldown(borderShrinkCD)){
                 areaSize--;
             }
@@ -256,33 +252,16 @@ public class GameHandler {
             }
         }
     }
+    public boolean switchBoolVal(boolean booleanToSwitch){
+        if(booleanToSwitch) {
+            return false;
+        }
+        return true;
+    }
 
-    public void updateInteractables(Player player){
-        for (int i = 0; i < getInteractables().size(); i++) {
-            drawInteractables(getInteractables().get(i));
-                Interactable current = getInteractables().get(i);
-                DrawText("PosX: " + current.getPosX(), current.getPosX(), current.getPosY() - 200,0, BLACK);
-                DrawText("PosY: " + current.getPosY(), current.getPosX() - 100, current.getPosY() - 200,0, BLACK);
-            if(IsKeyPressed(KEY_F)) {
-                if (distanceVector.distanceBetweenTwoObjects(current.getPos(), player.getPosition()) < current.getInteractRadius()) {
-                    getInteractables().get(i).setInRange(true);
-                    if(getInteractables().get(i).isPickup()){
-                        getInteractables().get(i).setPickup(false);
-                    }
-                    else{
-                        getInteractables().get(i).setPickup(true);
-                    }
-                    interactablesToUpdate.add(getInteractables().get(i));
-                }
-            }
-        }
-        for(int i = 0; i < interactablesToUpdate.size(); i++){
-            interactablesToUpdate.get(i).pickUpItem(player);
-        }
-    }
-    private void drawInteractables(Interactable interactable){
-        DrawCircle(interactable.getPosX(),interactable.getPosY(),interactable.getSize(),BLACK);
-    }
+
+
+
 
     public boolean isIsinMenu() {
         return isinMenu;
@@ -308,11 +287,12 @@ public class GameHandler {
         this.centerOfArena = centerOfArena;
     }
 
-    public ArrayList<Interactable> getInteractables() {
-        return interactables;
+    public boolean isShrinkBorder() {
+        return shrinkBorder;
     }
 
-    public void setInteractables(ArrayList<Interactable> interactables) {
-        this.interactables = interactables;
+    public void setShrinkBorder(boolean shrinkBorder) {
+        this.shrinkBorder = shrinkBorder;
     }
+
 }
