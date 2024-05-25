@@ -260,6 +260,7 @@ public abstract class Player implements Creature {
         poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
+//        vector.rangeLine(this,mousePos);
     }
 
     public void burn() {

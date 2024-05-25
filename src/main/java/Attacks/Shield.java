@@ -79,7 +79,7 @@ public class Shield {
 //    shield block helper fucntions
     public double[] calculateShieldLocation(Player player, Raylib.Vector2 mousePos){
         Raylib.Vector2 endPoint = vector.findEndPointOfLine(player.getPosition(), player.getRange() / 2, mousePos);
-        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35, mousePos);
+        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint, player.getRange() / 2,35);
         linePoint1 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[0], (float) poses[1]));
         linePoint2 = new Raylib.Vector2(new Jaylib.Vector2((float) poses[2], (float) poses[3]));
 

@@ -25,6 +25,7 @@ public class InteractablesHandler {
     private Random rand;
     private boolean buildingQuestActive;
     private boolean alreadyPicked;
+    private Raylib.Vector2 genPos;
 
 
     public InteractablesHandler(Camera2D camera){
@@ -40,6 +41,7 @@ public class InteractablesHandler {
         rand = new Random();
         startTelepatherTask(camera);
         alreadyPicked = false;
+        genPos = new Raylib.Vector2();
     }
 
     public void update(Player player, GameHandler game, Camera2D camera){
@@ -98,6 +100,9 @@ public class InteractablesHandler {
         for (int i = 0; i < getInteractables().size(); i++) {
             Interactable current = getInteractables().get(i);
             drawInteractables(current);
+            if(current.isHasPower()){
+                current.drawPowerLineBetweenPoweredInteractableAndGen(this);
+            }
             DrawText(current.isHasPower() + "", current.getPosX(), current.getPosY() - 100, 30, BLACK);
             if (distanceVector.distanceBetweenTwoObjects(current.getPos(), player.getPosition()) < current.getInteractRadius()) {
                 current.setInRange(true);
@@ -112,6 +117,7 @@ public class InteractablesHandler {
                         int pos2 = distanceVector.distanceBetweenTwoObjects(player.getPosition(),interactableToUpdate.getPos());
                         if(pos1 < pos2){
                             interactableToUpdate = current;
+                            current.updateActionStatus(player,game);
                         }
                     }
                     else {
@@ -143,8 +149,10 @@ public class InteractablesHandler {
     public void startTelepatherTask(Camera2D camera){
         buildingQuestActive = true;
         for(int i = 0; i < 3; i++){
-            int randPosX = rand.nextInt(4000) - 2000;
-            int randPosY = rand.nextInt(4000) - 2000;
+//            int randPosX = rand.nextInt(4000) - 2000;
+//            int randPosY = rand.nextInt(4000) - 2000;
+            int randPosX = rand.nextInt(400) - 200;
+            int randPosY = rand.nextInt(400) - 200;
             Raylib.Vector2 partPos = new Raylib.Vector2(new Jaylib.Vector2(randPosX,randPosY));
             Interactable telepatherPart = new Interactable(getDefaultInteractableSize(),getDefaultInteractRadius(),1,(int) partPos.x(), (int) partPos.y(), camera);
             telepatherParts.add(telepatherPart);
@@ -207,5 +215,13 @@ public class InteractablesHandler {
 
     public void setAlreadyPicked(boolean alreadyPicked) {
         this.alreadyPicked = alreadyPicked;
+    }
+
+    public Vector2 getGenPos() {
+        return genPos;
+    }
+
+    public void setGenPos(Vector2 genPos) {
+        this.genPos = genPos;
     }
 }

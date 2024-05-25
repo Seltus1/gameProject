@@ -11,8 +11,7 @@ import com.raylib.Raylib;
 import java.util.ArrayList;
 
 import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Raylib.DrawLine;
-import static com.raylib.Raylib.DrawLineV;
+import static com.raylib.Raylib.*;
 
 public class Interactable {
     private int size;
@@ -67,11 +66,13 @@ public class Interactable {
             expandBorder(game);
         }
         else if(build){
-            build(interactables.getTelepatherParts(),interactables,camera);
+            build(interactables.getTelepatherParts(),interactables,camera, player);
         }
         else if(connectPower){
+            interactables.setGenPos(getPos());
             powerLineToOtherInteractable(player);
         }
+        DrawText(connectPower + "", player.getPosX(), player.getPosY() - 100,30, BLACK);
     }
 
     public void updateActionStatus(Player player, GameHandler game){
@@ -80,19 +81,16 @@ public class Interactable {
             case 1:
                 futureType = 3;
                 canBePowered = false;
-                if(!player.isDidEquipMaterializer()) {
-                    pickup = game.switchBoolVal(pickup);
+                if(player.isDidEquipMaterializer()) {
+                    build = game.switchBoolVal(build);
                 }
                 else{
-                    build = game.switchBoolVal(build);
+                    pickup = game.switchBoolVal(pickup);
                 }
                 break;
 //                type 2 = Atmosphere Amplifier
             case 2:
                 canBePowered = true;
-                if(connectPower){
-                    hasPower = true;
-                }
                 if(!player.isUsingSpaceSuit() && !(player.getSpaceSuitOxygen() == 100)){
                     refillSpaceSuit = game.switchBoolVal(refillSpaceSuit);
                 }
@@ -111,6 +109,10 @@ public class Interactable {
                 connectPower =  game.switchBoolVal(connectPower);
                 break;
         }
+        if(player.isConnectingPowerLine() && canBePowered){
+            hasPower = true;
+        }
+
     }
     private void pickUpItem(Player player) {
         posX = player.getPosX();
@@ -135,17 +137,10 @@ public class Interactable {
         }
     }
 
-    private void build(ArrayList<Interactable> partList, InteractablesHandler interactables, Raylib.Camera2D camera){
+    private void build(ArrayList<Interactable> partList, InteractablesHandler interactables, Raylib.Camera2D camera, Player player){
         for(int i = 0; i < partList.size(); i++){
-            if(i!= partList.size() - 1) {
-                if (!(distanceVector.distanceBetweenTwoObjects(partList.get(i).getPos(), partList.get(i + 1).getPos()) < buildingRadius)){
-                    return;
-                }
-            }
-            else{
-                if(!(distanceVector.distanceBetweenTwoObjects(partList.get(i).getPos(), partList.get(i - 1).getPos()) < buildingRadius)){
-                    return;
-                }
+            if(!(distanceVector.distanceBetweenTwoObjects(player.getPosition(), partList.get(i).getPos()) < buildingRadius)){
+                return;
             }
         }
         int posX = 0, posY = 0;
@@ -164,11 +159,15 @@ public class Interactable {
     private void powerLineToOtherInteractable(Player player){
         DrawLineV(player.getPosition(),getPos(), BLACK);
         player.setConnectingPowerLine(true);
-
     }
+
     private void connectedPower(Interactable otherInteractable, Player player){
         hasPower = true;
         player.setConnectingPowerLine(false);
+    }
+
+    public void drawPowerLineBetweenPoweredInteractableAndGen(InteractablesHandler interactables){
+        DrawLineV(getPos(),interactables.getGenPos(),BLACK);
     }
 
 

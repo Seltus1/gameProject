@@ -225,52 +225,44 @@ public class VectorHandler {
         setPosX((int) Math.round(newX));
         setPosY((int) Math.round(newY));
     }
+public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2) {
+    // Getting the 1st circle
+    float a = circle1.x();
+    float b = circle1.y();
+    float r = r1;
 
-    public double[] findIntersectingPoints(Vector2 circle1, Vector2 circle2, int r1, int r2, Raylib.Vector2 mousePos) {
-        // Getting the 1st circle
-        float a = circle1.x();
-        float b = circle1.y();
-        float r = r1;
+    // Getting the 2nd circle
+    float p = circle2.x();
+    float q = circle2.y();
+    float d = r2;
 
-        // Getting the 2nd circle
-        float p = circle2.x();
-        float q = circle2.y();
-        float d = r2;
+    // Calculating the distance between the centers
+    double D = Math.sqrt((p - a) * (p - a) + (q - b) * (q - b));
 
-        // Handling infinite slope
-        double x1, x2, y1, y2;
-        float m,c;
-
-        if (b - q != 0) {
-            // Making mx + c
-            m = (p - a) / (b - q);
-            c = ((a * a) + (b * b) + (d * d) - ((p * p) + (q * q) + (r * r))) / (2 * (b - q));
-
-            // Making quadratic formula
-            float A = 1 + (m * m);
-            float B = 2 * (m * (c - b) - a);
-            long C = (long) ((a * a) + ((c - b) * (c - b)) - (r * r));
-
-            // Getting the x intersections
-
-            x1 = ((-B + Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
-            x2 = ((-B - Math.sqrt((B * B) - (4 * A * C))) / (2 * A));
-            // Getting the y intersections
-            y1 = (m * x1) + c;
-            y2 = (m * x2) + c;
-            intersectingCircleDistance = Math.sqrt(Math.pow((double) y2 - (double) y1, 2) + Math.pow((double) x2 - (double) x1, 2));
-        }
-        else{
-            x1 = x2 = a;
-            // Handle infinite slope separately (vertical line)
-//          Raylib.Vector2 pos = findIntersectingPointOnCircleAndMousePos(circle1,r1,mousePos);  // Line passes through the point (a, b)
-            y1 = b + intersectingCircleDistance / 2;  // One intersection point
-            y2 = b - intersectingCircleDistance / 2;  // Other intersection poi nt
-        }
-
-        double[] returnIntersections = {x1, y1, x2, y2};
-        return returnIntersections;
+    // Check if there are no intersection points
+    if (D > r + d || D < Math.abs(r - d)) {
+        return null;
     }
+
+    // Find the point P2 where the line through the circle intersection points crosses the line between the circle centers.
+    double a2 = (r * r - d * d + D * D) / (2 * D);
+    double h = Math.sqrt(r * r - a2 * a2);
+
+    // Finding P2
+    double x2 = a + a2 * (p - a) / D;
+    double y2 = b + a2 * (q - b) / D;
+
+    // Calculate the intersection points
+    double x3 = x2 + h * (q - b) / D;
+    double y3 = y2 - h * (p - a) / D;
+
+    double x4 = x2 - h * (q - b) / D;
+    double y4 = y2 + h * (p - a) / D;
+
+    return new double[]{x3, y3, x4, y4};
+}
+
+
 
 
     private HashMap<String, Float> findSlopeAndIntercept(Raylib.Vector2 startPoint, Raylib.Vector2 endPoint){

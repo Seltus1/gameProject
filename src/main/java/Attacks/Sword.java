@@ -45,7 +45,7 @@ public class Sword {
     }
     public Raylib.Vector2[] calculateTriangle(Player player, Raylib.Vector2 mousePos){
         Raylib.Vector2 endPoint = vector.findEndPointOfLine(player.getPosition(),player.getRange(),mousePos);
-        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint,player.getRange(),50, mousePos);
+        double[] poses = vector.findIntersectingPoints(player.getPosition(),endPoint,player.getRange(),50);
         Raylib.Vector2 p1 = new Jaylib.Vector2((int)poses[0],(int)poses[1]);
         Raylib.Vector2 p2 = new Jaylib.Vector2((int)poses[2],(int)poses[3]);
         return new Raylib.Vector2[] {player.getPosition(), p1,p2};
