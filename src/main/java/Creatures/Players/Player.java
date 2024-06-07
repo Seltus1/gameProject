@@ -179,6 +179,7 @@ public abstract class Player implements Creature {
     private int spaceSuitOxygen;
     private int initialSpaceSuitOxygen;
     private boolean didEquipMaterializer;
+    private boolean drawPlayer;
 
 
 
@@ -198,6 +199,7 @@ public abstract class Player implements Creature {
 
         isOnFire = false;
         isRegening = false;
+        drawPlayer = true;
 
 
         burnCountDown = 0;
@@ -260,6 +262,8 @@ public abstract class Player implements Creature {
         poisoned();
         Jaylib.Vector2 pos = new Jaylib.Vector2((float) getPosX(),(float)getPosY() + size);
         camera.target(pos);
+//        DrawText(game.getAreaSize() + "", getPosX(), getPosY() - 100,30, BLACK);
+
 //        vector.rangeLine(this,mousePos);
     }
 
@@ -1063,5 +1067,13 @@ public abstract class Player implements Creature {
 
     public void setConnectingPowerLine(boolean connectingPowerLine) {
         this.connectingPowerLine = connectingPowerLine;
+    }
+
+    public boolean isDrawPlayer() {
+        return drawPlayer;
+    }
+
+    public void setDrawPlayer(boolean drawPlayer) {
+        this.drawPlayer = drawPlayer;
     }
 }

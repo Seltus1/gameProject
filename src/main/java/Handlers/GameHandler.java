@@ -23,6 +23,7 @@ public class GameHandler {
     private CooldownHandler waveInCenter;
     private boolean drawWaveInCenter;
     private int areaSize;
+    private int initialAreaSize;
     private Shop shop;
     private boolean rerolledShop;
     private CooldownHandler borderShrinker;
@@ -40,6 +41,7 @@ public class GameHandler {
     private VectorHandler distanceVector;
     private boolean shrinkBorder;
     private int defaultInteractableSize;
+    private Raylib.Vector2 mousePos;
 
 
     public GameHandler(Player player, Camera2D camera){
@@ -55,15 +57,17 @@ public class GameHandler {
 //        sound = LoadSound("..\\gameProject\\sounds\\war-drum-loop-103870.mp3");
         drawWaveInCenter = true;
         areaSize = 2500;
+        initialAreaSize = areaSize;
         shop = new Shop(player);
         rerolledShop = false;
-        borderShrinkCD = 125;
+        borderShrinkCD = 50;
         currentArenaElement = 6;
         arenaColor = GRAY;
         centerOfArena = new Raylib.Vector2(new Jaylib.Vector2(0,0));
         isRoundOver = false;
         shrinkBorder = true;
         distanceVector = new VectorHandler(0,0,0,camera);
+        mousePos = new Raylib.Vector2(new Jaylib.Vector2(0,0));
     }
 
     public void startGame(){
@@ -81,6 +85,7 @@ public class GameHandler {
         drawArea();
         determineIfRoundIsOver(enemies);
         shrinkBorder();
+        updateMousePos(camera);
 //        drawTexts();
 //        if(IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
 //            if(GetMouseX() > (middleX - 100) && GetMouseX() < (middleX + 100)) {
@@ -258,6 +263,9 @@ public class GameHandler {
         }
         return true;
     }
+    private void updateMousePos(Camera2D camera){
+        mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
+    }
 
 
 
@@ -295,4 +303,15 @@ public class GameHandler {
         this.shrinkBorder = shrinkBorder;
     }
 
+    public Raylib.Vector2 getMousePos() {
+        return mousePos;
+    }
+
+    public int getInitialAreaSize() {
+        return initialAreaSize;
+    }
+
+    public void setInitialAreaSize(int initialAreaSize) {
+        this.initialAreaSize = initialAreaSize;
+    }
 }

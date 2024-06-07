@@ -21,7 +21,6 @@ public class Main {
     static PlayerHandler playerHandler;
     static InteractablesHandler interactablesHandler;
     static int amountOfEnemy;
-    static Raylib.Vector2 mousePos;
     static boolean isInit = false;
     public static void main(String[] args) {
         init();
@@ -50,13 +49,13 @@ public class Main {
             DrawFPS(player.getPosX() - (GetScreenWidth() / 2) + 100, player.getPosY() - (GetScreenHeight() / 2) + 100);
 
 
-            mousePos = GetScreenToWorld2D(new Jaylib.Vector2(GetMouseX(), GetMouseY()), camera);
+
             enemies.update(projectiles, player, camera, player.getFire(), player.getPoison());
             projectiles.update(enemies, player, camera);
             game.update(player,enemies,camera);
             interactablesHandler.update(player, game, camera);
-            playerHandler.update(enemies, projectiles, camera, mousePos, game);
-            player.update(projectiles, camera, mousePos, enemies, game, interactablesHandler);
+            playerHandler.update(enemies, projectiles, camera, game.getMousePos(), game);
+            player.update(projectiles, camera, game.getMousePos(), enemies, game, interactablesHandler);
 
 
             drawMouse();
@@ -83,6 +82,6 @@ public class Main {
             camera.zoom(1f);
         }
         public static void drawMouse(){
-            DrawCircle((int) mousePos.x(), (int) mousePos.y(), 5, PURPLE);
+            DrawCircle((int) game.getMousePos().x(), (int) game.getMousePos().y(), 5, PURPLE);
         }
 }

@@ -8,169 +8,92 @@ import Handlers.VectorHandler;
 import com.raylib.Jaylib;
 import com.raylib.Raylib;
 
-import java.util.ArrayList;
-
-import static com.raylib.Jaylib.BLACK;
-import static com.raylib.Raylib.*;
+import static com.raylib.Jaylib.*;
 
 public class Interactable {
     private int size;
     private int interactRadius;
-    private int type;
     private int posX;
     private int posY;
     private Raylib.Vector2 pos;
+    private Raylib.Color color;
     private boolean isInRange;
     private boolean pickup;
     private boolean refillSpaceSuit;
     private boolean expandBorder;
+    private boolean build;
     private CooldownHandler spaceSuitOxygenCH;
     private int spaceSuitOxygenIncreaseCD;
     private CooldownHandler expandBorderCH;
     private int expandBorderCD;
-    private boolean build;
     private int buildingRadius;
     private VectorHandler distanceVector;
-    private int futureType;
-    private boolean connectedToOtherInteractable;
-    private boolean hasPower;
-    private boolean canBePowered;
+    protected boolean canBePowered;
     private boolean connectPower;
+    private boolean hasPower;
+    private boolean openPowerMenu;
+    private int menuSize;
+    private boolean beingUpdated;
 
-    public Interactable(int size, int interactRadius, int type, int posX, int posY, Raylib.Camera2D camera){
+    public Interactable(int size, int interactRadius, int posX, int posY, Raylib.Camera2D camera, InteractablesHandler interactables){
         this.size = size;
         this.interactRadius = interactRadius;
-        this.type = type;
         this.posX = posX;
         this.posY = posY;
         pos = new Raylib.Vector2(new Jaylib.Vector2(posX,posY));
         spaceSuitOxygenCH = new CooldownHandler();
         expandBorderCH = new CooldownHandler();
         distanceVector = new VectorHandler(0,0,0,camera);
-        expandBorderCD = 125;
+        expandBorderCD = 50;
         spaceSuitOxygenIncreaseCD = 200;
         buildingRadius = 150;
+        menuSize = 500;
+        beingUpdated = false;
+        interactables.getInteractables().add(this);
     }
     private void setInitialValues(){
 //        if()
     }
 
     public void update(Player player, GameHandler game, InteractablesHandler interactables, Raylib.Camera2D camera){
-        if(pickup){
-            pickUpItem(player);
-        }
-        else if(refillSpaceSuit){
-            refillSpaceSuit(player, game);
-        }
-        else if(expandBorder){
-            expandBorder(game);
-        }
-        else if(build){
-            build(interactables.getTelepatherParts(),interactables,camera, player);
-        }
-        else if(connectPower){
-            interactables.setGenPos(getPos());
-            powerLineToOtherInteractable(player);
-        }
-        DrawText(connectPower + "", player.getPosX(), player.getPosY() - 100,30, BLACK);
     }
 
-    public void updateActionStatus(Player player, GameHandler game){
-        switch(type){
-//            type 1 = part for telepather
-            case 1:
-                futureType = 3;
-                canBePowered = false;
-                if(player.isDidEquipMaterializer()) {
-                    build = game.switchBoolVal(build);
-                }
-                else{
-                    pickup = game.switchBoolVal(pickup);
-                }
-                break;
-//                type 2 = Atmosphere Amplifier
-            case 2:
-                canBePowered = true;
-                if(!player.isUsingSpaceSuit() && !(player.getSpaceSuitOxygen() == 100)){
-                    refillSpaceSuit = game.switchBoolVal(refillSpaceSuit);
-                }
-                else{
-                    expandBorder = game.switchBoolVal(expandBorder);
-                    game.setShrinkBorder(game.switchBoolVal(game.isShrinkBorder()));
-                }
-                break;
-//                type 3 = Telepather
-//            not sure what I want to do with the telepather fully yet
-            case 3:
-                canBePowered = true;
-                break;
-//                type 4 = power generator
-            case 4:
-                connectPower =  game.switchBoolVal(connectPower);
-                break;
+    public void updateActionStatus(Player player, GameHandler game, InteractablesHandler interactables){
+        if(!canBePowered && player.isConnectingPowerLine()){
+            player.setConnectingPowerLine(false);
         }
-        if(player.isConnectingPowerLine() && canBePowered){
-            hasPower = true;
-        }
-
-    }
-    private void pickUpItem(Player player) {
-        posX = player.getPosX();
-        posY = player.getPosY() - size;
-        pos = new Raylib.Vector2(new Jaylib.Vector2(posX,posY));
-    }
-    private void refillSpaceSuit(Player player, GameHandler game){
-       if(player.getSpaceSuitOxygen() < 100) {
-           if (spaceSuitOxygenCH.cooldown(spaceSuitOxygenIncreaseCD)) {
-               player.setSpaceSuitOxygen(player.getSpaceSuitOxygen()+1);
-               if(player.getSpaceSuitOxygen() == 100){
-//                   set refillSpaceSuit to false
-                   refillSpaceSuit = game.switchBoolVal(refillSpaceSuit);
-                   updateActionStatus(player, game);
-               }
-           }
-       }
-    }
-    private void expandBorder(GameHandler game){
-        if(expandBorderCH.cooldown(expandBorderCD)){
-            game.setAreaSize(game.getAreaSize()+1);
-        }
-    }
-
-    private void build(ArrayList<Interactable> partList, InteractablesHandler interactables, Raylib.Camera2D camera, Player player){
-        for(int i = 0; i < partList.size(); i++){
-            if(!(distanceVector.distanceBetweenTwoObjects(player.getPosition(), partList.get(i).getPos()) < buildingRadius)){
-                return;
+        if(player.isConnectingPowerLine() && isCanBePowered()){
+            connectedPower(player, game, interactables);
+            if(!interactables.getActiveGens().contains(interactables.getGenLastInteractedWith())) {
+                interactables.getActiveGens().add(interactables.getGenLastInteractedWith());
+                interactables.getGenLastInteractedWith().getPoweringList().add(this);
             }
         }
-        int posX = 0, posY = 0;
-        for(int i = 0; i < partList.size();i++){
-            posX += partList.get(i).getPosX();
-            posY += partList.get(i).getPosY();
-            interactables.getInteractables().remove(partList.get(i));
+    }
+    public boolean isBeingUpdated(){
+        if(this instanceof TelepatherPart){
+            beingUpdated = build || pickup;
         }
-        posX /= partList.size();
-        posY /= partList.size();
-        Interactable upgradedInteractable = new Interactable(interactables.getDefaultInteractableSize(),interactables.getDefaultInteractRadius(),futureType,posX,posY,camera);
-        interactables.getInteractables().add(upgradedInteractable);
-        build = false;
-        interactables.setBuildingQuestActive(false);
-    }
-    private void powerLineToOtherInteractable(Player player){
-        DrawLineV(player.getPosition(),getPos(), BLACK);
-        player.setConnectingPowerLine(true);
-    }
+        else if(this instanceof AtmosphereAmplifier){
+            beingUpdated = refillSpaceSuit || expandBorder;
+        }
+        else if(this instanceof Telepather){
 
-    private void connectedPower(Interactable otherInteractable, Player player){
-        hasPower = true;
-        player.setConnectingPowerLine(false);
+        }
+        else if(this instanceof PowerGenerator){
+            beingUpdated = openPowerMenu || connectPower;
+        }
+        return beingUpdated;
     }
-
     public void drawPowerLineBetweenPoweredInteractableAndGen(InteractablesHandler interactables){
-        DrawLineV(getPos(),interactables.getGenPos(),BLACK);
+        DrawLineV(getPos(),interactables.getGenLastInteractedWith().getPos(), BLACK);
     }
+    private void connectedPower(Player player, GameHandler game, InteractablesHandler interactables){
+        setHasPower(true);
+        player.setConnectingPowerLine(false);
+        setConnectPower(false);
 
-
+    }
     public int getSize() {
         return size;
     }
@@ -185,14 +108,6 @@ public class Interactable {
 
     public void setInteractRadius(int interactRadius) {
         this.interactRadius = interactRadius;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public int getPosX() {
@@ -259,4 +174,103 @@ public class Interactable {
         this.canBePowered = canBePowered;
     }
 
+    public void setBeingUpdated(boolean beingUpdated) {
+        this.beingUpdated = beingUpdated;
+    }
+
+    public boolean isRefillSpaceSuit() {
+        return refillSpaceSuit;
+    }
+
+    public void setRefillSpaceSuit(boolean refillSpaceSuit) {
+        this.refillSpaceSuit = refillSpaceSuit;
+    }
+
+    public CooldownHandler getSpaceSuitOxygenCH() {
+        return spaceSuitOxygenCH;
+    }
+
+    public void setSpaceSuitOxygenCH(CooldownHandler spaceSuitOxygenCH) {
+        this.spaceSuitOxygenCH = spaceSuitOxygenCH;
+    }
+
+    public int getSpaceSuitOxygenIncreaseCD() {
+        return spaceSuitOxygenIncreaseCD;
+    }
+
+    public void setSpaceSuitOxygenIncreaseCD(int spaceSuitOxygenIncreaseCD) {
+        this.spaceSuitOxygenIncreaseCD = spaceSuitOxygenIncreaseCD;
+    }
+
+    public CooldownHandler getExpandBorderCH() {
+        return expandBorderCH;
+    }
+
+    public void setExpandBorderCH(CooldownHandler expandBorderCH) {
+        this.expandBorderCH = expandBorderCH;
+    }
+
+    public int getExpandBorderCD() {
+        return expandBorderCD;
+    }
+
+    public void setExpandBorderCD(int expandBorderCD) {
+        this.expandBorderCD = expandBorderCD;
+    }
+
+    public boolean isBuild() {
+        return build;
+    }
+
+    public void setBuild(boolean build) {
+        this.build = build;
+    }
+
+    public int getBuildingRadius() {
+        return buildingRadius;
+    }
+
+    public void setBuildingRadius(int buildingRadius) {
+        this.buildingRadius = buildingRadius;
+    }
+
+    public VectorHandler getDistanceVector() {
+        return distanceVector;
+    }
+
+    public void setDistanceVector(VectorHandler distanceVector) {
+        this.distanceVector = distanceVector;
+    }
+
+    public boolean isConnectPower() {
+        return connectPower;
+    }
+
+    public void setConnectPower(boolean connectPower) {
+        this.connectPower = connectPower;
+    }
+
+    public boolean isOpenPowerMenu() {
+        return openPowerMenu;
+    }
+
+    public void setOpenPowerMenu(boolean openPowerMenu) {
+        this.openPowerMenu = openPowerMenu;
+    }
+
+    public int getMenuSize() {
+        return menuSize;
+    }
+
+    public void setMenuSize(int menuSize) {
+        this.menuSize = menuSize;
+    }
+
+    public Raylib.Color getColor() {
+        return color;
+    }
+
+    public void setColor(Raylib.Color color) {
+        this.color = color;
+    }
 }

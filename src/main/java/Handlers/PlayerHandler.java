@@ -41,7 +41,9 @@ public class PlayerHandler {
         drawFireFex();
         drawRange(mousePos);
         drawPoison();
-        drawPlayer();
+        if(player.isDrawPlayer()) {
+            drawPlayer();
+        }
         drawOxygen();
         drawPos();
         drawCooldowns();
@@ -247,4 +249,5 @@ public class PlayerHandler {
         cdNumSecs = (player.getUltimateCD() / 1000) - cdNumSecs;
         DrawText("" + cdNumSecs, player.getPosX() - 30, player.getPosY() + (GetScreenHeight() / 2) - 190, 40, BLACK);
     }
+
 }

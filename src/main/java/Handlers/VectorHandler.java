@@ -59,14 +59,9 @@ public class VectorHandler {
         setActualYPos(getPosY());
     }
 
-    private void updateCamera(Raylib.Vector2 position, Camera2D camera){
-        camera.target(position);
-    }
-
     private void updateActualPositions(Camera2D camera){
         Raylib.Vector2 updatedPosition = new Jaylib.Vector2(posX, posY);
         setPosition(updatedPosition);
-        updateCamera(updatedPosition,camera);
     }
 
     public int playerHorizontalCheck() {
