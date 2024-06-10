@@ -30,6 +30,7 @@ public class InteractablesHandler {
     private int decreaseGenPowerLevelCD;
     private boolean didSetInteractsToFalse;
     private SolariumDeposit testSolarium;
+    private int arrowSize;
 
 
     public InteractablesHandler(Camera2D camera){
@@ -48,6 +49,7 @@ public class InteractablesHandler {
         rand = new Random();
         startTelepatherTask(camera);
         alreadyPicked = false;
+        arrowSize = 20;
     }
 
     public void update(Player player, GameHandler game, Camera2D camera){
@@ -60,7 +62,7 @@ public class InteractablesHandler {
 //                DrawText(genList.get(i).getCurrentCharge() + "", genList.get(i).getPosX(), genList.get(i).getPosY() - 100, 30, BLACK);
             }
         }
-        if(buildingQuestActive){
+        if(buildingQuestActive && player.isDrawPlayer()){
             drawBuildingPartsDirection(telepatherParts, player);
         }
     }
@@ -70,34 +72,33 @@ public class InteractablesHandler {
 
     private void drawBuildingPartsDirection(ArrayList<TelepatherPart> partList, Player player){
         for(int i = 0; i < partList.size();i++){
-//            find the direction of the vector from the players position to the position of the part
-            Raylib.Vector2 direction = Vector2Subtract(partList.get(i).getPos(), player.getPosition());
-//            normalize that vector to make it a unit vector
-            Raylib.Vector2 normalizedDir = Vector2Normalize(direction);
-//            multiply that vector by a scalar of 100
-            Raylib.Vector2 scaledDir = Vector2Scale(normalizedDir, 200);
-//            add that vector to the players position so it follows the players position
-            Raylib.Vector2 endPoint = Vector2Add(scaledDir,player.getPosition());
-
-
-
-//            draw a line from the players position to the endpoint
-            DrawLineV(player.getPosition(),endPoint,BLACK);
-
+//            check if the distance to the part is less than 200 (how far the arrow is)
+            if(distanceVector.distanceBetweenTwoObjects(partList.get(i).getPos(),player.getPosition()) > 200) {
+//                find the direction to the part
+                Raylib.Vector2 direction = Vector2Subtract(partList.get(i).getPos(), player.getPosition());
+//                normalize the direction vector
+                Raylib.Vector2 normalizedDir = Vector2Normalize(direction);
+//                scale it to 200 to find the end point.
+                Raylib.Vector2 scaledDir = Vector2Scale(normalizedDir, 200);
+//                  scale the same to 180 for the triangle points
+                Raylib.Vector2 scaledPerp = Vector2Scale(normalizedDir, 180);
+//                take into account the players position
+                Raylib.Vector2 trianglePoint = Vector2Add(scaledDir, player.getPosition());
+                Raylib.Vector2 perpPoint = Vector2Add(scaledPerp, player.getPosition());
+//                finding the direction of the base of the triangle
+                Raylib.Vector2 perpDir = new Jaylib.Vector2(-normalizedDir.y(), normalizedDir.x());
+//                finding the left point of the triangle
+                Raylib.Vector2 triangleLeft = Vector2Subtract(perpPoint, Vector2Scale(perpDir, arrowSize));
+//                finding the right point of the triangle
+                Raylib.Vector2 triangleRight = Vector2Add(perpPoint, Vector2Scale(perpDir, arrowSize));
+                DrawTriangle(trianglePoint, triangleLeft, triangleRight, BLACK);
+            }
         }
     }
 
-
-
-
-
-
-
-
-
-
     //    want to make this function be able to switch between differnt interactables.
-//    for example if you are interacting with one thing, then get in range with another,
+//    for example if you are interacti
+//    ng with one thing, then get in range with another,
 //    then press F it should revert the action of the first and then preform the action on the 2nd
     private void determineWhichInteractableToPreformActionOn(Player player, GameHandler game){
         for (int i = 0; i < getInteractables().size(); i++) {
@@ -108,14 +109,12 @@ public class InteractablesHandler {
             drawInteractables(current);
             if (distanceVector.distanceBetweenTwoObjects(current.getPos(), player.getPosition()) < current.getInteractRadius()) {
                 current.setInRange(true);
-
                 if(IsKeyPressed(KEY_F)) {
                     current.updateActionStatus(player, game, this);
                     if(interactableToUpdate == null && !alreadyPicked){
                         interactableToUpdate = current;
                         alreadyPicked = true;
                     }
-
                     else if(alreadyPicked && interactableToUpdate != null){
                         int pos1 = distanceVector.distanceBetweenTwoObjects(player.getPosition(),current.getPos());
                         int pos2 = distanceVector.distanceBetweenTwoObjects(player.getPosition(),interactableToUpdate.getPos());
